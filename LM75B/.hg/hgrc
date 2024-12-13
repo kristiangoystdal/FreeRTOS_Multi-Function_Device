@@ -1,0 +1,5 @@
+[ui]
+ignore.local = .hg/hgignore
+[paths]
+mbed-studio-cache = /home/studio/mbed-studio-data/library-cache/os.mbed.com/users/neilt6/code/LM75B
+default = http://mbed.org/users/neilt6/code/LM75B/
