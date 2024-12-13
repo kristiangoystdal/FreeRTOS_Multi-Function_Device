@@ -8,10 +8,7 @@
 ***************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
-#include "FreeRTOS.h"
-#include "queue.h"
-
-extern QueueHandle_t xQueue;
+#include "GlobalQueues.h"
 
 /*-------------------------------------------------------------------------+
 | Function: cmd_sair - termina a aplicacao
