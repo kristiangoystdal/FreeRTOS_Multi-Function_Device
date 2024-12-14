@@ -57,9 +57,9 @@ struct command_d {
     {cmd_test, "test", "<arg1> <arg2>               test command"},
     {cmd_rdt, "rdt",
      "                             read date/time (dd/MM/YYYY hh:mm:ss)"},
-    {cmd_sd, "sd", "<day> <month> <year>          set date (day, month, year)"},
+    {cmd_sd, "sd", "  <day> <month> <year>        set date (day, month, year)"},
     {cmd_rc, "rc", "                              read clock"},
-    {cmd_sc, "sc", "<hours> <minutes> <seconds>   set clock"},
+    {cmd_sc, "sc", "  <hours> <minutes> <seconds> set clock"},
     {cmd_rt, "rt", "                              read temperature"},
     {cmd_rmm, "rmm",
      "                             read maximum and minimum of temperature"},
@@ -68,17 +68,17 @@ struct command_d {
     {cmd_rp, "rp",
      "                              read parameters (pmon, tala)"},
     {cmd_mmp, "mmp",
-     "<p>                          modify monitoring period (seconds - 0 "
+     " <p>                         modify monitoring period (seconds - 0 "
      "deactivate)"},
     {cmd_mta, "mta",
-     "<t>                          modify time alarm (seconds)"},
+     " <t>                         modify time alarm (seconds)"},
     {cmd_rai, "rai",
      "                             read alarm info (alarm clock, tlow, thigh, "
      "active/inactive)"},
     {cmd_sac, "sac",
-     "<h> <m> <s>                  set alarm clock (hours, minutes, seconds)"},
+     " <h> <m> <s>                 set alarm clock (hours, minutes, seconds)"},
     {cmd_sat, "sat",
-     "<tlow> <thigh>               set alarm temperature thresholds (tlow, "
+     " <tlow> <thigh>              set alarm temperature thresholds (tlow, "
      "thigh)"},
     {cmd_adac, "adac",
      "1/0                         activate/deactivate alarm clock"},
