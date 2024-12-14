@@ -7,13 +7,12 @@
 |        from an original by Leendert Van Doorn
 | Data:  Nov 2002
 ***************************************************************************/
+#include "mbed.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include "mbed.h"
+
 
 /*-------------------------------------------------------------------------+
 | Headers of command functions
@@ -22,6 +21,25 @@ extern void cmd_sair(int, char **);
 extern void cmd_test(int, char **);
 void cmd_sos(int, char **);
 extern void cmd_send(int, char **);
+extern void cmd_rdt(int, char **);
+extern void cmd_sd(int, char **);
+extern void cmd_rc(int, char **);
+extern void cmd_sc(int, char **);
+extern void cmd_rt(int, char **);
+extern void cmd_rmm(int, char **);
+extern void cmd_cmm(int, char **);
+extern void cmd_rp(int, char **);
+extern void cmd_mmp(int, char **);
+extern void cmd_mta(int, char **);
+extern void cmd_rai(int, char **);
+extern void cmd_sac(int, char **);
+extern void cmd_sat(int, char **);
+extern void cmd_adac(int, char **);
+extern void cmd_adat(int, char **);
+extern void cmd_rts(int, char **);
+extern void cmd_adbl(int, char **);
+extern void cmd_adhb(int, char **);
+extern void cmd_adcs(int, char **);
 
 /*-------------------------------------------------------------------------+
 | Variable and constants definition
@@ -43,17 +61,27 @@ struct command_d {
     {cmd_rc, "rc", "                    read clock"},
     {cmd_sc, "sc", "<hours> <minutes> <seconds>   set clock"},
     {cmd_rt, "rt", "                    read temperature"},
-    {cmd_rmm, "rmm", "                   read maximum and minimum of temperature"},
-    {cmd_cmm, "cmm", "                   clear maximum and minimum of temperature"},
+    {cmd_rmm, "rmm",
+     "                   read maximum and minimum of temperature"},
+    {cmd_cmm, "cmm",
+     "                   clear maximum and minimum of temperature"},
     {cmd_rp, "rp", "                    read parameters (pmon, tala)"},
-    {cmd_mmp, "mmp", "<p>                modify monitoring period (seconds - 0 deactivate)"},
+    {cmd_mmp, "mmp",
+     "<p>                modify monitoring period (seconds - 0 deactivate)"},
     {cmd_mta, "mta", "<t>                modify time alarm (seconds)"},
-    {cmd_rai, "rai", "                   read alarm info (alarm clock, tlow, thigh, active/inactive)"},
-    {cmd_sac, "sac", "<h> <m> <s>        set alarm clock (hours, minutes, seconds)"},
-    {cmd_sat, "sat", "<tlow> <thigh>     set alarm temperature thresholds (tlow, thigh)"},
+    {cmd_rai, "rai",
+     "                   read alarm info (alarm clock, tlow, thigh, "
+     "active/inactive)"},
+    {cmd_sac, "sac",
+     "<h> <m> <s>        set alarm clock (hours, minutes, seconds)"},
+    {cmd_sat, "sat",
+     "<tlow> <thigh>     set alarm temperature thresholds (tlow, thigh)"},
     {cmd_adac, "adac", "1/0              activate/deactivate alarm clock"},
-    {cmd_adat, "adat", "1/0              activate/deactivate alarm temperature"},
-    {cmd_rts, "rts", "                   read task state (Bubble Level, Hit Bit, Config Sound)"},
+    {cmd_adat, "adat",
+     "1/0              activate/deactivate alarm temperature"},
+    {cmd_rts, "rts",
+     "                   read task state (Bubble Level, Hit Bit, Config "
+     "Sound)"},
     {cmd_adbl, "adbl", "1/0              activate/deactivate Bubble Level"},
     {cmd_adhb, "adhb", "1/0              activate/deactivate Hit Bit"},
     {cmd_adcs, "adcs", "1/0              activate/deactivate Config Sound"},
@@ -140,7 +168,7 @@ void monitor(void) {
       else
         printf("%s", InvalMsg);
     } /* if my_getline */
-  } /* forever */
+  }   /* forever */
 }
 
 // #endif //notdef
