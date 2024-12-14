@@ -68,6 +68,22 @@ bool check_args_range(char **argv, int ranges[][2]) {
   return false;
 }
 
+bool check_args(int argc, char **argv, int num_args, int ranges[][2]) {
+  if (argc != num_args) {
+    printf("wrong number of arguments!\n");
+    return true;
+  }
+  if (check_args_digit(argv)) {
+    printf("wrong type of arguments!\n");
+    return true;
+  }
+  if (check_args_range(argv, ranges)) {
+    printf("wrong range of arguments!\n");
+    return true;
+  }
+  return false;
+}
+
 /*-------------------------------------------------------------------------+
 | Ranges for the arguments
 +--------------------------------------------------------------------------*/
@@ -83,20 +99,6 @@ void cmd_rdt(int argc, char **argv) {
 }
 
 void cmd_sd(int argc, char **argv) {
-  printf("%d\n", argc);
-  if (argc != 4) {
-    printf("wrong number of arguments!\n");
-    return;
-  }
-  if (check_args_digit(argv)) {
-    printf("wrong type of arguments!\n");
-    return;
-  }
-  if (check_args_range(argv, ranges_dates)) {
-    printf("wrong range of arguments!\n");
-    return;
-  }
-
   // Placeholder for command
   printf("cmd_sd %d %d %d\n", atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
 }
@@ -107,12 +109,20 @@ void cmd_rc(int argc, char **argv) {
 }
 
 void cmd_sc(int argc, char **argv) {
-  if (argc == 4) {
-    // Placeholder for command
-    printf("cmd_sc %d %d %d\n", atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
-  } else {
+  if (argc != 4) {
     printf("wrong number of arguments!\n");
+    return;
   }
+  if (check_args_digit(argv)) {
+    printf("wrong type of arguments!\n");
+    return;
+  }
+  if (check_args_range(argv, ranges_time)) {
+    printf("wrong range of arguments!\n");
+    return;
+  }
+
+  printf("cmd_sc %d %d %d\n", atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
 }
 
 void cmd_rt(int argc, char **argv) {
@@ -136,21 +146,37 @@ void cmd_rp(int argc, char **argv) {
 }
 
 void cmd_mmp(int argc, char **argv) {
-  if (argc == 2) {
-    // Placeholder for command
-    printf("cmd_mmp %d\n", atoi(argv[1]));
-  } else {
+  if (argc != 2) {
     printf("wrong number of arguments!\n");
+    return;
   }
+  if (check_args_digit(argv)) {
+    printf("wrong type of arguments!\n");
+    return;
+  }
+  if (check_args_range(argv, ranges_period)) {
+    printf("wrong range of arguments!\n");
+    return;
+  }
+
+  printf("cmd_mmp %d\n", atoi(argv[1]));
 }
 
 void cmd_mta(int argc, char **argv) {
-  if (argc == 2) {
-    // Placeholder for command
-    printf("cmd_mta %d\n", atoi(argv[1]));
-  } else {
+  if (argc != 2) {
     printf("wrong number of arguments!\n");
+    return;
   }
+  if (check_args_digit(argv)) {
+    printf("wrong type of arguments!\n");
+    return;
+  }
+  if (check_args_range(argv, ranges_alarm)) {
+    printf("wrong range of arguments!\n");
+    return;
+  }
+
+  printf("cmd_mta %d\n", atoi(argv[1]));
 }
 
 void cmd_rai(int argc, char **argv) {
