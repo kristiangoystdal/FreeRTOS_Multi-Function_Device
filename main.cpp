@@ -60,20 +60,16 @@ int main(void) {
 
   pc.baud(115200);
 
-  //    printf("Hello from mbed -- FreeRTOS / cmd\n");
+  init_TaskScheduler(&xQueue);
 
-  /* --- APPLICATION TASKS CAN BE CREATED HERE --- */
-
-  xQueue = xQueueCreate(3, sizeof(int32_t));
-
-  xTaskCreate(vTask1, "Task 1", 2 * configMINIMAL_STACK_SIZE, NULL, 1, NULL);
-  xTaskCreate(vTask2, "Task 2", 2 * configMINIMAL_STACK_SIZE, NULL, 2, NULL);
+  xTaskCreate(vTask1, "Task 1", 2 * configMINIMAL_STACK_SIZE, xQueue, 1, NULL);
+  xTaskCreate(vTask2, "Task 2", 2 * configMINIMAL_STACK_SIZE, xQueue, 2, NULL);
 
   vTaskStartScheduler();
 
   while (1) {
     tm t = RTC::getDefaultTM();
-    // printf("Current time: %d\n", t.tm_sec);
+    printf("Current time: %d\n", t.tm_sec);
     wait(1);
   };
 }
