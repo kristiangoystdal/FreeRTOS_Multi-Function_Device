@@ -1,82 +1,81 @@
 #include "mbed.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
+#include "RTC.h"
+#include "LM75B.h"
+#include "C12832.h"
 
-DigitalOut led1(LED1);
-DigitalOut led2(LED2);
-Serial pc(USBTX, USBRX);
+C12832 lcd(p5, p7, p6, p8, p11);
 
-QueueHandle_t xQueue;
+LM75B sensor(p28,p27);
+Serial pc(USBTX,USBRX);
 
-extern void monitor(void);
+DigitalOut led(LED1);
 
-/*-------------------------------------------------------------------------+
-| Function: my_fgets        (called from my_getline / monitor) 
-+--------------------------------------------------------------------------*/ 
-char* my_fgets (char* ln, int sz, FILE* f)
+void check_temperature(void);
+void check_rtc(void);
+void check_lcd(void);
+
+int main ()
 {
-//  fgets(line, MAX_LINE, stdin);
-//  pc.gets(line, MAX_LINE);
-  int i; char c;
-  for(i=0; i<sz-1; i++) {
-      c = pc.getc();
-      ln[i] = c;
-      if ((c == '\n') || (c == '\r')) break;
-  }
-  ln[i] = '\0';
-
-  return ln;
-}
-
-void vTask1( void *pvParameters ) {
-int32_t lValueToSend;
-BaseType_t xStatus;
-    led1 = 1;
-    for( ;; ) {
-        lValueToSend = 201;
-        xStatus = xQueueSend( xQueue, &lValueToSend, 0 );
-        monitor(); //does not return
-        led1 = !led1;
+    int testNumber = 0; // TODO: Change this value for do the other tests
+    switch (testNumber) {
+    case 0:
+        check_temperature();
+        break;
+    case 1:
+        check_rtc();
+        break;
     }
-}
-
-void vTask2( void *pvParameters ) {
-int32_t lReceivedValue;
-BaseType_t xStatus;
-
-    led2 = 1;
-    printf("Hello from mbed -- FreeRTOS / cmd\n");
-    for( ;; ) {
-//        vTaskDelay( 1000 );
-        xStatus = xQueueReceive( xQueue, &lReceivedValue, 1000 );
-        if( xStatus == pdPASS ) {
-            printf( "Received = %d", lReceivedValue );
-        }
-        led2 = !led2;
-    }
-}
-
-int main( void ) {
-    /* Perform any hardware setup necessary. */
-//    prvSetupHardware();
-
-    pc.baud(115200);
-
-//    printf("Hello from mbed -- FreeRTOS / cmd\n");
-
-    /* --- APPLICATION TASKS CAN BE CREATED HERE --- */
-
-    xQueue = xQueueCreate( 3, sizeof( int32_t ) );
-    
-    xTaskCreate( vTask1, "Task 1", 2*configMINIMAL_STACK_SIZE, NULL, 1, NULL );
-    xTaskCreate( vTask2, "Task 2", 2*configMINIMAL_STACK_SIZE, NULL, 2, NULL );
-    
-    /* Start the created tasks running. */
-    vTaskStartScheduler();
-
-    /* Execution will only reach here if there was insufficient heap to
-    start the scheduler. */
-    for( ;; );
     return 0;
+}
+
+void check_temperature() {
+    pc.baud(115200);
+    while (1) {
+        //Try to open the LM75B
+        if (sensor.open()) {
+            printf("Device detected!\n");
+
+            while (1) {
+                lcd.cls();
+                lcd.locate(0,3);
+                lcd.printf("Temp = %.3f\n", sensor.temp());
+                wait(1.0);
+            }
+
+        } else {
+            error("Device not detected!\n");
+        }
+    }
+}
+
+void ledFunction( void )
+{
+    led = 1;
+    RTC::detach(RTC::Second);
+}
+
+void displayFunction( void )
+{
+    time_t seconds = time(NULL);
+    printf("%s", ctime(&seconds));
+}
+
+void alarmFunction( void )
+{
+    error("Not most useful alarm function");
+}
+
+void check_rtc()
+{
+    set_time(1256729737); // Set time to Wed, 28 Oct 2009 11:35:37
+
+    tm t = RTC::getDefaultTM();
+    t.tm_sec = 5;
+    t.tm_min = 36;
+
+    RTC::alarm(&alarmFunction, t);
+    RTC::attach(&displayFunction, RTC::Second);
+    RTC::attach(&ledFunction, RTC::Minute);
+
+    while(1);
 }

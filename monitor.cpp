@@ -11,8 +11,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-extern char *my_fgets(char *, int, FILE *);
+#include <stdlib.h>
+#include <ctype.h>
+#include "mbed.h"
 
 /*-------------------------------------------------------------------------+
 | Headers of command functions
@@ -61,6 +62,24 @@ struct command_d {
 #define NCOMMANDS (sizeof(commands) / sizeof(struct command_d))
 #define ARGVECSIZE 3
 #define MAX_LINE 50
+
+static Serial pc(USBTX, USBRX);
+
+char *my_fgets(char *ln, int sz, FILE *f) {
+  //  fgets(line, MAX_LINE, stdin);
+  //  pc.gets(line, MAX_LINE);
+  int i;
+  char c;
+  for (i = 0; i < sz - 1; i++) {
+    c = pc.getc();
+    ln[i] = c;
+    if ((c == '\n') || (c == '\r'))
+      break;
+  }
+  ln[i] = '\0';
+
+  return ln;
+}
 
 /*-------------------------------------------------------------------------+
 | Function: cmd_sos - provides a rudimentary help

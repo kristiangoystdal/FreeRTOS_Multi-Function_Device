@@ -10,8 +10,8 @@
 #include "queue.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "GlobalQueues.h"
 
-extern QueueHandle_t xQueue;
 
 /*-------------------------------------------------------------------------+
 | Function: cmd_sair - termina a aplicacao
