@@ -51,12 +51,31 @@ bool check_args_digit(char **argv) {
   for (int i = 1; i < 4; i++) {
     for (int j = 0; j < strlen(argv[i]); j++) {
       if (!isdigit(argv[i][j])) {
-        return false;
+        return true;
       }
     }
   }
-  return true;
+  return false;
 }
+
+bool check_args_range(char **argv, int ranges[][2]) {
+  for (int i = 1; i < 4; i++) {
+    int value = atoi(argv[i]);
+    if (value < ranges[i - 1][0] || value > ranges[i - 1][1]) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/*-------------------------------------------------------------------------+
+| Ranges for the arguments
++--------------------------------------------------------------------------*/
+int ranges_dates[3][2] = {{0, 31}, {0, 12}, {0, 9999}};
+int ranges_time[3][2] = {{0, 23}, {0, 59}, {0, 59}};
+int ranges_temp[1][2] = {{0, 50}};
+int ranges_period[1][2] = {{0, 99}};
+int ranges_alarm[1][2] = {{0, 60}};
 
 void cmd_rdt(int argc, char **argv) {
   // Placeholder for command
@@ -65,16 +84,21 @@ void cmd_rdt(int argc, char **argv) {
 
 void cmd_sd(int argc, char **argv) {
   printf("%d\n", argc);
-  if (argc == 4) {
-    if (check_args_digit(argv)) {
-      // Placeholder for command
-      printf("cmd_sd %d %d %d\n", atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
-    } else {
-      printf("wrong type of arguments!\n");
-    }
-  } else {
+  if (argc != 4) {
     printf("wrong number of arguments!\n");
+    return;
   }
+  if (check_args_digit(argv)) {
+    printf("wrong type of arguments!\n");
+    return;
+  }
+  if (check_args_range(argv, ranges_dates)) {
+    printf("wrong range of arguments!\n");
+    return;
+  }
+
+  // Placeholder for command
+  printf("cmd_sd %d %d %d\n", atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
 }
 
 void cmd_rc(int argc, char **argv) {
