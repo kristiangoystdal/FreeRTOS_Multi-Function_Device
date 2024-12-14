@@ -92,6 +92,7 @@ int ranges_time[3][2] = {{0, 23}, {0, 59}, {0, 59}};
 int ranges_temp[1][2] = {{0, 50}};
 int ranges_period[1][2] = {{0, 99}};
 int ranges_alarm[1][2] = {{0, 60}};
+int ranges_bool[1][2] = {{0, 1}};
 
 void cmd_rdt(int argc, char **argv) {
   // Placeholder for command
@@ -99,6 +100,9 @@ void cmd_rdt(int argc, char **argv) {
 }
 
 void cmd_sd(int argc, char **argv) {
+  if check_args (argc, argv, 4, ranges_dates) {
+    return;
+  }
   // Placeholder for command
   printf("cmd_sd %d %d %d\n", atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
 }
@@ -109,16 +113,7 @@ void cmd_rc(int argc, char **argv) {
 }
 
 void cmd_sc(int argc, char **argv) {
-  if (argc != 4) {
-    printf("wrong number of arguments!\n");
-    return;
-  }
-  if (check_args_digit(argv)) {
-    printf("wrong type of arguments!\n");
-    return;
-  }
-  if (check_args_range(argv, ranges_time)) {
-    printf("wrong range of arguments!\n");
+  if check_args (argc, argv, 4, ranges_time) {
     return;
   }
 
@@ -146,16 +141,7 @@ void cmd_rp(int argc, char **argv) {
 }
 
 void cmd_mmp(int argc, char **argv) {
-  if (argc != 2) {
-    printf("wrong number of arguments!\n");
-    return;
-  }
-  if (check_args_digit(argv)) {
-    printf("wrong type of arguments!\n");
-    return;
-  }
-  if (check_args_range(argv, ranges_period)) {
-    printf("wrong range of arguments!\n");
+  if check_args (argc, argv, 2, ranges_period) {
     return;
   }
 
@@ -163,16 +149,7 @@ void cmd_mmp(int argc, char **argv) {
 }
 
 void cmd_mta(int argc, char **argv) {
-  if (argc != 2) {
-    printf("wrong number of arguments!\n");
-    return;
-  }
-  if (check_args_digit(argv)) {
-    printf("wrong type of arguments!\n");
-    return;
-  }
-  if (check_args_range(argv, ranges_alarm)) {
-    printf("wrong range of arguments!\n");
+  if check_args (argc, argv, 2, ranges_alarm) {
     return;
   }
 
@@ -185,39 +162,39 @@ void cmd_rai(int argc, char **argv) {
 }
 
 void cmd_sac(int argc, char **argv) {
-  if (argc == 4) {
-    // Placeholder for command
-    printf("cmd_sac %d %d %d\n", atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
-  } else {
-    printf("wrong number of arguments!\n");
+  if check_args (argc, argv, 4, ranges_temp) {
+    return;
   }
+
+  // Placeholder for command
+  printf("cmd_sac %d %d %d\n", atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
 }
 
 void cmd_sat(int argc, char **argv) {
-  if (argc == 3) {
-    // Placeholder for command
-    printf("cmd_sat %d %d\n", atoi(argv[1]), atoi(argv[2]));
-  } else {
-    printf("wrong number of arguments!\n");
+  if check_args (argc, argv, 3, {ranges_temp[0], ranges_temp[0]}) {
+    return;
   }
+
+  // Placeholder for command
+  printf("cmd_sat %d %d\n", atoi(argv[1]), atoi(argv[2]));
 }
 
 void cmd_adac(int argc, char **argv) {
-  if (argc == 2) {
-    // Placeholder for command
-    printf("cmd_adac %d\n", atoi(argv[1]));
-  } else {
-    printf("wrong number of arguments!\n");
+  if check_args (argc, argv, 2, ranges_bool) {
+    return;
   }
+
+  // Placeholder for command
+  printf("cmd_adac %d\n", atoi(argv[1]));
 }
 
 void cmd_adat(int argc, char **argv) {
-  if (argc == 2) {
-    // Placeholder for command
-    printf("cmd_adat %d\n", atoi(argv[1]));
-  } else {
-    printf("wrong number of arguments!\n");
+  if check_args (argc, argv, 2, ranges_bool) {
+    return;
   }
+
+  // Placeholder for command
+  printf("cmd_adat %d\n", atoi(argv[1]));
 }
 
 void cmd_rts(int argc, char **argv) {
@@ -226,31 +203,30 @@ void cmd_rts(int argc, char **argv) {
 }
 
 void cmd_adbl(int argc, char **argv) {
-  if (argc == 2) {
-    // Placeholder for command
-    printf("cmd_adbl %d\n", atoi(argv[1]));
-  } else {
-    printf("wrong number of arguments!\n");
+  if check_args (argc, argv, 2, ranges_bool) {
+    return;
   }
+
+  // Placeholder for command
+  printf("cmd_adbl %d\n", atoi(argv[1]));
 }
 
 void cmd_adhb(int argc, char **argv) {
-  if (argc == 2) {
-    // Placeholder for command
-    printf("cmd_adhb %d\n", atoi(argv[1]));
-  } else {
-    printf("wrong number of arguments!\n");
+  if check_args (argc, argv, 2, ranges_bool) {
+    return;
   }
+
+  // Placeholder for command
+  printf("cmd_adhb %d\n", atoi(argv[1]));
 }
 
 void cmd_adcs(int argc, char **argv) {
-  if (argc == 2) {
-    // Placeholder for command
-    printf("cmd_adcs %d\n", atoi(argv[1]));
-  } else {
-
-    printf("wrong number of arguments!\n");
+  if check_args (argc, argv, 2, ranges_bool) {
+    return;
   }
+
+  // Placeholder for command
+  printf("cmd_adcs %d\n", atoi(argv[1]));
 }
 
 /*-------------------------------------------------------------------------+
