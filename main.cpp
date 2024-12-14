@@ -65,14 +65,9 @@ int main(void) {
 
   xQueue = xQueueCreate(3, sizeof(int32_t));
 
-  xTaskCreate(vTask1, "Task 1", 2 * configMINIMAL_STACK_SIZE, NULL, 1, NULL);
-  xTaskCreate(vTask2, "Task 2", 2 * configMINIMAL_STACK_SIZE, NULL, 2, NULL);
-
-  /* Start the created tasks running. */
-  vTaskStartScheduler();
-
-  /* Execution will only reach here if there was insufficient heap to
-  start the scheduler. */
-  for (;;)
-    ;
+  while (1) {
+    tm t = RTC::getDefaultTM();
+    printf("Current time: %d\n", t.tm_sec);
+    wait(1);
+  };
 }
