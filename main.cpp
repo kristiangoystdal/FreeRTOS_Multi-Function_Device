@@ -88,6 +88,9 @@ void check_cmd() {
 
   xQueue = xQueueCreate(3, sizeof(int32_t));
 
-  while (1)
-    ;
+  while (1) {
+    tm t = RTC::getDefaultTM();
+    printf("Current time: %d\n", t.tm_sec);
+    wait(1);
+  };
 }
