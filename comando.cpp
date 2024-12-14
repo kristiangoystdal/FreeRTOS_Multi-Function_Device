@@ -100,7 +100,7 @@ void cmd_rdt(int argc, char **argv) {
 }
 
 void cmd_sd(int argc, char **argv) {
-  if check_args (argc, argv, 4, ranges_dates) {
+  if (check_args(argc, argv, 4, ranges_dates)) {
     return;
   }
   // Placeholder for command
@@ -113,7 +113,7 @@ void cmd_rc(int argc, char **argv) {
 }
 
 void cmd_sc(int argc, char **argv) {
-  if check_args (argc, argv, 4, ranges_time) {
+  if (check_args(argc, argv, 4, ranges_time)) {
     return;
   }
 
@@ -141,7 +141,7 @@ void cmd_rp(int argc, char **argv) {
 }
 
 void cmd_mmp(int argc, char **argv) {
-  if check_args (argc, argv, 2, ranges_period) {
+  if (check_args(argc, argv, 2, ranges_period)) {
     return;
   }
 
@@ -149,7 +149,7 @@ void cmd_mmp(int argc, char **argv) {
 }
 
 void cmd_mta(int argc, char **argv) {
-  if check_args (argc, argv, 2, ranges_alarm) {
+  if (check_args(argc, argv, 2, ranges_alarm)) {
     return;
   }
 
@@ -162,7 +162,7 @@ void cmd_rai(int argc, char **argv) {
 }
 
 void cmd_sac(int argc, char **argv) {
-  if check_args (argc, argv, 4, ranges_temp) {
+  if (check_args(argc, argv, 4, ranges_temp)) {
     return;
   }
 
@@ -171,7 +171,9 @@ void cmd_sac(int argc, char **argv) {
 }
 
 void cmd_sat(int argc, char **argv) {
-  if check_args (argc, argv, 3, {ranges_temp[0], ranges_temp[0]}) {
+  int ranges_temp_double[2][2] = {{ranges_temp[0][0], ranges_temp[0][1]},
+                                  {ranges_temp[0][0], ranges_temp[0][1]}};
+  if (check_args(argc, argv, 3, ranges_temp_double)) {
     return;
   }
 
@@ -180,7 +182,7 @@ void cmd_sat(int argc, char **argv) {
 }
 
 void cmd_adac(int argc, char **argv) {
-  if check_args (argc, argv, 2, ranges_bool) {
+  if (check_args(argc, argv, 2, ranges_bool)) {
     return;
   }
 
@@ -189,7 +191,7 @@ void cmd_adac(int argc, char **argv) {
 }
 
 void cmd_adat(int argc, char **argv) {
-  if check_args (argc, argv, 2, ranges_bool) {
+  if (check_args(argc, argv, 2, ranges_bool)) {
     return;
   }
 
@@ -203,7 +205,7 @@ void cmd_rts(int argc, char **argv) {
 }
 
 void cmd_adbl(int argc, char **argv) {
-  if check_args (argc, argv, 2, ranges_bool) {
+  if (check_args(argc, argv, 2, ranges_bool)) {
     return;
   }
 
@@ -212,7 +214,7 @@ void cmd_adbl(int argc, char **argv) {
 }
 
 void cmd_adhb(int argc, char **argv) {
-  if check_args (argc, argv, 2, ranges_bool) {
+  if (check_args(argc, argv, 2, ranges_bool)) {
     return;
   }
 
@@ -221,7 +223,7 @@ void cmd_adhb(int argc, char **argv) {
 }
 
 void cmd_adcs(int argc, char **argv) {
-  if check_args (argc, argv, 2, ranges_bool) {
+  if (check_args(argc, argv, 2, ranges_bool)) {
     return;
   }
 

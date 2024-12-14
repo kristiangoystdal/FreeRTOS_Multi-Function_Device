@@ -1,4 +1,8 @@
+#include "C12832.h"
 #include "FreeRTOS.h"
+#include "LCD/LCD.h"
+#include "LM75B.h"
+#include "RTC.h"
 #include "mbed.h"
 #include "queue.h"
 #include "task.h"
@@ -7,19 +11,31 @@ DigitalOut led1(LED1);
 DigitalOut led2(LED2);
 Serial pc(USBTX, USBRX);
 
-QueueHandle_t xQueue;
+LM75B sensor(p28, p27);
 
 extern void monitor(void);
 
-void vTask1(void *pvParameters) {
-  int32_t lValueToSend;
-  BaseType_t xStatus;
-  led1 = 1;
-  for (;;) {
-    lValueToSend = 201;
-    xStatus = xQueueSend(xQueue, &lValueToSend, 0);
-    monitor(); // does not return
-    led1 = !led1;
+QueueHandle_t xQueue;
+
+void check_temperature(void);
+void check_rtc(void);
+void check_lcd(void);
+void check_cmd(void);
+
+int main() {
+  int testNumber = 2; // TODO: Change this value for do the other tests
+  switch (testNumber) {
+  case 0:
+    check_temperature();
+    break;
+  case 1:
+    check_rtc();
+    break;
+  case 2:
+    check_cmd();
+    break;
+  default:
+    break;
   }
 }
 
@@ -27,13 +43,11 @@ void vTask2(void *pvParameters) {
   int32_t lReceivedValue;
   BaseType_t xStatus;
 
-  led2 = 1;
-  printf("Hello from mbed -- FreeRTOS / cmd\n");
-  for (;;) {
-    //        vTaskDelay( 1000 );
-    xStatus = xQueueReceive(xQueue, &lReceivedValue, 1000);
-    if (xStatus == pdPASS) {
-      printf("Received = %d", lReceivedValue);
+      while (1)
+        ;
+
+    } else {
+      error("Device not detected!\n");
     }
     led2 = !led2;
   }
@@ -61,5 +75,4 @@ int main(void) {
   start the scheduler. */
   for (;;)
     ;
-  return 0;
 }
