@@ -1,5 +1,6 @@
+#include "C12832.h"
 #include "FreeRTOS.h"
-#include "LCD.h"
+#include "LCD/LCD.h"
 #include "LM75B.h"
 #include "RTC.h"
 #include "mbed.h"
@@ -11,13 +12,15 @@ DigitalOut led2(LED2);
 Serial pc(USBTX, USBRX);
 
 LM75B sensor(p28, p27);
-Serial pc(USBTX, USBRX);
 
 DigitalOut led(LED1);
+
+QueueHandle_t xQueue;
 
 void check_temperature(void);
 void check_rtc(void);
 void check_lcd(void);
+void check_cmd(void);
 
 int main() {
   int testNumber = 2; // TODO: Change this value for do the other tests
@@ -44,12 +47,8 @@ void check_temperature() {
     if (sensor.open()) {
       printf("Device detected!\n");
 
-      while (1) {
-        lcd.cls();
-        lcd.locate(0, 3);
-        lcd.printf("Temp = %.3f\n", sensor.temp());
-        wait(1.0);
-      }
+      while (1)
+        ;
 
     } else {
       error("Device not detected!\n");
