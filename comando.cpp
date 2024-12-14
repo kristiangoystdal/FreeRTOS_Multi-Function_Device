@@ -7,8 +7,6 @@
 | Data:  Nov 2002
 ***************************************************************************/
 #include "FreeRTOS.h"
-// #include "global_queues.h"
-
 #include "queue.h"
 #include <ctype.h>
 #include <stdio.h>
@@ -38,7 +36,7 @@ void cmd_test(int argc, char **argv) {
 +--------------------------------------------------------------------------*/
 void cmd_send(int argc, char **argv) {
   int32_t lValueToSend;
-  // BaseType_t xStatus;
+  //   BaseType_t xStatus;
 
   if (argc == 2) {
     printf("msg: %s\n", argv[1]);
@@ -66,15 +64,15 @@ void cmd_rdt(int argc, char **argv) {
 }
 
 void cmd_sd(int argc, char **argv) {
+  printf("%d\n", argc);
   if (argc == 4) {
     if (check_args_digit(argv)) {
+      // Placeholder for command
       printf("cmd_sd %d %d %d\n", atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
     } else {
       printf("wrong type of arguments!\n");
     }
-    // Placeholder for command
   } else {
-
     printf("wrong number of arguments!\n");
   }
 }
