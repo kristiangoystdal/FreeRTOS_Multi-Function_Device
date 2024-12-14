@@ -7,11 +7,10 @@
 | Data:  Nov 2002
 ***************************************************************************/
 #include "FreeRTOS.h"
+#include "GlobalQueues.h"
 #include "queue.h"
 #include <stdio.h>
 #include <stdlib.h>
-
-extern QueueHandle_t xQueue;
 
 /*-------------------------------------------------------------------------+
 | Function: cmd_sair - termina a aplicacao
