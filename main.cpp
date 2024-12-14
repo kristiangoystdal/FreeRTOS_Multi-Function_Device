@@ -1,9 +1,7 @@
 #include "mbed.h"
 #include "RTC.h"
 #include "LM75B.h"
-#include "C12832.h"
-
-C12832 lcd(p5, p7, p6, p8, p11);
+#include "LCD.h"
 
 LM75B sensor(p28,p27);
 Serial pc(USBTX,USBRX);
@@ -31,14 +29,16 @@ int main ()
 void check_temperature() {
     pc.baud(115200);
     while (1) {
+        setup_lcd();
         //Try to open the LM75B
         if (sensor.open()) {
             printf("Device detected!\n");
 
             while (1) {
-                lcd.cls();
-                lcd.locate(0,3);
-                lcd.printf("Temp = %.3f\n", sensor.temp());
+                write_time(1,2,3);
+                write_alarm_enables(true, true);
+                write_temperature();
+                draw_bubble_level();
                 wait(1.0);
             }
 
@@ -79,3 +79,4 @@ void check_rtc()
 
     while(1);
 }
+

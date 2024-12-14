@@ -6,9 +6,12 @@
 | Autor: Carlos Almeida (IST)
 | Data:  Nov 2002
 ***************************************************************************/
+#include "FreeRTOS.h"
+#include "queue.h"
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "GlobalQueues.h"
+#include <string.h>
 
 /*-------------------------------------------------------------------------+
 | Function: cmd_sair - termina a aplicacao
@@ -36,12 +39,12 @@ void cmd_test (int argc, char** argv)
 void cmd_send (int argc, char** argv)
 {
 int32_t lValueToSend;
-BaseType_t xStatus;
+//BaseType_t xStatus;
 
     if (argc == 2) {
         printf ("msg: %s\n", argv[1]);
         lValueToSend = atoi(argv[1]);
-        xStatus = xQueueSend( xQueue, &lValueToSend, 0 );
+ //       xStatus = xQueueSend( xQueue, &lValueToSend, 0 );
     }
     else {
         printf ("wrong number of arguments!\n");
