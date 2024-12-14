@@ -13,7 +13,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 /*-------------------------------------------------------------------------+
 | Headers of command functions
 +--------------------------------------------------------------------------*/
@@ -52,39 +51,46 @@ struct command_d {
   char *cmd_name;
   char *cmd_help;
 } const commands[] = {
-    {cmd_sos, "sos", "                  help"},
-    {cmd_send, "send", "<msg>            send message"},
-    {cmd_sair, "sair", "                 sair"},
-    {cmd_test, "test", "<arg1> <arg2>    test command"},
-    {cmd_rdt, "rdt", "                   read date/time (dd/MM/YYYY hh:mm:ss)"},
-    {cmd_sd, "sd", "<day> <month> <year>   set date (day, month, year)"},
-    {cmd_rc, "rc", "                    read clock"},
-    {cmd_sc, "sc", "<hours> <minutes> <seconds>   set clock"},
-    {cmd_rt, "rt", "                    read temperature"},
+    {cmd_sos, "sos", "                            help"},
+    {cmd_send, "send", "<msg>                       send message"},
+    {cmd_sair, "sair", "                            sair"},
+    {cmd_test, "test", "<arg1> <arg2>               test command"},
+    {cmd_rdt, "rdt",
+     "                            read date/time (dd/MM/YYYY hh:mm:ss)"},
+    {cmd_sd, "sd", "<day> <month> <year>        set date (day, month, year)"},
+    {cmd_rc, "rc", "                            read clock"},
+    {cmd_sc, "sc", "<hours> <minutes> <seconds> set clock"},
+    {cmd_rt, "rt", "                            read temperature"},
     {cmd_rmm, "rmm",
-     "                   read maximum and minimum of temperature"},
+     "                            read maximum and minimum of temperature"},
     {cmd_cmm, "cmm",
-     "                   clear maximum and minimum of temperature"},
-    {cmd_rp, "rp", "                    read parameters (pmon, tala)"},
+     "                            clear maximum and minimum of temperature"},
+    {cmd_rp, "rp", "                            read parameters (pmon, tala)"},
     {cmd_mmp, "mmp",
-     "<p>                modify monitoring period (seconds - 0 deactivate)"},
-    {cmd_mta, "mta", "<t>                modify time alarm (seconds)"},
+     "<p>                         modify monitoring period (seconds - 0 "
+     "deactivate)"},
+    {cmd_mta, "mta", "<t>                         modify time alarm (seconds)"},
     {cmd_rai, "rai",
-     "                   read alarm info (alarm clock, tlow, thigh, "
+     "                            read alarm info (alarm clock, tlow, thigh, "
      "active/inactive)"},
     {cmd_sac, "sac",
-     "<h> <m> <s>        set alarm clock (hours, minutes, seconds)"},
+     "<h> <m> <s>                 set alarm clock (hours, minutes, seconds)"},
     {cmd_sat, "sat",
-     "<tlow> <thigh>     set alarm temperature thresholds (tlow, thigh)"},
-    {cmd_adac, "adac", "1/0              activate/deactivate alarm clock"},
+     "<tlow> <thigh>              set alarm temperature thresholds (tlow, "
+     "thigh)"},
+    {cmd_adac, "adac",
+     "1/0                         activate/deactivate alarm clock"},
     {cmd_adat, "adat",
-     "1/0              activate/deactivate alarm temperature"},
+     "1/0                         activate/deactivate alarm temperature"},
     {cmd_rts, "rts",
-     "                   read task state (Bubble Level, Hit Bit, Config "
-     "Sound)"},
-    {cmd_adbl, "adbl", "1/0              activate/deactivate Bubble Level"},
-    {cmd_adhb, "adhb", "1/0              activate/deactivate Hit Bit"},
-    {cmd_adcs, "adcs", "1/0              activate/deactivate Config Sound"},
+     "                            read task state (Bubble Level, Hit Bit, "
+     "Config Sound)"},
+    {cmd_adbl, "adbl",
+     "1/0                         activate/deactivate Bubble Level"},
+    {cmd_adhb, "adhb",
+     "1/0                         activate/deactivate Hit Bit"},
+    {cmd_adcs, "adcs",
+     "1/0                         activate/deactivate Config Sound"},
 };
 
 #define NCOMMANDS (sizeof(commands) / sizeof(struct command_d))
@@ -168,7 +174,7 @@ void monitor(void) {
       else
         printf("%s", InvalMsg);
     } /* if my_getline */
-  }   /* forever */
+  } /* forever */
 }
 
 // #endif //notdef
