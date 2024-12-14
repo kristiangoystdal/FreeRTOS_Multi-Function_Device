@@ -9,8 +9,11 @@
 #include "FreeRTOS.h"
 #include "GlobalQueues.h"
 #include "queue.h"
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 
 /*-------------------------------------------------------------------------+
 | Function: cmd_sair - termina a aplicacao
