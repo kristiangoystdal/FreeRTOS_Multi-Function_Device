@@ -46,6 +46,17 @@ void cmd_send(int argc, char **argv) {
   }
 }
 
+bool check_args_digit(char **argv) {
+  for (int i = 1; i < 4; i++) {
+    for (int j = 0; j < strlen(argv[i]); j++) {
+      if (!isdigit(argv[i][j])) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 void cmd_rdt(int argc, char **argv) {
   // Placeholder for command
   printf("cmd_rdt\n");
@@ -53,9 +64,14 @@ void cmd_rdt(int argc, char **argv) {
 
 void cmd_sd(int argc, char **argv) {
   if (argc == 4) {
+    if (check_args_digit(argv)) {
+      printf("cmd_sd %d %d %d\n", atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
+    } else {
+      printf("wrong type of arguments!\n");
+    }
     // Placeholder for command
-    printf("cmd_sd %d %d %d\n", atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
   } else {
+
     printf("wrong number of arguments!\n");
   }
 }
@@ -181,6 +197,7 @@ void cmd_adcs(int argc, char **argv) {
     // Placeholder for command
     printf("cmd_adcs %d\n", atoi(argv[1]));
   } else {
+
     printf("wrong number of arguments!\n");
   }
 }
