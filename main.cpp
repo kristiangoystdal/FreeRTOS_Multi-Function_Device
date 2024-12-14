@@ -1,4 +1,5 @@
 #include "C12832.h"
+#include "CMD/cmd.h"
 #include "FreeRTOS.h"
 #include "LCD/LCD.h"
 #include "LM75B.h"
@@ -65,9 +66,14 @@ int main(void) {
 
   xQueue = xQueueCreate(3, sizeof(int32_t));
 
+  xTaskCreate(vTask1, "Task 1", 2 * configMINIMAL_STACK_SIZE, NULL, 1, NULL);
+  xTaskCreate(vTask2, "Task 2", 2 * configMINIMAL_STACK_SIZE, NULL, 2, NULL);
+
+  vTaskStartScheduler();
+
   while (1) {
     tm t = RTC::getDefaultTM();
-    printf("Current time: %d\n", t.tm_sec);
+    // printf("Current time: %d\n", t.tm_sec);
     wait(1);
   };
 }
