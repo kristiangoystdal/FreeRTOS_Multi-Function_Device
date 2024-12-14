@@ -1,21 +1,32 @@
 #include "LCD.h"
 #include "MMA7660.h"
+#include "LM75B.h"
 
 MMA7660 MMA(p28, p27); //I2C Accelerometer
 C12832 lcd(p5, p7, p6, p8, p11);
+LM75B sensor(p28,p27);
 
 int bubble_x=0, bubble_y=0;
 
 void setup_lcd(void){
     lcd.cls();
     lcd.locate(0,0);
+    printf("LCD OK");
 }
 
-void check_accelerometer(void){
+void setup_accelerometer(void){
     if(MMA.testConnection()){
         printf("Accelerometer OK \n");
     } else {
         printf("Accelerometer NOT OK");
+    }
+}
+
+void setup_temp_sensor(void){
+    if(sensor.open()){
+        printf("Temperature sensor OK");
+    }else{
+        printf("Temperature sensor NOT OK");
     }
 }
 
@@ -49,6 +60,6 @@ void write_alarm_enables(bool clock_alarm_enabled, bool temp_alarm_enabled){
 
 void write_temperature(void){
     lcd.locate(0,22);
-    lcd.printf("Temp = 69");
+    lcd.printf("Temp = %.1f",sensor.temp());
 }
 

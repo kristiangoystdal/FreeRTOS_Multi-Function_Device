@@ -7,7 +7,9 @@
 
 void setup_lcd(void);
 
-void check_accelerometer(void);
+void setup_accelerometer(void);
+
+void setup_temp_sensor(void);
 
 void write_time(int hours, int minutes, int seconds);
 
