@@ -1,10 +1,22 @@
 #include "LCD.h"
+#include "MMA7660.h"
 
+MMA7660 MMA(p28, p27); //I2C Accelerometer
 C12832 lcd(p5, p7, p6, p8, p11);
+
+int bubble_x=0, bubble_y=0;
 
 void setup_lcd(void){
     lcd.cls();
     lcd.locate(0,0);
+}
+
+void check_accelerometer(void){
+    if(MMA.testConnection()){
+        printf("Accelerometer OK \n");
+    } else {
+        printf("Accelerometer NOT OK");
+    }
 }
 
 void write_time(int hours, int minutes, int seconds){
@@ -13,8 +25,13 @@ void write_time(int hours, int minutes, int seconds){
 }
 
 void draw_bubble_level(void){
-    lcd.line(95,0,95,31,1);
-    lcd.circle(113, 16, 3, 1);
+        lcd.fillrect(95, 0, 127, 31, 0);
+        bubble_x = (bubble_x + MMA.x() * 32.0)/2.0;
+        bubble_y = (bubble_y -(MMA.y() * 16.0))/2.0;
+        if(bubble_x>-16){
+            lcd.fillcircle(bubble_x+111, bubble_y+15, 3, 1);
+        }
+        lcd.fillrect(93,0,95,31,1);
 }
 
 void write_alarm_enables(bool clock_alarm_enabled, bool temp_alarm_enabled){
@@ -30,7 +47,7 @@ void write_alarm_enables(bool clock_alarm_enabled, bool temp_alarm_enabled){
     }
 }
 
-void write_temperature(){
+void write_temperature(void){
     lcd.locate(0,22);
     lcd.printf("Temp = 69");
 }
