@@ -1,4 +1,12 @@
+#include "FreeRTOS.h"
+#include "queue.h"
+#include "task.h"
+#include <cstdio>
 
+
+// Assuming led1 and led2 are defined elsewhere in your code
+extern int led1;
+extern int led2;
 
 void vTask1(void *pvParameters) {
   int32_t lValueToSend;
