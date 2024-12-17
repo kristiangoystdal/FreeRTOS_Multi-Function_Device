@@ -8,6 +8,22 @@ namespace max_min_task {
 
   static MaxMinMeasure_t xMaxMin;
 
+  void sendMaxMin(QueueHandle_t xQueueConsole) {
+    // TODO: Send to console
+  }
+
+  void updateMaxMin(MaxMinMessage_t xMessage) {
+    if(xMaxMin.xMax.xTemp < xMessage.xTemp) {
+      xMaxMin.xMax.xTime = xMessage.xTime;
+      xMaxMin.xMax.xTemp = xMessage.xTemp;
+    }
+
+    if(xMaxMin.xMin.xTemp > xMessage.xTemp) {
+      xMaxMin.xMin.xTime = xMessage.xTime;
+      xMaxMin.xMin.xTemp = xMessage.xTemp;
+    }
+  }
+
   void vMaxMinInitialize(void) {
     xMaxMin.xMax.xTime = 0;
     xMaxMin.xMax.xTemp = -FLT_MAX;
@@ -27,22 +43,6 @@ namespace max_min_task {
       } else {
         updateMaxMin(xMessage);
       }
-    }
-  }
-
-  void sendMaxMin(QueueHandle_t xQueueConsole) {
-    // TODO: Send to console
-  }
-
-  void updateMaxMin(MaxMinMessage_t xMessage) {
-    if(xMaxMin.xMax.xTemp < xMessage.xTemp) {
-      xMaxMin.xMax.xTime = xMessage.xTime;
-      xMaxMin.xMax.xTemp = xMessage.xTemp;
-    }
-
-    if(xMaxMin.xMin.xTemp > xMessage.xTemp) {
-      xMaxMin.xMin.xTime = xMessage.xTime;
-      xMaxMin.xMin.xTemp = xMessage.xTemp;
     }
   }
 

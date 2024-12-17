@@ -4,6 +4,8 @@
 #include "LCD/LCD.h"
 #include "LM75B.h"
 #include "RTC.h"
+#include "alarm_task.hpp"
+#include "lcd_task.hpp"
 #include "mbed.h"
 #include "queue.h"
 #include "task.h"
@@ -27,6 +29,7 @@ void check_rtc(void);
 void check_lcd(void);
 void check_cmd(void);
 void check_tasks(void);
+QueueHandle_t createQueue(UBaseType_t uxSize, UBaseType_t uxType);
 
 int main() {
   pc.baud(115200);
@@ -114,8 +117,8 @@ void check_tasks() {
   QueueHandle_t xQueueLCD = createQueue(LCD_TASK_QUEUE_SIZE, sizeof(lcd_task::LCDMessage_t));
   QueueHandle_t xQueueConsole = createQueue(CONSOLE_TASK_QUEUE_SIZE, 100); // TODO: Think about this
 
-  QueueHandle_t [4] pxReadTemperatureParameters = {xQueueMaxMin, xQueueAlarm, xQueueLCD, xQueueConsole}; 
-  QueueHandle_t [2] pxMaxMinParameters = {xQueueMaxMin, xQueueConsole}; 
+  QueueHandle_t pxReadTemperatureParameters [4] = {xQueueMaxMin, xQueueAlarm, xQueueLCD, xQueueConsole}; 
+  QueueHandle_t pxMaxMinParameters [2] = {xQueueMaxMin, xQueueConsole}; 
 
   configuration::vConfigInitializer();
   max_min_task::vMaxMinInitialize();
@@ -132,6 +135,6 @@ QueueHandle_t createQueue(UBaseType_t uxSize, UBaseType_t uxType) {
   QueueHandle_t xQueue = xQueueCreate(uxSize, uxType);
   if (xQueue == NULL) {
     printf("Failed to create the queue\n");
-    return;
   }
+  return xQueue;
 }
