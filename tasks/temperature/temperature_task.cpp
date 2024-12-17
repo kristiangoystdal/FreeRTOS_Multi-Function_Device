@@ -1,17 +1,20 @@
 
-#include "global_structures.h"
 #include "configuration.hpp"
 #include "LM75B.h"
-#include <time.h>
 #include "alarm_task.hpp"
 #include "max_min_task.hpp"
 #include "lcd_task.hpp"
+#include "FreeRTOS.h"
+#include "queue.h"
 
 namespace temperature_task {
 
   LM75B sensor(p28,p27);
   
   void vReadTemperature(void* pvParameters) {
+    QueueHandle_t xQueueMaxMin = (QueueHandle_t)pvParameters[0];
+    QueueHandle_t xQueueAlarm = (QueueHandle_t)pvParameters[1];
+    QueueHandle_t xQueueLCD = (QueueHandle_t)pvParameters[2];
     for(;;) {
       TickType_t xPMON = configuration::xConfigGetPMON();
       xPMON = xPMON > 0 ? xPMON : portMAX_DELAY;
