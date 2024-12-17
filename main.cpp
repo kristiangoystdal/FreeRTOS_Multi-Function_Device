@@ -24,6 +24,7 @@ void check_lcd(void);
 void check_cmd(void);
 
 int main() {
+  pc.baud(115200);
   int testNumber = 2; // TODO: Change this value for do the other tests
   switch (testNumber) {
   case 0:
@@ -40,9 +41,11 @@ int main() {
   }
 }
 
-void vTask2(void *pvParameters) {
-  int32_t lReceivedValue;
-  BaseType_t xStatus;
+void check_temperature() {
+  while (1) {
+    // Try to open the LM75B
+    if (sensor.open()) {
+      printf("Device detected!\n");
 
       while (1)
         ;
@@ -58,7 +61,29 @@ int main(void) {
   /* Perform any hardware setup necessary. */
   //    prvSetupHardware();
 
-  pc.baud(115200);
+void displayFunction(void) {
+  time_t seconds = time(NULL);
+  printf("%s", ctime(&seconds));
+}
+
+void alarmFunction(void) { error("Not most useful alarm function"); }
+
+void check_rtc() {
+  set_time(1256729737); // Set time to Wed, 28 Oct 2009 11:35:37
+
+  tm t = RTC::getDefaultTM();
+  t.tm_sec = 5;
+  t.tm_min = 36;
+
+  RTC::alarm(&alarmFunction, t);
+  RTC::attach(&displayFunction, RTC::Second);
+  RTC::attach(&ledFunction, RTC::Minute);
+
+  while (1)
+    ;
+}
+
+void check_cmd() {
 
   init_TaskScheduler(&xQueue);
 

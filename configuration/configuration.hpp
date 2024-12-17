@@ -11,11 +11,11 @@ namespace configuration {
 
   void vConfigInitializer();
 
-  BaseType_t xConfigGetPMON();
-  BaseType_t xConfigGetTALA();
+  TickType_t xConfigGetPMON();
+  TickType_t xConfigGetTALA();
   
-  void vConfigSetPMON(BaseType_t value);
-  void vConfigSetTALA(BaseType_t value);
+  void vConfigSetPMON(TickType_t value);
+  void vConfigSetTALA(TickType_t value);
 
 }
 
