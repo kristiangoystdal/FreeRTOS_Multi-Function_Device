@@ -14,8 +14,8 @@ namespace configuration {
   TickType_t xConfigGetPMON();
   TickType_t xConfigGetTALA();
   
-  void vConfigSetPMON(TickType_t value);
-  void vConfigSetTALA(TickType_t value);
+  void vConfigSetPMON(int seconds);
+  void vConfigSetTALA(int seconds);
 
 }
 

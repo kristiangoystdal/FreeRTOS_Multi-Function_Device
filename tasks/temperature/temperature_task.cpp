@@ -10,13 +10,14 @@
 
 namespace temperature_task {
 
-  LM75B sensor(p28,p27);
+  static LM75B sensor(p28,p27);
   
-  void vReadTemperature(void* pvParameters) {
+  void vReadTemperatureTask(void* pvParameters) {
     QueueHandle_t* pxQueueArray = (QueueHandle_t*)pvParameters;
     QueueHandle_t xQueueMaxMin = (QueueHandle_t)pxQueueArray[0];
     QueueHandle_t xQueueAlarm = (QueueHandle_t)pxQueueArray[1];
     QueueHandle_t xQueueLCD = (QueueHandle_t)pxQueueArray[2];
+    QueueHandle_t xQueueConsole = (QueueHandle_t)pxQueueArray[3];
     for(;;) {
       TickType_t xPMON = configuration::xConfigGetPMON();
       xPMON = xPMON > 0 ? xPMON : portMAX_DELAY;
@@ -26,6 +27,7 @@ namespace temperature_task {
       time_t xMeasureTime = time(NULL);
 
       max_min_task::MaxMinMessage_t xMaxMinMessage;
+      xMaxMinMessage.action = max_min_task::Set;
       xMaxMinMessage.xTime = xMeasureTime;
       xMaxMinMessage.xTemp = xTemp;
       BaseType_t xStatus = xQueueSend(xQueueMaxMin, &xMaxMinMessage, 0);
@@ -48,6 +50,10 @@ namespace temperature_task {
       if(xStatus == errQUEUE_FULL){
         printf("ERROR: Queue full: Temperature -> Alarm");
       }
+
+      if(ulNotificationValue > 0) {
+        // TODO: Send to console
+      } 
     }
   }
 }

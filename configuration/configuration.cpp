@@ -5,11 +5,11 @@
 
 namespace configuration {
 
-  SemaphoreHandle_t xMutexPMON;
-  SemaphoreHandle_t xMutexTALA;
+  static SemaphoreHandle_t xMutexPMON;
+  static SemaphoreHandle_t xMutexTALA;
 
-  TickType_t xPMON;
-  TickType_t xTALA;
+  static TickType_t xPMON;
+  static TickType_t xTALA;
   
   void vConfigInitializer() {
     xMutexPMON = xSemaphoreCreateMutex();
@@ -22,8 +22,8 @@ namespace configuration {
      printf("Critical error when creating TALA's Mutex!");
     }
 
-    xPMON = PMON_DEFAULT_VALUE;
-    xTALA = TALA_DEFAULT_VALUE;
+    xPMON = pdMS_TO_TICKS(1000*PMON_DEFAULT_VALUE);
+    xTALA = pdMS_TO_TICKS(1000*TALA_DEFAULT_VALUE);
   }
 
   TickType_t xConfigGetPMON() {
@@ -40,15 +40,17 @@ namespace configuration {
     return xTALAValue;
   }
   
-  void vConfigSetPMON(TickType_t value) {
+  void vConfigSetPMON(int seconds) {
+    TickType_t ticks = pdMS_TO_TICKS(1000*seconds);
     xSemaphoreTake(xMutexPMON, portMAX_DELAY);
-    xPMON = value;
+    xPMON = ticks;
     xSemaphoreGive(xMutexPMON);
   }
 
-  void vConfigSetTALA(TickType_t value) {
+  void vConfigSetTALA(int seconds) {
+    TickType_t ticks = pdMS_TO_TICKS(1000*seconds);
     xSemaphoreTake(xMutexTALA, portMAX_DELAY);
-    xTALA = value;
+    xTALA = ticks;
     xSemaphoreGive(xMutexTALA);
   }
 
