@@ -7,6 +7,10 @@
 #include "mbed.h"
 #include "queue.h"
 #include "task.h"
+#include "tasks_macros.h"
+#include "temperature_task.hpp"
+#include "max_min_task.hpp"
+#include "configuration.hpp"
 
 DigitalOut led1(LED1);
 DigitalOut led2(LED2);
@@ -22,6 +26,7 @@ void check_temperature(void);
 void check_rtc(void);
 void check_lcd(void);
 void check_cmd(void);
+void check_tasks(void);
 
 int main() {
   pc.baud(115200);
@@ -35,6 +40,9 @@ int main() {
     break;
   case 2:
     check_cmd();
+    break;
+  case 3:
+    check_tasks();
     break;
   default:
     break;
@@ -98,4 +106,33 @@ void check_cmd() {
     printf("Current time: %d\n", t.tm_sec);
     wait(1);
   };
+}
+
+void check_tasks() {
+
+  QueueHandle_t xQueueMaxMin = createQueue(MAX_MIN_TASK_QUEUE_SIZE, sizeof(max_min_task::MaxMinMessage_t));
+  QueueHandle_t xQueueAlarm = createQueue(ALARM_TASK_QUEUE_SIZE, sizeof(alarm_task::AlarmMessage_t));
+  QueueHandle_t xQueueLCD = createQueue(LCD_TASK_QUEUE_SIZE, sizeof(lcd_task::LCDMessage_t));
+  QueueHandle_t xQueueConsole = createQueue(CONSOLE_TASK_QUEUE_SIZE, 100); // TODO: Think about this
+
+  QueueHandle_t [4] pxReadTemperatureParameters = {xQueueMaxMin, xQueueAlarm, xQueueLCD, xQueueConsole}; 
+  QueueHandle_t [2] pxMaxMinParameters = {xQueueMaxMin, xQueueConsole}; 
+
+  configuration::vConfigInitializer();
+  max_min_task::vMaxMinInitialize();
+
+  TaskHandle_t xReadTemperatureTaskHandler;
+  xTaskCreate(temperature_task::vReadTemperatureTask, "Task Read Temperature", 2 * configMINIMAL_STACK_SIZE, &pxReadTemperatureParameters, TEMPERATURE_TASK_PRIORITY, &xReadTemperatureTaskHandler);
+  xTaskCreate(max_min_task::vMaxMinTask, "Task Max Min", 2 * configMINIMAL_STACK_SIZE, &pxMaxMinParameters, MAX_MIN_TASK_PRIORITY, NULL);
+
+  vTaskStartScheduler();
+  while(1);
+}
+
+QueueHandle_t createQueue(UBaseType_t uxSize, UBaseType_t uxType) {
+  QueueHandle_t xQueue = xQueueCreate(uxSize, uxType);
+  if (xQueue == NULL) {
+    printf("Failed to create the queue\n");
+    return;
+  }
 }
