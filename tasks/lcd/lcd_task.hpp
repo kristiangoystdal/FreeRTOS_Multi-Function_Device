@@ -2,7 +2,6 @@
 #ifndef __LCD_TASK_H
 #define __LCD_TASK_H
 
-#include "FreeRTOS.h"
 #include <time.h>
 
 namespace lcd_task {
