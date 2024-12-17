@@ -4,6 +4,8 @@
 #include "LM75B.h"
 #include <time.h>
 #include "alarm_task.hpp"
+#include "max_min_task.hpp"
+#include "lcd_task.hpp"
 
 namespace temperature_task {
 
@@ -21,15 +23,15 @@ namespace temperature_task {
       max_min_task::MaxMinMessage_t xMaxMinMessage;
       xMaxMinMessage.xTime = xMeasureTime;
       xMaxMinMessage.xTemp = xTemp;
-      BaseType_t xStatus = xQueueSend(xQueueMaxMin, &xTemp, 0);
+      BaseType_t xStatus = xQueueSend(xQueueMaxMin, &xMaxMinMessage, 0);
       if(xStatus == errQUEUE_FULL){
         printf("ERROR: Queue full: Temperature -> Max/Min");
       }
 
       lcd_task::LCDMessage_t xLCDMessage;
-      xLCDMessage.xDataType = lcd_task::LCDDataType::Temperature;
-      xLCDMessage.xLCDData = xTemp;
-      BaseType_t xStatus = xQueueSend(xQueueLCD, &xTemp, 0);
+      xLCDMessage.xDataType = lcd_task::Temperature;
+      xLCDMessage.xLCDData.xTemperature = xTemp;
+      xStatus = xQueueSend(xQueueLCD, &xLCDMessage, 0);
       if(xStatus == errQUEUE_FULL){
         printf("ERROR: Queue full: Temperature -> LCD");
       }
@@ -37,7 +39,7 @@ namespace temperature_task {
       alarm_task::AlarmMessage_t xAlarmMessage;
       xAlarmMessage.xTime = xMeasureTime;
       xAlarmMessage.xTemp = xTemp;
-      BaseType_t xStatus = xQueueSend(xQueueAlarm, &xTemp, 0);
+      xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
       if(xStatus == errQUEUE_FULL){
         printf("ERROR: Queue full: Temperature -> Alarm");
       }
