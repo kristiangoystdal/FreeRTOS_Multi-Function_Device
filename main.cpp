@@ -24,6 +24,7 @@ void check_lcd(void);
 void check_cmd(void);
 
 int main() {
+  pc.baud(115200);
   int testNumber = 2; // TODO: Change this value for do the other tests
   switch (testNumber) {
   case 0:
@@ -42,7 +43,6 @@ int main() {
 }
 
 void check_temperature() {
-  pc.baud(115200);
   while (1) {
     // Try to open the LM75B
     if (sensor.open()) {
@@ -85,7 +85,6 @@ void check_rtc() {
 }
 
 void check_cmd() {
-  pc.baud(115200);
 
   init_TaskScheduler(&xQueue);
 
