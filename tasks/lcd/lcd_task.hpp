@@ -7,20 +7,20 @@
 
 namespace lcd_task {
 
-  typedef enum class LCDDataType {
+  typedef enum LCDDataType {
     Timestamp,
     Alarm,
     Temperature
-  };
+  } LCDDataType;
 
   typedef union LCDData {
     time_t xTime;
     char cAlarmLetter;
     float xTemperature;
-  };
+  } LCDData;
 
   typedef struct {
-    BaseType_t xDataType;
+    LCDDataType xDataType;
     LCDData xLCDData;
   } LCDMessage_t;
   
