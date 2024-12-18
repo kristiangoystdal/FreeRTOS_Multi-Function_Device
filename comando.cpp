@@ -7,6 +7,11 @@
 | Data:  Nov 2002
 ***************************************************************************/
 #include "FreeRTOS.h"
+#include "LM75B.h"
+#include "alarm_task.hpp"
+#include "configuration.hpp"
+#include "lcd_task.hpp"
+#include "max_min_task.hpp"
 #include "queue.h"
 #include <ctype.h>
 #include <stdio.h>
@@ -128,6 +133,16 @@ void cmd_rt(int argc, char **argv) {
 void cmd_rmm(int argc, char **argv) {
   // Placeholder for command
   printf("cmd_rmm\n");
+  max_min_task::MaxMinMessage_t xMaxMinMessage;
+  xMaxMinMessage.action = max_min_task::Get;
+  xMaxMinMessage.xTime = xMeasureTime;
+  xMaxMinMessage.xTemp = xTemp;
+  BaseType_t xStatus = xQueueSend(xQueueMaxMin, &xMaxMinMessage, 0);
+  if (xStatus == errQUEUE_FULL) {
+    printf("ERROR: Queue full: Temperature -> Max/Min");
+  } else {
+    printf("Pass\n");
+  }
 }
 
 void cmd_cmm(int argc, char **argv) {
