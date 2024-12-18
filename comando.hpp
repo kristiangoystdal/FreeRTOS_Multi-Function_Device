@@ -10,6 +10,8 @@ void vCommandInitialize(QueueHandle_t pxQueueArray[4]);
 void vCommandTask(void *pvParameters);
 
 // Command functions
+void cmd_test(int argc, char **argv);
+void cmd_send(int argc, char **argv);
 void cmd_sair(int argc, char **argv);
 void cmd_test(int argc, char **argv);
 void cmd_send(int argc, char **argv);

@@ -19,7 +19,7 @@
 +--------------------------------------------------------------------------*/
 // extern void comando::cmd_sair(int, char **);
 // extern void comando::cmd_test(int, char **);
-// void comando::cmd_sos(int, char **);
+void cmd_sos(int, char **);
 // extern void comando::cmd_send(int, char **);
 // extern void comando::cmd_rdt(int, char **);
 // extern void comando::cmd_sd(int, char **);
@@ -52,7 +52,7 @@ struct command_d {
   char *cmd_name;
   char *cmd_help;
 } const commands[] = {
-    {comando::cmd_sos, "sos", "                             help"},
+    {cmd_sos, "sos", "                             help"},
     {comando::cmd_send, "send", "<msg>                       send message"},
     {comando::cmd_sair, "sair", "                            sair"},
     {comando::cmd_test, "test", "<arg1> <arg2>               test command"},
