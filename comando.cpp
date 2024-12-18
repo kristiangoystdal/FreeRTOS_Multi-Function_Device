@@ -26,8 +26,8 @@ static QueueHandle_t *xQueueMaxMin;
 static QueueHandle_t *xQueueAlarm;
 static QueueHandle_t *xQueueLCD;
 
-void vCommandInitialize(QueueHandle_t pxQueueArray) {
-  xQueueCommand = pxQueueArray[0];
+void vCommandInitialize(QueueHandle_t *pxQueueArray) {
+  xQueueCommand = **(pxQueueArray[0]);
   xQueueMaxMin = pxQueueArray[1];
   xQueueAlarm = pxQueueArray[2];
   xQueueLCD = pxQueueArray[3];
@@ -149,9 +149,8 @@ void cmd_rmm(int argc, char **argv) {
   // Placeholder for command
   // printf("cmd_rmm\n");
   max_min_task::MaxMinMessage_t xMaxMinMessage;
-  xMaxMinMessage.action = max_min_task::Get;
-  xMaxMinMessage.xTime = xMeasureTime;
-  xMaxMinMessage.xTemp = xTemp;
+  xMaxMinMessage.xAction = max_min_task::Get;
+  //   xMaxMinMessage.xMeasure = temperature_task::xLastTemperature;
   BaseType_t xStatus = xQueueSend(xQueueMaxMin, &xMaxMinMessage, 0);
   if (xStatus == errQUEUE_FULL) {
     printf("ERROR: Queue full: Temperature -> Max/Min");

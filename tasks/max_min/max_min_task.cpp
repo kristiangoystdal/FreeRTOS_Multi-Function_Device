@@ -1,9 +1,11 @@
 
 #include "max_min_task.hpp"
 #include "FreeRTOS.h"
+#include "comando.hpp"
 #include "command_task.hpp"
 #include "queue.h"
 #include "temperature_task.hpp"
+#include <stdio.h>
 
 namespace max_min_task {
 
@@ -11,7 +13,7 @@ static MaxMinMeasure_t xMaxMin;
 
 void sendMaxMin(QueueHandle_t xQueueConsole) {
   // TODO: Send to console
-  CommandMessage_t xMessage;
+  command_task::CommandMessage_t xMessage;
   xMessage.action = command_task::MinMax;
   xMessage.data.max_min = xMaxMin;
 
@@ -33,9 +35,9 @@ void updateMaxMin(temperature_task::Measure_t xMeasure) {
 
 void vMaxMinInitialize(void) {
   xMaxMin.xMax.xTime = 0;
-  xMaxMin.xMax.xTemp = -FLT_MAX;
+  xMaxMin.xMax.xTemp = -100;
   xMaxMin.xMin.xTime = 0;
-  xMaxMin.xMin.xTemp = FLT_MAX;
+  xMaxMin.xMin.xTemp = 100;
 }
 
 void vMaxMinTask(void *pvParameters) {

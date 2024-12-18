@@ -1,6 +1,6 @@
 
-#ifndef __MAX_MIN_TASK_H
-#define __MAX_MIN_TASK_H
+#ifndef __COMMAND_TASK_H
+#define __COMMAND_TASK_H
 
 #include "max_min_task.hpp"
 #include "time.h"
@@ -20,8 +20,7 @@ typedef enum CommandAction {
 typedef struct {
   CommandAction action;
   union {
-    MaxMinMeasure_t max_min;
-    time_t datetime;
+    max_min_task::MaxMinMeasure_t max_min;
   } data;
 } CommandMessage_t;
 

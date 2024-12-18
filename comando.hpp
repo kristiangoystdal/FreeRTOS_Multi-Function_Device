@@ -2,6 +2,7 @@
 #define COMANDO_HPP
 
 #include "FreeRTOS.h"
+#include "queue.h"
 
 namespace comando {
 void vCommandInitialize(QueueHandle_t pxQueueArray);

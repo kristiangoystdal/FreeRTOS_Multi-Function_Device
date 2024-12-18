@@ -16,12 +16,11 @@
 #include "tasks_macros.h"
 #include "temperature_task.hpp"
 
-
 DigitalOut led1(LED1);
 DigitalOut led2(LED2);
 Serial pc(USBTX, USBRX);
 
-LM75B sensor(p28, p27);
+// LM75B sensor(p28, p27);
 
 DigitalOut led(LED1);
 
@@ -56,20 +55,20 @@ int main() {
   return 0;
 }
 
-void check_temperature() {
-  while (1) {
-    // Try to open the LM75B
-    if (sensor.open()) {
-      printf("Device detected!\n");
+// void check_temperature() {
+//   while (1) {
+//     // Try to open the LM75B
+//     if (sensor.open()) {
+//       printf("Device detected!\n");
 
-      while (1)
-        ;
+//       while (1)
+//         ;
 
-    } else {
-      error("Device not detected!\n");
-    }
-  }
-}
+//     } else {
+//       error("Device not detected!\n");
+//     }
+//   }
+// }
 
 void ledFunction(void) {
   led = 1;
@@ -128,12 +127,12 @@ void check_tasks() {
   QueueHandle_t pxReadTemperatureParameters[4] = {xQueueMaxMin, xQueueAlarm,
                                                   xQueueLCD, xQueueConsole};
   QueueHandle_t pxMaxMinParameters[2] = {xQueueMaxMin, xQueueConsole};
-  QueueHandle_t pxCmdParameters[2] = {xQueueConsole, xQueueMaxMin, xQueueAlarm,
+  QueueHandle_t pxCmdParameters[4] = {xQueueConsole, xQueueMaxMin, xQueueAlarm,
                                       xQueueLCD};
 
   configuration::vConfigInitializer();
   max_min_task::vMaxMinInitialize();
-  comando::vCommandInitialize(pxCmdParameters);
+  comando::vCommandInitialize(&pxCmdParameters);
 
   TaskHandle_t xReadTemperatureTaskHandler;
   xTaskCreate(command_task::vCommandTask, "Task Command",
