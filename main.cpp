@@ -125,7 +125,7 @@ void check_tasks() {
   max_min_task::vMaxMinInitialize();
 
   TaskHandle_t xReadTemperatureTaskHandler;
-  xTaskCreate(temperature_task::vReadTemperatureTask, "Task Read Temperature", 2 * configMINIMAL_STACK_SIZE, &pxReadTemperatureParameters, TEMPERATURE_TASK_PRIORITY, &xReadTemperatureTaskHandler);
+  xTaskCreate(temperature_task::vTemperatureTask, "Task Read Temperature", 2 * configMINIMAL_STACK_SIZE, &pxReadTemperatureParameters, TEMPERATURE_TASK_PRIORITY, &xReadTemperatureTaskHandler);
   xTaskCreate(max_min_task::vMaxMinTask, "Task Max Min", 2 * configMINIMAL_STACK_SIZE, &pxMaxMinParameters, MAX_MIN_TASK_PRIORITY, NULL);
 
   vTaskStartScheduler();
