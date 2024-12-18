@@ -132,7 +132,7 @@ void cmd_rt(int argc, char **argv) {
 
 void cmd_rmm(int argc, char **argv) {
   // Placeholder for command
-  printf("cmd_rmm\n");
+  // printf("cmd_rmm\n");
   max_min_task::MaxMinMessage_t xMaxMinMessage;
   xMaxMinMessage.action = max_min_task::Get;
   xMaxMinMessage.xTime = xMeasureTime;
