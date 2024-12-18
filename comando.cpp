@@ -6,6 +6,7 @@
 | Autor: Carlos Almeida (IST)
 | Data:  Nov 2002
 ***************************************************************************/
+#include "comando.hpp"
 #include "FreeRTOS.h"
 #include "LM75B.h"
 #include "alarm_task.hpp"
@@ -17,6 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 
 /*-------------------------------------------------------------------------+
 | Headers of command functions

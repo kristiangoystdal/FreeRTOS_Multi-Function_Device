@@ -1,6 +1,5 @@
-// Command.h
-#ifndef COMMAND_HPP
-#define COMMAND_HPP
+#ifndef COMANDO_HPP
+#define COMANDO_HPP
 
 #include "FreeRTOS.h"
 #include "queue.h"
