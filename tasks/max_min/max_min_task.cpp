@@ -12,6 +12,7 @@ static MaxMinMeasure_t xMaxMin;
 
 void sendMaxMin(QueueHandle_t xQueueConsole) {
   // TODO: Send to console
+  
   printf("Max: %f at %d\n", xMaxMin.xMax.xTemp, xMaxMin.xMax.xTime);
   printf("Min: %f at %d\n", xMaxMin.xMin.xTemp, xMaxMin.xMin.xTime);
 }
