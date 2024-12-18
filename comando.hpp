@@ -6,7 +6,7 @@
 #include "queue.h"
 
 namespace comando {
-void vCommandInitialize(QueueHandle_t (*pxQueueArray)[4]);
+void vCommandInitialize(QueueHandle_t pxQueueArray[4]);
 }
 
 #endif

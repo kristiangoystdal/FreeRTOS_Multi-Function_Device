@@ -132,7 +132,7 @@ void check_tasks() {
 
   configuration::vConfigInitializer();
   max_min_task::vMaxMinInitialize();
-  comando::vCommandInitialize(&pxCmdParameters);
+  comando::vCommandInitialize(pxCmdParameters);
 
   TaskHandle_t xReadTemperatureTaskHandler;
   xTaskCreate(command_task::vCommandTask, "Task Command",
