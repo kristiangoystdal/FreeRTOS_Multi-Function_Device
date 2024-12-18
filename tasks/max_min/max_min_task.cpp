@@ -2,9 +2,7 @@
 #include "max_min_task.hpp"
 #include "FreeRTOS.h"
 #include "queue.h"
-#include <cfloat>
-#include <cstdio>
-#include <stdio.h>
+#include "temperature_task.hpp"
 
 namespace max_min_task {
 
@@ -17,17 +15,17 @@ void sendMaxMin(QueueHandle_t xQueueConsole) {
   printf("Min: %f at %d\n", xMaxMin.xMin.xTemp, xMaxMin.xMin.xTime);
 }
 
-void updateMaxMin(MaxMinMessage_t xMessage) {
-  if (xMaxMin.xMax.xTemp < xMessage.xTemp) {
-    xMaxMin.xMax.xTime = xMessage.xTime;
-    xMaxMin.xMax.xTemp = xMessage.xTemp;
-  }
+  void updateMaxMin(temperature_task::Measure_t xMeasure) {
+    if(xMaxMin.xMax.xTemp < xMeasure.xTemp) {
+      xMaxMin.xMax.xTime = xMeasure.xTime;
+      xMaxMin.xMax.xTemp = xMeasure.xTemp;
+    }
 
-  if (xMaxMin.xMin.xTemp > xMessage.xTemp) {
-    xMaxMin.xMin.xTime = xMessage.xTime;
-    xMaxMin.xMin.xTemp = xMessage.xTemp;
+    if(xMaxMin.xMin.xTemp > xMeasure.xTemp) {
+      xMaxMin.xMin.xTime = xMeasure.xTime;
+      xMaxMin.xMin.xTemp = xMeasure.xTemp;
+    }
   }
-}
 
 void vMaxMinInitialize(void) {
   xMaxMin.xMax.xTime = 0;
@@ -36,19 +34,19 @@ void vMaxMinInitialize(void) {
   xMaxMin.xMin.xTemp = FLT_MAX;
 }
 
-void vMaxMinTask(void *pvParameters) {
-  QueueHandle_t *pxQueueArray = (QueueHandle_t *)pvParameters;
-  QueueHandle_t xQueueMaxMin = (QueueHandle_t)pxQueueArray[0];
-  QueueHandle_t xQueueConsole = (QueueHandle_t)pxQueueArray[1];
-  MaxMinMessage_t xMessage;
-  for (;;) {
-    xQueueReceive(xQueueMaxMin, &xMessage, portMAX_DELAY);
-    if (xMessage.action == Get) {
-      sendMaxMin(xQueueConsole);
-    } else {
-      updateMaxMin(xMessage);
+  void vMaxMinTask(void* pvParameters) {
+    QueueHandle_t* pxQueueArray = (QueueHandle_t*)pvParameters;
+    QueueHandle_t xQueueMaxMin = (QueueHandle_t)pxQueueArray[0];
+    QueueHandle_t xQueueConsole = (QueueHandle_t)pxQueueArray[1];
+    MaxMinMessage_t xMessage;
+    for(;;) {
+      xQueueReceive(xQueueMaxMin, &xMessage, portMAX_DELAY);
+      if(xMessage.xAction == Get) {
+        sendMaxMin(xQueueConsole);
+      } else {
+        updateMaxMin(xMessage.xMeasure);
+      }
     }
   }
-}
 
 } // namespace max_min_task

@@ -12,7 +12,7 @@ namespace temperature_task {
 
   static LM75B sensor(p28,p27);
   
-  void vReadTemperatureTask(void* pvParameters) {
+  void vTemperatureTask(void* pvParameters) {
     QueueHandle_t* pxQueueArray = (QueueHandle_t*)pvParameters;
     QueueHandle_t xQueueMaxMin = (QueueHandle_t)pxQueueArray[0];
     QueueHandle_t xQueueAlarm = (QueueHandle_t)pxQueueArray[1];
@@ -26,10 +26,12 @@ namespace temperature_task {
       float xTemp = sensor.temp();
       time_t xMeasureTime = time(NULL);
 
+      Measure_t xMeasure;
+      xMeasure.xTime = xMeasureTime;
+      xMeasure.xTemp = xTemp;
       max_min_task::MaxMinMessage_t xMaxMinMessage;
-      xMaxMinMessage.action = max_min_task::Set;
-      xMaxMinMessage.xTime = xMeasureTime;
-      xMaxMinMessage.xTemp = xTemp;
+      xMaxMinMessage.xAction = max_min_task::Set;
+      xMaxMinMessage.xMeasure = xMeasure;
       BaseType_t xStatus = xQueueSend(xQueueMaxMin, &xMaxMinMessage, 0);
       if(xStatus == errQUEUE_FULL){
         printf("ERROR: Queue full: Temperature -> Max/Min");
@@ -44,8 +46,8 @@ namespace temperature_task {
       }
 
       alarm_task::AlarmMessage_t xAlarmMessage;
-      xAlarmMessage.xTime = xMeasureTime;
-      xAlarmMessage.xTemp = xTemp;
+      xAlarmMessage.xAction = alarm_task::Temp;
+      xAlarmMessage.xMeasure = xMeasure;
       xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
       if(xStatus == errQUEUE_FULL){
         printf("ERROR: Queue full: Temperature -> Alarm");
