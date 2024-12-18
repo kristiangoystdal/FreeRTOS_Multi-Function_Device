@@ -2,15 +2,22 @@
 #ifndef __ALARM_TASK_H
 #define __ALARM_TASK_H
 
-#include <time.h>
+#include "temperature_task.hpp"
 
 namespace alarm_task {
 
+  typedef enum AlarmAction {
+    Get,
+    Set,
+    Temp
+  } AlarmAction;
+
   typedef struct {
-    float xTemp;
-    time_t xTime;
+    AlarmAction xAction;
+    temperature_task::Measure_t xMeasure;
   } AlarmMessage_t;
   
+  void vAlarmTask(void* pvParameters);
 }
 
 #endif

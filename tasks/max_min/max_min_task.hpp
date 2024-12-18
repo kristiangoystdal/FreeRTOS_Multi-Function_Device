@@ -2,7 +2,7 @@
 #ifndef __MAX_MIN_TASK_H
 #define __MAX_MIN_TASK_H
 
-#include "time.h"
+#include "temperature_task.hpp"
 
 namespace max_min_task {
 
@@ -12,19 +12,13 @@ namespace max_min_task {
   } MaxMinAction;
 
   typedef struct {
-    MaxMinAction action;
-    float xTemp;
-    time_t xTime;
+    MaxMinAction xAction;
+    temperature_task::Measure_t xMeasure;
   } MaxMinMessage_t;
 
   typedef struct {
-    float xTemp;
-    time_t xTime;
-  } Measure_t;
-
-  typedef struct {
-    Measure_t xMax;
-    Measure_t xMin;
+    temperature_task::Measure_t xMax;
+    temperature_task::Measure_t xMin;
   } MaxMinMeasure_t;
   
   void vMaxMinInitialize(void);
