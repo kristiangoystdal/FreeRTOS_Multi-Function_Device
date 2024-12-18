@@ -6,7 +6,7 @@
 
 namespace comando {
 // Initialization and task-related functions
-void vCommandInitialize(QueueHandle_t pxQueueArray[4]);
+void vCommandInitialize(QueueHandle_t (*pxQueueArray)[4]);
 void vCommandTask(void *pvParameters);
 
 // Command functions
