@@ -1,4 +1,3 @@
-// #ifdef notdef
 
 /***************************************************************************
 | File: comando.c  -  Concretizacao de comandos (exemplo)
@@ -19,7 +18,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-
+namespace comando {
 /*-------------------------------------------------------------------------+
 | Headers of command functions
 +--------------------------------------------------------------------------*/
@@ -262,9 +261,4 @@ void cmd_adcs(int argc, char **argv) {
   // Placeholder for command
   printf("cmd_adcs %d\n", atoi(argv[1]));
 }
-
-/*-------------------------------------------------------------------------+
-
-// #endif //notdef
-
-*/
+} // namespace comando
