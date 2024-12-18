@@ -21,16 +21,17 @@
 /*-------------------------------------------------------------------------+
 | Headers of command functions
 +--------------------------------------------------------------------------*/
-static QueueHandle_t *xQueueCommand;
-static QueueHandle_t *xQueueMaxMin;
-static QueueHandle_t *xQueueAlarm;
-static QueueHandle_t *xQueueLCD;
+static QueueHandle_t xQueueCommand;
+static QueueHandle_t xQueueMaxMin;
+static QueueHandle_t xQueueAlarm;
+static QueueHandle_t xQueueLCD;
 
-void vCommandInitialize(QueueHandle_t *pxQueueArray) {
-  xQueueCommand = **(pxQueueArray[0]);
-  xQueueMaxMin = pxQueueArray[1];
-  xQueueAlarm = pxQueueArray[2];
-  xQueueLCD = pxQueueArray[3];
+void vCommandInitialize(QueueHandle_t (*pxQueueArray)[4]) {
+  // Dereference the pointer to get the original array and assign the elements
+  xQueueCommand = (*pxQueueArray)[0];
+  xQueueMaxMin = (*pxQueueArray)[1];
+  xQueueAlarm = (*pxQueueArray)[2];
+  xQueueLCD = (*pxQueueArray)[3];
 }
 
 /*-------------------------------------------------------------------------+

@@ -1,12 +1,12 @@
-#ifndef COMANDO_HPP
-#define COMANDO_HPP
+// Command.h
+#ifndef COMMAND_HPP
+#define COMMAND_HPP
 
 #include "FreeRTOS.h"
 #include "queue.h"
 
 namespace comando {
-void vCommandInitialize(QueueHandle_t pxQueueArray);
+void vCommandInitialize(QueueHandle_t (*pxQueueArray)[4]);
+}
 
-} // namespace comando
-
-#endif // COMANDO_HPP
+#endif
