@@ -5,6 +5,7 @@
 #include "LM75B.h"
 #include "RTC.h"
 #include "alarm_task.hpp"
+#include "comando.hpp"
 #include "command_task.hpp"
 #include "configuration.hpp"
 #include "lcd_task.hpp"
@@ -14,6 +15,7 @@
 #include "task.h"
 #include "tasks_macros.h"
 #include "temperature_task.hpp"
+
 
 DigitalOut led1(LED1);
 DigitalOut led2(LED2);
