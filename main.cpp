@@ -126,13 +126,16 @@ void check_tasks() {
   QueueHandle_t pxReadTemperatureParameters[4] = {xQueueMaxMin, xQueueAlarm,
                                                   xQueueLCD, xQueueConsole};
   QueueHandle_t pxMaxMinParameters[2] = {xQueueMaxMin, xQueueConsole};
+  QueueHandle_t pxCmdParameters[2] = {xQueueConsole, xQueueMaxMin, xQueueAlarm,
+                                      xQueueLCD};
 
   configuration::vConfigInitializer();
   max_min_task::vMaxMinInitialize();
+  comando::vCommandInitialize(pxCmdParameters);
 
   TaskHandle_t xReadTemperatureTaskHandler;
   xTaskCreate(command_task::vCommandTask, "Task Command",
-              2 * configMINIMAL_STACK_SIZE, &xQueueConsole,
+              2 * configMINIMAL_STACK_SIZE, &pxCmdParameters,
               CONSOLE_TASK_PRIORITY, NULL);
   xTaskCreate(temperature_task::vTemperatureTask, "Task Read Temperature",
               2 * configMINIMAL_STACK_SIZE, &pxReadTemperatureParameters,
