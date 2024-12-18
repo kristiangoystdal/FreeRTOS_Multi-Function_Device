@@ -21,12 +21,12 @@
 /*-------------------------------------------------------------------------+
 | Headers of command functions
 +--------------------------------------------------------------------------*/
-static QueueHandle_t xQueueCommand;
-static QueueHandle_t xQueueMaxMin;
-static QueueHandle_t xQueueAlarm;
-static QueueHandle_t xQueueLCD;
+static QueueHandle_t *xQueueCommand;
+static QueueHandle_t *xQueueMaxMin;
+static QueueHandle_t *xQueueAlarm;
+static QueueHandle_t *xQueueLCD;
 
-void vCommandInitialize(QueueHandle_t *pxQueueArray) {
+void vCommandInitialize(QueueHandle_t pxQueueArray) {
   xQueueCommand = pxQueueArray[0];
   xQueueMaxMin = pxQueueArray[1];
   xQueueAlarm = pxQueueArray[2];
