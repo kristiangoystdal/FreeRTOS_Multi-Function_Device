@@ -30,6 +30,13 @@ void vCommandInitialize(QueueHandle_t (*pxQueueArray)[4]) {
   xQueueMaxMin = &(*pxQueueArray)[1];
   xQueueAlarm = &(*pxQueueArray)[2];
   xQueueLCD = &(*pxQueueArray)[3];
+
+  if (*xQueueCommand == NULL || *xQueueMaxMin == NULL || *xQueueAlarm == NULL ||
+      *xQueueLCD == NULL) {
+    printf("Error: One or more queues are uninitialized!\n");
+  } else {
+    printf("Queues initialized successfully.\n");
+  }
 }
 
 /*-------------------------------------------------------------------------+
@@ -149,7 +156,8 @@ void cmd_rmm(int argc, char **argv) {
   printf("cmd_rmm\n");
   max_min_task::MaxMinMessage_t xMaxMinMessage;
   xMaxMinMessage.xAction = max_min_task::Get;
-  //   xMaxMinMessage.xMeasure = temperature_task::xLastTemperature;
+  xMaxMinMessage.xMeasure.xTemp = 0;
+  xMaxMinMessage.xMeasure.xTime = 0;
   BaseType_t xStatus = xQueueSend(xQueueMaxMin, &xMaxMinMessage, 0);
   if (xStatus == errQUEUE_FULL) {
     printf("ERROR: Queue full: Temperature -> Max/Min");

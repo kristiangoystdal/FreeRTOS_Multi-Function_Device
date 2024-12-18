@@ -143,7 +143,7 @@ void check_tasks() {
   xTaskCreate(vTask2, "Task 2", 2 * configMINIMAL_STACK_SIZE, xQueue, 21, NULL);
 
   xTaskCreate(command_task::vCommandTask, "Task Command",
-              2 * configMINIMAL_STACK_SIZE, &pxCmdParameters,
+              4 * configMINIMAL_STACK_SIZE, &pxCmdParameters,
               CONSOLE_TASK_PRIORITY, NULL);
   xTaskCreate(temperature_task::vTemperatureTask, "Task Read Temperature",
               2 * configMINIMAL_STACK_SIZE, &pxReadTemperatureParameters,
