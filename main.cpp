@@ -35,7 +35,7 @@ QueueHandle_t createQueue(UBaseType_t uxSize, UBaseType_t uxType);
 
 int main() {
   pc.baud(115200);
-  int testNumber = 2; // TODO: Change this value for do the other tests
+  int testNumber = 3; // TODO: Change this value for do the other tests
   switch (testNumber) {
   case 0:
     check_temperature();
@@ -134,7 +134,14 @@ void check_tasks() {
   max_min_task::vMaxMinInitialize();
   comando::vCommandInitialize(&pxCmdParameters);
 
+  printf("Init complete...");
+
   TaskHandle_t xReadTemperatureTaskHandler;
+  init_TaskScheduler(&xQueue);
+
+  xTaskCreate(vTask1, "Task 1", 2 * configMINIMAL_STACK_SIZE, xQueue, 20, NULL);
+  xTaskCreate(vTask2, "Task 2", 2 * configMINIMAL_STACK_SIZE, xQueue, 21, NULL);
+
   xTaskCreate(command_task::vCommandTask, "Task Command",
               2 * configMINIMAL_STACK_SIZE, &pxCmdParameters,
               CONSOLE_TASK_PRIORITY, NULL);

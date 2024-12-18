@@ -18,10 +18,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-static QueueHandle_t *xQueueCommand = nullptr;
-static QueueHandle_t *xQueueMaxMin = nullptr;
-static QueueHandle_t *xQueueAlarm = nullptr;
-static QueueHandle_t *xQueueLCD = nullptr;
+static QueueHandle_t *xQueueCommand = NULL;
+static QueueHandle_t *xQueueMaxMin = NULL;
+static QueueHandle_t *xQueueAlarm = NULL;
+static QueueHandle_t *xQueueLCD = NULL;
 
 namespace comando {
 void vCommandInitialize(QueueHandle_t (*pxQueueArray)[4]) {

@@ -47,6 +47,8 @@ void vMaxMinTask(void *pvParameters) {
   MaxMinMessage_t xMessage;
   for (;;) {
     xQueueReceive(xQueueMaxMin, &xMessage, portMAX_DELAY);
+    printf("R");
+
     if (xMessage.xAction == Get) {
       sendMaxMin(xQueueConsole);
     } else {

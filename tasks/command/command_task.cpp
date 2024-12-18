@@ -10,10 +10,10 @@ namespace command_task {
 void vCommandTask(void *pvParameters) {
   QueueHandle_t *pxQueueArray = (QueueHandle_t *)pvParameters;
   QueueHandle_t xQueueCommand = (QueueHandle_t)pxQueueArray[0];
-  QueueHandle_t xQueueConsole = (QueueHandle_t)pxQueueArray[1];
   CommandMessage_t xMessage;
   for (;;) {
-    xQueueReceive(xQueueConsole, &xMessage, portMAX_DELAY);
+    printf("CMD\n");
+    xQueueReceive(xQueueCommand, &xMessage, portMAX_DELAY);
     switch (xMessage.action) {
     case DateTime:
       // Placeholder for command
@@ -21,7 +21,7 @@ void vCommandTask(void *pvParameters) {
       break;
     case MinMax:
       // Placeholder for command
-      printf("cmd_mmp\n");
+      printf("cmd_rmm\n");
       printf("Max temperature at %d: %f\n", xMessage.data.max_min.xMax.xTime,
              xMessage.data.max_min.xMax.xTemp);
       printf("Min temperature at %d: %f\n", xMessage.data.max_min.xMin.xTime,
