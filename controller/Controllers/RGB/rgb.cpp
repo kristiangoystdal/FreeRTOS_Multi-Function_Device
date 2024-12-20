@@ -14,4 +14,8 @@ namespace rgb {
     b = 1.0 - blue;
   }
 
+  void set_period() {
+    r.period(0.001);
+  }
+
 }
