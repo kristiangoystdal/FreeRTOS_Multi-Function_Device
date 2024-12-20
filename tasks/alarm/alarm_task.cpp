@@ -30,7 +30,7 @@ namespace alarm_task {
     lcd_task::LCDMessage_t xLCDMessage;
     xLCDMessage.xDataType = lcd_task::Alarm;
     xLCDMessage.xLCDData.cAlarmLetter = letter;
-    xStatus = xQueueSend(xQueueLCD, &xLCDMessage, 0);
+    BaseType_t xStatus = xQueueSend(xQueueLCD, &xLCDMessage, 0);
     if(xStatus == errQUEUE_FULL){
       printf("ERROR: Queue full: Alarm -> LCD");
     }
@@ -78,7 +78,7 @@ namespace alarm_task {
         case Temp:
           float temp = xMessage.xAlarmData.xMeasure.xTemp;
           if(xAlarmInfo.temp_alarm_en && (xAlarmInfo.thigh < temp || xAlarmInfo.tlow > temp)) {
-            vRunAlarm(xQueueLCD, "T");
+            vRunAlarm(xQueueLCD, 'T');
           }
           vSetRGB(temp);
           break;
