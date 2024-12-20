@@ -47,7 +47,7 @@ namespace temperature_task {
 
       alarm_task::AlarmMessage_t xAlarmMessage;
       xAlarmMessage.xAction = alarm_task::Temp;
-      xAlarmMessage.xMeasure = xMeasure;
+      xAlarmMessage.xAlarmData.xMeasure = xMeasure;
       xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
       if(xStatus == errQUEUE_FULL){
         printf("ERROR: Queue full: Temperature -> Alarm");

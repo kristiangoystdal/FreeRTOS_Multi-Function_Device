@@ -118,7 +118,7 @@ void check_tasks() {
   QueueHandle_t xQueueConsole = createQueue(CONSOLE_TASK_QUEUE_SIZE, 100); // TODO: Think about this
 
   QueueHandle_t pxReadTemperatureParameters [4] = {xQueueMaxMin, xQueueAlarm, xQueueLCD, xQueueConsole}; 
-  QueueHandle_t pxMaxMinParameters [2] = {xQueueMaxMin, xQueueConsole}; 
+  QueueHandle_t pxMaxMinParameters [3] = {xQueueMaxMin, xQueueConsole, xQueueLCD}; 
 
   configuration::vConfigInitializer();
   max_min_task::vMaxMinInitialize();
