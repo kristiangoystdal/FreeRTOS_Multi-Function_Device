@@ -74,7 +74,7 @@ int main(void) {
   //    prvSetupHardware();
 
 void displayFunction(void) {
-  time_t seconds = clock::get_time();
+  time_t seconds = date_time::get_time();
   printf("%s", ctime(&seconds));
 }
 

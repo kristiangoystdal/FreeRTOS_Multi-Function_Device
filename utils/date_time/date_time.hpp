@@ -1,10 +1,10 @@
 
-#ifndef __CLOCK_H
-#define __CLOCK_H
+#ifndef __DATE_TIME_H
+#define __DATE_TIME_H
 
 #include <time.h>
 
-namespace clock {
+namespace date_time {
 
   time_t get_time();
   void get_date(char* s);
@@ -16,4 +16,4 @@ namespace clock {
 
 }
 
-#endif // __CLOCK_H
+#endif // __DATE_TIME_H

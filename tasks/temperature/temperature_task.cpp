@@ -25,7 +25,7 @@ namespace temperature_task {
       uint32_t ulNotificationValue = ulTaskNotifyTake(pdTRUE, xPMON);
 
       float xTemp = sensor.temp();
-      time_t xMeasureTime = clock::get_time();
+      time_t xMeasureTime = date_time::get_time();
 
       Measure_t xMeasure;
       xMeasure.xTime = xMeasureTime;

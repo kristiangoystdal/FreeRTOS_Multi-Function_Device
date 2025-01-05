@@ -1,7 +1,7 @@
 
-#include "clock.hpp"
+#include "date_time.hpp"
 
-namespace clock {
+namespace date_time {
 
   time_t get_time() {
     return time(NULL);
