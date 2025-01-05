@@ -13,6 +13,7 @@
 #include "temperature_task.hpp"
 #include "max_min_task.hpp"
 #include "configuration.hpp"
+#include "clock.hpp"
 
 DigitalOut led1(LED1);
 DigitalOut led2(LED2);
@@ -73,7 +74,7 @@ int main(void) {
   //    prvSetupHardware();
 
 void displayFunction(void) {
-  time_t seconds = time(NULL);
+  time_t seconds = clock::get_time();
   printf("%s", ctime(&seconds));
 }
 

@@ -7,6 +7,7 @@
 #include "FreeRTOS.h"
 #include "queue.h"
 #include "task.h"
+#include "clock.hpp"
 
 namespace temperature_task {
 
@@ -24,7 +25,7 @@ namespace temperature_task {
       uint32_t ulNotificationValue = ulTaskNotifyTake(pdTRUE, xPMON);
 
       float xTemp = sensor.temp();
-      time_t xMeasureTime = time(NULL);
+      time_t xMeasureTime = clock::get_time();
 
       Measure_t xMeasure;
       xMeasure.xTime = xMeasureTime;
