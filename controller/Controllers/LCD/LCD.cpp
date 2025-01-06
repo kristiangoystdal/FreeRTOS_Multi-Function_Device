@@ -2,11 +2,11 @@
 #include "MMA7660.h"
 #include "LM75B.h"
 
-MMA7660 MMA(p28, p27); //I2C Accelerometer
-C12832 lcd(p5, p7, p6, p8, p11);
-LM75B sensor(p28,p27);
+static MMA7660 MMA(p28, p27); //I2C Accelerometer
+static C12832 lcd(p5, p7, p6, p8, p11);
+static LM75B sensor(p28,p27);
 
-int bubble_x=0, bubble_y=0;
+static int bubble_x=0, bubble_y=0;
 
 void setup_lcd(void){
     lcd.cls();

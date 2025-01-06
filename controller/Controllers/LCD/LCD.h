@@ -15,8 +15,10 @@ void write_time(int hours, int minutes, int seconds);
 
 void draw_bubble_level(void);
 
-void write_alarm_enables(bool clock_alarm_enabled, bool temp_alarm_enabled);
+void write_clock_alarm(bool clock_alarm_enabled);
 
-void write_temperature(void);
+void write_temp_alarm(bool temp_alarm_enabled);
+
+void write_temperature(int temperature);
 
 #endif
