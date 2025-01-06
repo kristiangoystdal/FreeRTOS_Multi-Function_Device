@@ -1,5 +1,6 @@
 
 #include "date_time.hpp"
+#include "mbed.h"
 
 namespace date_time {
 
@@ -26,14 +27,29 @@ namespace date_time {
     strftime(&s[0], sizeof(s), "%H:%M:%S\n", &tm_);
   }
 
-  // TODO: Set Time
-  void set_time(time_t t) {
+  void set_time_t(time_t t) {
+    set_time(t);
   }
 
   void set_date(char* s) {
+    tm tm_;
+    if (sscanf(s, "%2d/%2d/%4d %2d:%2d:%2d",
+               &tm_.tm_mday, &tm_.tm_mon, &tm_.tm_year,
+               &tm_.tm_hour, &tm_.tm_min, &tm_.tm_sec) != 6) {
+        printf("Error while parsing date");
+        return;
+    }
+    set_time(clock_to_time(&tm_));
   }
 
   void set_clock(char* s) {
+    tm tm_;
+    if (sscanf(s, "%2d:%2d:%2d",
+               &tm_.tm_hour, &tm_.tm_min, &tm_.tm_sec) != 3) {
+        printf("Error while parsing clock");
+        return;
+    }
+    set_time(clock_to_time(&tm_));
   }
 
   time_t clock_to_time(tm* t) {

@@ -140,7 +140,7 @@ void check_tasks() {
   QueueHandle_t pxTemperatureParameters [4] = {xQueueMaxMin, xQueueAlarm, xQueueLCD, xQueueConsole};
   QueueHandle_t pxAlarmParameters [4] = {xQueueAlarm, xQueueConsole, xQueueLCD, xPWMTaskHandler};
   QueueHandle_t pxMaxMinParameters [3] = {xQueueMaxMin, xQueueConsole, xQueueLCD};
-  QueueHandle_t pxLCDParameters [4] = {xQueueLCD};
+  QueueHandle_t pxLCDParameters [1] = {xQueueLCD};
 
   configuration::vConfigInitializer();
   max_min_task::vMaxMinInitialize();
