@@ -13,7 +13,8 @@
 #include "temperature_task.hpp"
 #include "max_min_task.hpp"
 #include "configuration.hpp"
-#include "date_time.hpp"
+#include "clock.hpp"
+#include "pwm_task.hpp"
 
 DigitalOut led1(LED1);
 DigitalOut led2(LED2);
@@ -30,7 +31,7 @@ void check_rtc(void);
 void check_lcd(void);
 void check_cmd(void);
 void check_tasks(void);
-QueueHandle_t createQueue(UBaseType_t uxSize, UBaseType_t uxType);
+QueueHandle_t xCreateQueue(UBaseType_t uxSize, UBaseType_t uxType);
 
 int main() {
   pc.baud(115200);
@@ -113,29 +114,41 @@ void check_cmd() {
 
 void check_tasks() {
 
-  QueueHandle_t xQueueMaxMin = createQueue(MAX_MIN_TASK_QUEUE_SIZE, sizeof(max_min_task::MaxMinMessage_t));
-  QueueHandle_t xQueueAlarm = createQueue(ALARM_TASK_QUEUE_SIZE, sizeof(alarm_task::AlarmMessage_t));
-  QueueHandle_t xQueueLCD = createQueue(LCD_TASK_QUEUE_SIZE, sizeof(lcd_task::LCDMessage_t));
-  QueueHandle_t xQueueConsole = createQueue(CONSOLE_TASK_QUEUE_SIZE, 100); // TODO: Think about this
+  TaskHandle_t xPWMTaskHandler;
+  vCreateTask(pwm_task::vPWMTask, "Task PWM", 2 * configMINIMAL_STACK_SIZE, NULL, MAX_MIN_TASK_PRIORITY, &xPWMTaskHandler);
 
-  QueueHandle_t pxReadTemperatureParameters [4] = {xQueueMaxMin, xQueueAlarm, xQueueLCD, xQueueConsole}; 
-  QueueHandle_t pxMaxMinParameters [3] = {xQueueMaxMin, xQueueConsole, xQueueLCD}; 
+  QueueHandle_t xQueueMaxMin = xCreateQueue(MAX_MIN_TASK_QUEUE_SIZE, sizeof(max_min_task::MaxMinMessage_t));
+  QueueHandle_t xQueueAlarm = xCreateQueue(ALARM_TASK_QUEUE_SIZE, sizeof(alarm_task::AlarmMessage_t));
+  QueueHandle_t xQueueLCD = xCreateQueue(LCD_TASK_QUEUE_SIZE, sizeof(lcd_task::LCDMessage_t));
+  QueueHandle_t xQueueConsole = xCreateQueue(CONSOLE_TASK_QUEUE_SIZE, 100); // TODO: Think about this
+
+  QueueHandle_t pxTemperatureParameters [4] = {xQueueMaxMin, xQueueAlarm, xQueueLCD, xQueueConsole}; 
+  QueueHandle_t pxMaxMinParameters [3] = {xQueueMaxMin, xQueueConsole, xQueueLCD};
+  QueueHandle_t pxAlarmParameters [4] = {xQueueAlarm, xQueueConsole, xQueueLCD, xPWMTaskHandler}; 
 
   configuration::vConfigInitializer();
   max_min_task::vMaxMinInitialize();
 
-  TaskHandle_t xReadTemperatureTaskHandler;
-  xTaskCreate(temperature_task::vTemperatureTask, "Task Read Temperature", 2 * configMINIMAL_STACK_SIZE, &pxReadTemperatureParameters, TEMPERATURE_TASK_PRIORITY, &xReadTemperatureTaskHandler);
-  xTaskCreate(max_min_task::vMaxMinTask, "Task Max Min", 2 * configMINIMAL_STACK_SIZE, &pxMaxMinParameters, MAX_MIN_TASK_PRIORITY, NULL);
-
+  TaskHandle_t xTemperatureTaskHandler;
+  vCreateTask(temperature_task::vTemperatureTask, "Task Read Temperature", 2 * configMINIMAL_STACK_SIZE, &pxTemperatureParameters, TEMPERATURE_TASK_PRIORITY, &xTemperatureTaskHandler);
+  vCreateTask(alarm_task::vAlarmTask, "Task Alarm", 2 * configMINIMAL_STACK_SIZE, &pxAlarmParameters , ALARM_TASK_PRIORITY, NULL);
+  vCreateTask(max_min_task::vMaxMinTask, "Task Max Min", 2 * configMINIMAL_STACK_SIZE, &pxMaxMinParameters, MAX_MIN_TASK_PRIORITY, NULL);
   vTaskStartScheduler();
   while(1);
 }
 
-QueueHandle_t createQueue(UBaseType_t uxSize, UBaseType_t uxType) {
+QueueHandle_t xCreateQueue(UBaseType_t uxSize, UBaseType_t uxType) {
   QueueHandle_t xQueue = xQueueCreate(uxSize, uxType);
   if (xQueue == NULL) {
     printf("Failed to create the queue\n");
   }
   return xQueue;
+}
+
+void vCreateTask(TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth,
+							    void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask) {
+  BaseType_t xReturn = xTaskCreate(pxTaskCode, pcName, usStackDepth, pvParameters, uxPriority, pxCreatedTask);
+  if(xReturn == errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY) {
+    printf("Failed to create the task %s\n", pcName);
+  }
 }

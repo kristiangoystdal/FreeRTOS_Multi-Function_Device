@@ -9,7 +9,7 @@ namespace alarm_task {
   typedef enum AlarmAction {
     Get,
     SetClock,
-    SetTempThreshold,
+    SetTemp,
     SetClockEn,
     SetTempEn,
     Temp

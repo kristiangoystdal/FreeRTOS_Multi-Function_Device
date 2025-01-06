@@ -7,6 +7,11 @@ namespace date_time {
     return time(NULL);
   }
 
+  tm* get_time_tm() {
+    time_t t = time(NULL);
+    return localtime(&t);
+  } 
+
   void get_date(char* s) {
     time_t t = time(NULL);
     tm tm_;
@@ -29,6 +34,14 @@ namespace date_time {
   }
 
   void set_clock(char* s) {
+  }
+
+  time_t clock_to_time(tm* t) {
+    return mktime(t);
+  }
+
+  tm* time_to_clock(time_t t) {
+    return localtime(&t);
   }
   
 } // namespace clock
