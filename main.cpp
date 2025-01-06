@@ -31,7 +31,6 @@ void check_rtc(void);
 void check_lcd(void);
 void check_cmd(void);
 void check_tasks(void);
-QueueHandle_t xCreateQueue(UBaseType_t uxSize, UBaseType_t uxType);
 
 int main() {
   pc.baud(115200);
@@ -112,6 +111,22 @@ void check_cmd() {
   };
 }
 
+QueueHandle_t xCreateQueue(UBaseType_t uxSize, UBaseType_t uxType) {
+  QueueHandle_t xQueue = xQueueCreate(uxSize, uxType);
+  if (xQueue == NULL) {
+    printf("Failed to create the queue\n");
+  }
+  return xQueue;
+}
+
+void vCreateTask(TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth,
+							    void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask) {
+  BaseType_t xReturn = xTaskCreate(pxTaskCode, pcName, usStackDepth, pvParameters, uxPriority, pxCreatedTask);
+  if(xReturn == errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY) {
+    printf("Failed to create the task %s\n", pcName);
+  }
+}
+
 void check_tasks() {
 
   TaskHandle_t xPWMTaskHandler;
@@ -135,20 +150,4 @@ void check_tasks() {
   vCreateTask(max_min_task::vMaxMinTask, "Task Max Min", 2 * configMINIMAL_STACK_SIZE, &pxMaxMinParameters, MAX_MIN_TASK_PRIORITY, NULL);
   vTaskStartScheduler();
   while(1);
-}
-
-QueueHandle_t xCreateQueue(UBaseType_t uxSize, UBaseType_t uxType) {
-  QueueHandle_t xQueue = xQueueCreate(uxSize, uxType);
-  if (xQueue == NULL) {
-    printf("Failed to create the queue\n");
-  }
-  return xQueue;
-}
-
-void vCreateTask(TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth,
-							    void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask) {
-  BaseType_t xReturn = xTaskCreate(pxTaskCode, pcName, usStackDepth, pvParameters, uxPriority, pxCreatedTask);
-  if(xReturn == errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY) {
-    printf("Failed to create the task %s\n", pcName);
-  }
 }

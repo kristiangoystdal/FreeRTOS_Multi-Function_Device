@@ -57,7 +57,7 @@ namespace alarm_task {
     }
   }
 
-  void vClockAlarm(k) {
+  void vClockAlarm() {
     xSemaphoreTake(xMutexClock, portMAX_DELAY);
     if(xAlarmInfo.clock_alarm_en) {
       xTaskNotifyGive(xPWMTask);
