@@ -137,17 +137,19 @@ void check_tasks() {
   QueueHandle_t xQueueLCD = xCreateQueue(LCD_TASK_QUEUE_SIZE, sizeof(lcd_task::LCDMessage_t));
   QueueHandle_t xQueueConsole = xCreateQueue(CONSOLE_TASK_QUEUE_SIZE, 100); // TODO: Think about this
 
-  QueueHandle_t pxTemperatureParameters [4] = {xQueueMaxMin, xQueueAlarm, xQueueLCD, xQueueConsole}; 
+  QueueHandle_t pxTemperatureParameters [4] = {xQueueMaxMin, xQueueAlarm, xQueueLCD, xQueueConsole};
+  QueueHandle_t pxAlarmParameters [4] = {xQueueAlarm, xQueueConsole, xQueueLCD, xPWMTaskHandler};
   QueueHandle_t pxMaxMinParameters [3] = {xQueueMaxMin, xQueueConsole, xQueueLCD};
-  QueueHandle_t pxAlarmParameters [4] = {xQueueAlarm, xQueueConsole, xQueueLCD, xPWMTaskHandler}; 
+  QueueHandle_t pxLCDParameters [4] = {xQueueLCD};
 
   configuration::vConfigInitializer();
   max_min_task::vMaxMinInitialize();
 
   TaskHandle_t xTemperatureTaskHandler;
-  vCreateTask(temperature_task::vTemperatureTask, "Task Read Temperature", 2 * configMINIMAL_STACK_SIZE, &pxTemperatureParameters, TEMPERATURE_TASK_PRIORITY, &xTemperatureTaskHandler);
+  vCreateTask(temperature_task::vTemperatureTask, "Task Temperature", 2 * configMINIMAL_STACK_SIZE, &pxTemperatureParameters, TEMPERATURE_TASK_PRIORITY, &xTemperatureTaskHandler);
   vCreateTask(alarm_task::vAlarmTask, "Task Alarm", 2 * configMINIMAL_STACK_SIZE, &pxAlarmParameters , ALARM_TASK_PRIORITY, NULL);
   vCreateTask(max_min_task::vMaxMinTask, "Task Max Min", 2 * configMINIMAL_STACK_SIZE, &pxMaxMinParameters, MAX_MIN_TASK_PRIORITY, NULL);
+  vCreateTask(lcd_task::vLCDTask, "Task LCD", 2 * configMINIMAL_STACK_SIZE, &pxLCDParameters, LCD_TASK_PRIORITY, NULL);
   vTaskStartScheduler();
   while(1);
 }

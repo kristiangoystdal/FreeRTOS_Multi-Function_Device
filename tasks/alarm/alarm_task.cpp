@@ -38,7 +38,7 @@ namespace alarm_task {
 
   void vSendToLCD(QueueHandle_t xQueueLCD, char letter) {
     lcd_task::LCDMessage_t xLCDMessage;
-    xLCDMessage.xDataType = lcd_task::Alarm;
+    xLCDMessage.xAction = lcd_task::Alarm;
     xLCDMessage.xLCDData.cAlarmLetter = letter;
     BaseType_t xStatus = xQueueSend(xQueueLCD, &xLCDMessage, 0);
     if(xStatus == errQUEUE_FULL){
@@ -65,7 +65,6 @@ namespace alarm_task {
     xSemaphoreGive(xMutexClock);
   }
 
-  // TODO: Set clock alarm
   void vAlarmTask(void* pvParameters) {
     QueueHandle_t* pxQueueArray = (QueueHandle_t*)pvParameters;
     QueueHandle_t xQueueAlarm = (QueueHandle_t)pxQueueArray[0];

@@ -6,22 +6,25 @@
 
 namespace lcd_task {
 
-  typedef enum LCDDataType {
-    Timestamp,
+  #define LCD_CLOCK_UPDATE_TIME 1
+
+  typedef enum LCDAction {
     Alarm,
-    Temperature
-  } LCDDataType;
+    Temperature,
+    BubbleLevel
+  } LCDAction;
 
   typedef union LCDData {
-    time_t xTime;
     char cAlarmLetter;
     float xTemperature;
   } LCDData;
 
   typedef struct {
-    LCDDataType xDataType;
+    LCDAction xAction;
     LCDData xLCDData;
   } LCDMessage_t;
+
+  void vLCDTask(void* pvParameters);
   
 }
 

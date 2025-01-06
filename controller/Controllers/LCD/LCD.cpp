@@ -11,6 +11,10 @@ int bubble_x=0, bubble_y=0;
 void setup_lcd(void){
     lcd.cls();
     lcd.locate(0,0);
+    lcd.locate(0, 12);
+    lcd.printf("A:");
+    lcd.locate(0,22);
+    lcd.printf("Temp =");
     printf("LCD OK");
 }
 
@@ -45,21 +49,18 @@ void draw_bubble_level(void){
         lcd.fillrect(93,0,95,31,1);
 }
 
-void write_alarm_enables(bool clock_alarm_enabled, bool temp_alarm_enabled){
-    lcd.locate(0, 12);
-    lcd.printf("A:");
-    if(clock_alarm_enabled){
-        lcd.locate(10, 12);
-        lcd.printf("C");
-    }
-    if(temp_alarm_enabled){
-        lcd.locate(20,12);
-        lcd.printf("T");
-    }
+void write_clock_alarm(bool clock_alarm_enabled){
+    lcd.locate(10, 12);
+    lcd.printf(clock_alarm_enabled ? "C" : " ");
 }
 
-void write_temperature(void){
+void write_temp_alarm(bool temp_alarm_enabled){
+    lcd.locate(20,12);
+    lcd.printf(temp_alarm_enabled ? "T" : " ");
+}
+
+void write_temperature(int temperature){
     lcd.locate(0,22);
-    lcd.printf("Temp = %.1f",sensor.temp());
+    lcd.printf("Temp = %d", temperature);
 }
 

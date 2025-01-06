@@ -19,11 +19,8 @@ namespace temperature_task {
     QueueHandle_t xQueueAlarm = (QueueHandle_t)pxQueueArray[1];
     QueueHandle_t xQueueLCD = (QueueHandle_t)pxQueueArray[2];
     QueueHandle_t xQueueConsole = (QueueHandle_t)pxQueueArray[3];
+    uint32_t ulNotificationValue = 0;
     for(;;) {
-      TickType_t xPMON = configuration::xConfigGetPMON();
-      xPMON = xPMON > 0 ? xPMON : portMAX_DELAY;
-      uint32_t ulNotificationValue = ulTaskNotifyTake(pdTRUE, xPMON);
-
       float xTemp = sensor.temp();
       time_t xMeasureTime = date_time::get_time();
 
@@ -39,7 +36,7 @@ namespace temperature_task {
       }
 
       lcd_task::LCDMessage_t xLCDMessage;
-      xLCDMessage.xDataType = lcd_task::Temperature;
+      xLCDMessage.xAction = lcd_task::Temperature;
       xLCDMessage.xLCDData.xTemperature = xTemp;
       xStatus = xQueueSend(xQueueLCD, &xLCDMessage, 0);
       if(xStatus == errQUEUE_FULL){
@@ -56,7 +53,10 @@ namespace temperature_task {
 
       if(ulNotificationValue > 0) {
         // TODO: Send to console
-      } 
+      }
+      TickType_t xPMON = configuration::xConfigGetPMON();
+      xPMON = xPMON > 0 ? xPMON : portMAX_DELAY;
+      ulNotificationValue = ulTaskNotifyTake(pdTRUE, xPMON);
     }
   }
 }
