@@ -12,8 +12,7 @@ namespace lcd_task
   typedef enum LCDAction
   {
     Alarm,
-    Temperature,
-    BubbleLevel
+    Temperature
   } LCDAction;
 
   typedef union LCDData

@@ -13,7 +13,7 @@
 #include "temperature_task.hpp"
 #include "max_min_task.hpp"
 #include "configuration.hpp"
-#include "clock.hpp"
+#include "date_time.hpp"
 #include "pwm_task.hpp"
 
 DigitalOut led1(LED1);
@@ -38,9 +38,6 @@ int main() {
   switch (testNumber) {
   case 0:
     check_temperature();
-    break;
-  case 1:
-    check_rtc();
     break;
   case 2:
     check_cmd();
@@ -69,31 +66,7 @@ void check_temperature() {
   }
 }
 
-int main(void) {
-  /* Perform any hardware setup necessary. */
-  //    prvSetupHardware();
-
-void displayFunction(void) {
-  time_t seconds = date_time::get_time();
-  printf("%s", ctime(&seconds));
-}
-
 void alarmFunction(void) { error("Not most useful alarm function"); }
-
-void check_rtc() {
-  set_time(1256729737); // Set time to Wed, 28 Oct 2009 11:35:37
-
-  tm t = RTC::getDefaultTM();
-  t.tm_sec = 5;
-  t.tm_min = 36;
-
-  RTC::alarm(&alarmFunction, t);
-  RTC::attach(&displayFunction, RTC::Second);
-  RTC::attach(&ledFunction, RTC::Minute);
-
-  while (1)
-    ;
-}
 
 void check_cmd() {
 
