@@ -13,9 +13,9 @@ namespace configuration {
 
   static TickType_t xPMON;
   static TickType_t xTALA;
-  static bool bBubbleLevelEnabled;
-  static bool bHitBitEnabled;
-  static bool bConfigSoundEnabled;
+  static bool xBubbleLevelEnabled;
+  static bool xHitBitEnabled;
+  static bool xConfigSoundEnabled;
   
   void vConfigInitializer() {
     xMutexPMON = xSemaphoreCreateMutex();
@@ -45,9 +45,9 @@ namespace configuration {
 
     xPMON = pdMS_TO_TICKS(1000*PMON_DEFAULT_VALUE);
     xTALA = pdMS_TO_TICKS(1000*TALA_DEFAULT_VALUE);
-    bBubbleLevelEnabled = true;
-    bHitBitEnabled = false;
-    bConfigSoundEnabled = false;
+    xBubbleLevelEnabled = true;
+    xHitBitEnabled = false;
+    xConfigSoundEnabled = false;
   }
 
   TickType_t xConfigGetPMON() {
@@ -66,23 +66,23 @@ namespace configuration {
 
   bool xConfigGetBubbleLevelEnabled() {
     xSemaphoreTake(xMutexBubbleLevel, portMAX_DELAY);
-    bool bEnabled = bBubbleLevelEnabled;
+    bool xEnabled = xBubbleLevelEnabled;
     xSemaphoreGive(xMutexBubbleLevel);
-    return bEnabled;
+    return xEnabled;
   }
 
   bool xConfigGetHitBitEnabled() {
     xSemaphoreTake(xMutexHitBit, portMAX_DELAY);
-    bool bEnabled = bHitBitEnabled;
+    bool xEnabled = xHitBitEnabled;
     xSemaphoreGive(xMutexHitBit);
-    return bEnabled;
+    return xEnabled;
   }
 
   bool xConfigGetConfigSoundEnabled() {
     xSemaphoreTake(xMutexConfigSound, portMAX_DELAY);
-    bool bEnabled = bConfigSoundEnabled;
+    bool xEnabled = xConfigSoundEnabled;
     xSemaphoreGive(xMutexConfigSound);
-    return bEnabled;
+    return xEnabled;
   }
   
   void vConfigSetPMON(int seconds) {
@@ -101,19 +101,19 @@ namespace configuration {
 
   void vConfigSetBubbleLevelEnabled(bool enabled) {
     xSemaphoreTake(xMutexBubbleLevel, portMAX_DELAY);
-    bBubbleLevelEnabled = enabled;
+    xBubbleLevelEnabled = enabled;
     xSemaphoreGive(xMutexBubbleLevel);
   }
 
   void vConfigSetHitBitEnabled(bool enabled) {
     xSemaphoreTake(xMutexHitBit, portMAX_DELAY);
-    bHitBitEnabled = enabled;
+    xHitBitEnabled = enabled;
     xSemaphoreGive(xMutexHitBit);
   }
 
   void vConfigSetConfigSoundEnabled(bool enabled) {
     xSemaphoreTake(xMutexConfigSound, portMAX_DELAY);
-    bConfigSoundEnabled = enabled;
+    xConfigSoundEnabled = enabled;
     xSemaphoreGive(xMutexConfigSound);
   }
 

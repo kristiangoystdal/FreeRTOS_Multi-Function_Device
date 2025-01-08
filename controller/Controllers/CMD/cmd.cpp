@@ -5,8 +5,8 @@
 #include <stdio.h>
 
 // Assuming led1 and led2 are defined elsewhere in your code
-extern int led1;
-extern int led2;
+// extern int led1;
+// extern int led2;
 
 // Function prototype for the monitor function
 extern void monitor(void);
@@ -17,7 +17,7 @@ void vTask1(void *pvParameters) {
   QueueHandle_t xQueue = (QueueHandle_t)pvParameters;
   int32_t lValueToSend;
   BaseType_t xStatus;
-  led1 = 1;
+  // led1 = 1;
   for (;;) {
     lValueToSend = 201;
     // Send to the queue
@@ -25,7 +25,7 @@ void vTask1(void *pvParameters) {
     if (xStatus == pdPASS) {
       monitor(); // Assuming this does not return
     }
-    led1 = !led1; // Toggle led1
+    // led1 = !led1; // Toggle led1
   }
 }
 

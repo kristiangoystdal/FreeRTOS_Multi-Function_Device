@@ -15,9 +15,8 @@
 #include "configuration.hpp"
 #include "date_time.hpp"
 #include "pwm_task.hpp"
+#include "hit_bit_task.hpp"
 
-DigitalOut led1(LED1);
-DigitalOut led2(LED2);
 Serial pc(USBTX, USBRX);
 
 LM75B sensor(p28, p27);
@@ -116,13 +115,13 @@ void check_tasks() {
   QueueHandle_t pxLCDParameters [1] = {xQueueLCD};
 
   configuration::vConfigInitializer();
-  max_min_task::vMaxMinInitialize();
 
   TaskHandle_t xTemperatureTaskHandler;
   vCreateTask(temperature_task::vTemperatureTask, "Task Temperature", 2 * configMINIMAL_STACK_SIZE, &pxTemperatureParameters, TEMPERATURE_TASK_PRIORITY, &xTemperatureTaskHandler);
   vCreateTask(alarm_task::vAlarmTask, "Task Alarm", 2 * configMINIMAL_STACK_SIZE, &pxAlarmParameters , ALARM_TASK_PRIORITY, NULL);
   vCreateTask(max_min_task::vMaxMinTask, "Task Max Min", 2 * configMINIMAL_STACK_SIZE, &pxMaxMinParameters, MAX_MIN_TASK_PRIORITY, NULL);
-  vCreateTask(lcd_task::vLCDTask, "Task LCD", 2 * configMINIMAL_STACK_SIZE, &pxLCDParameters, LCD_TASK_PRIORITY, NULL);
+  vCreateTask(lcd_task::vLCDTask, "Task Hit Bit", 2 * configMINIMAL_STACK_SIZE, NULL, HIT_BIT_TASK_PRIORITY, NULL);
+  vCreateTask(hit_bit_task::vHitBitTask, "Task LCD", 2 * configMINIMAL_STACK_SIZE, &pxLCDParameters, LCD_TASK_PRIORITY, NULL);
   vTaskStartScheduler();
   while(1);
 }

@@ -37,6 +37,7 @@ namespace max_min_task {
     QueueHandle_t xQueueMaxMin = (QueueHandle_t)pxQueueArray[0];
     QueueHandle_t xQueueConsole = (QueueHandle_t)pxQueueArray[1];
     MaxMinMessage_t xMessage;
+    vMaxMinInitialize();
     for(;;) {
       xQueueReceive(xQueueMaxMin, &xMessage, portMAX_DELAY);
       if(xMessage.xAction == Get) {
