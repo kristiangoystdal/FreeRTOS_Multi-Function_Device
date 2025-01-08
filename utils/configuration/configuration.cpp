@@ -5,8 +5,8 @@
 
 namespace configuration {
 
-  static atomic::Atomic<TickType_t> xPMON;
-  static atomic::Atomic<TickType_t> xTALA;
+  static atomic::Atomic<TickType_t>* xPMON;
+  static atomic::Atomic<TickType_t>* xTALA;
   
   void vConfigInitializer() {
     xPMON = new atomic::Atomic<TickType_t>(pdMS_TO_TICKS(1000*PMON_DEFAULT_VALUE));
@@ -14,19 +14,19 @@ namespace configuration {
   }
 
   TickType_t xConfigGetPMON() {
-    return xPMON.get();
+    return xPMON->get();
   }
 
   TickType_t xConfigGetTALA() {
-    return xTALA.get();
+    return xTALA->get();
   }
   
   void vConfigSetPMON(int seconds) {
-    xPMON.set(pdMS_TO_TICKS(1000*seconds));
+    xPMON->set(pdMS_TO_TICKS(1000*seconds));
   }
 
   void vConfigSetTALA(int seconds) {
-    xTALA.set(pdMS_TO_TICKS(1000*seconds));
+    xTALA->set(pdMS_TO_TICKS(1000*seconds));
   }
 
 }

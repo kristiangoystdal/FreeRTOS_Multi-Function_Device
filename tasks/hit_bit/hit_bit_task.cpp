@@ -15,7 +15,7 @@ namespace hit_bit_task {
   static InterruptIn pb(p14);
 
   static TaskHandle_t xHandle;
-  static atomic::Atomic<bool> xHitBitEnabled;
+  static atomic::Atomic<bool>* xHitBitEnabled;
 
   void vButtonPressed() {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
@@ -60,11 +60,11 @@ namespace hit_bit_task {
   }
 
   bool xGetHitBitEnabled() {
-    return xHitBitEnabled.get();
+    return xHitBitEnabled->get();
   }
 
   void vSetHitBitEnabled(bool enabled) {
-    xHitBitEnabled.set(enabled);
+    xHitBitEnabled->set(enabled);
     if(enabled) {
       vTaskResume(xHandle);
     } else {

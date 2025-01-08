@@ -15,14 +15,14 @@ namespace pwm_task {
   static float fPeriod = 0.0;
   static float fDutyCycle = 0.0;
 
-  static atomic::Atomic<bool> xConfigSoundEnabled;
+  static atomic::Atomic<bool>* xConfigSoundEnabled;
 
   bool xGetConfigSoundEnabled() {
-    return xConfigSoundEnabled.get();
+    return xConfigSoundEnabled->get();
   }
 
   void vSetConfigSoundEnabled(bool enabled) {
-    xConfigSoundEnabled.set(enabled);
+    xConfigSoundEnabled->set(enabled);
   }
 
   void vPWMTask(void* pvParameters) {

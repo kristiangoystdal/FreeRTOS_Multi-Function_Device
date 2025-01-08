@@ -11,14 +11,14 @@ namespace bubble_level_task {
   static MMA7660 MMA(p28, p27); //I2C Accelerometer
 
   static TaskHandle_t xHandle;
-  static atomic::Atomic<bool> xBubbleLevelEnabled;
+  static atomic::Atomic<bool>* xBubbleLevelEnabled;
 
   bool xGetBubbleLevelEnabled() {
-    return xBubbleLevelEnabled.get();
+    return xBubbleLevelEnabled->get();
   }
 
   void vSetBubbleLevelEnabled(bool enabled) {
-    xBubbleLevelEnabled.set(enabled);
+    xBubbleLevelEnabled->set(enabled);
     if(enabled) {
       vTaskResume(xHandle);
     } else {

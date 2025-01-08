@@ -35,7 +35,7 @@ void vTask2(void *pvParameters) {
   QueueHandle_t xQueue = (QueueHandle_t)pvParameters;
   int32_t lReceivedValue;
   BaseType_t xStatus;
-  led2 = 1;
+  //led2 = 1;
   printf("Hello from mbed -- FreeRTOS / cmd\n");
   for (;;) {
     // Receive from the queue

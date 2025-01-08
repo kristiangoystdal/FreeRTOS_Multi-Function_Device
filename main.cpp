@@ -61,7 +61,7 @@ void check_temperature() {
     } else {
       error("Device not detected!\n");
     }
-    led2 = !led2;
+    // led2 = !led2;
   }
 }
 

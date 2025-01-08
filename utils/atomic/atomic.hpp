@@ -4,6 +4,7 @@
 
 #include "FreeRTOS.h"
 #include "semphr.h"
+#include <stdio.h>
 
 namespace atomic {
 
@@ -12,12 +13,27 @@ namespace atomic {
   class Atomic {
   public:
     // Constructor
-    Atomic(T value);
+    Atomic(T value): value(value) {
+    xMutex = xSemaphoreCreateMutex();
+    if(xMutex == NULL) {
+      printf("Critical error when creating Mutex!");
+    }
+  }
 
     // Member function
-    void set(T value);
-    T get(void);
-  private:
+    void set(T value) {
+      xSemaphoreTake(xMutex, portMAX_DELAY);
+      this->value = value;
+      xSemaphoreGive(xMutex);
+    }
+
+    T get(void) {
+      xSemaphoreTake(xMutex, portMAX_DELAY);
+      T val = this->value;
+      xSemaphoreGive(xMutex);
+      return val;
+    }
+    private:
     SemaphoreHandle_t xMutex;
     T value;
   };
