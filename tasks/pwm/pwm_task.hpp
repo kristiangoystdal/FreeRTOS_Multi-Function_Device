@@ -1,6 +1,6 @@
 
-#ifndef __PWM_H
-#define __PWM_H
+#ifndef __PWM_TASK_H
+#define __PWM_TASK_H
 
 namespace pwm_task {
   
@@ -8,4 +8,4 @@ namespace pwm_task {
 
 }
 
-#endif __PWM_H
+#endif // __PWM_TASK_H

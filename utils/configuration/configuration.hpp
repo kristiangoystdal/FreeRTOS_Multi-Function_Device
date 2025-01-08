@@ -13,9 +13,15 @@ namespace configuration {
 
   TickType_t xConfigGetPMON();
   TickType_t xConfigGetTALA();
+  bool xConfigGetBubbleLevelEnabled();
+  bool xConfigGetHitBitEnabled();
+  bool xConfigGetConfigSoundEnabled();
   
   void vConfigSetPMON(int seconds);
   void vConfigSetTALA(int seconds);
+  void vConfigSetBubbleLevelEnabled(bool enabled);
+  void vConfigSetHitBitEnabled(bool enabled);
+  void vConfigSetConfigSoundEnabled(bool enabled);
 
 }
 
