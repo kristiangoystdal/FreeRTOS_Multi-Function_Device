@@ -4,6 +4,10 @@
 
 namespace pwm_task {
   
+  bool xGetConfigSoundEnabled();
+
+  void vSetConfigSoundEnabled(bool enabled);
+
   void vPWMTask(void* pvParameters);
 
 }

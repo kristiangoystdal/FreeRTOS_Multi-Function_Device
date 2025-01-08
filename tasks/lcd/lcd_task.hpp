@@ -7,18 +7,26 @@
 namespace lcd_task
 {
 
-#define LCD_CLOCK_UPDATE_TIME 33
+  #define LCD_CLOCK_UPDATE_TIME 1000
 
   typedef enum LCDAction
   {
     Alarm,
-    Temperature
+    Temperature,
+    BubbleLevel
   } LCDAction;
+
+  typedef struct
+  {
+    int x;
+    int y;
+  } Pos;
 
   typedef union LCDData
   {
     char cAlarmLetter;
     float xTemperature;
+    Pos xBubbleLevelPos;
   } LCDData;
 
   typedef struct

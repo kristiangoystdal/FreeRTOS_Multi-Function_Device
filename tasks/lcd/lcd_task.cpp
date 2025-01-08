@@ -27,7 +27,6 @@ namespace lcd_task {
     vLCDInitialize();
     for(;;) {
       vUpdateClock();
-      draw_bubble_level();
       BaseType_t xStatus = xQueueReceive(xQueueLCD, &xMessage, xTicks);
       if(xStatus != pdPASS) {
         continue;
@@ -56,10 +55,14 @@ namespace lcd_task {
           int xTemperature = xMessage.xLCDData.xTemperature;
           write_temperature(xTemperature);
           break;
+        case BubbleLevel:
+          int x = xMessage.xLCDData.xBubbleLevelPos.x;
+          int y = xMessage.xLCDData.xBubbleLevelPos.y;
+          draw_bubble_level(x, y);
+          break;
         default:
           break;
       }
-      // Always update clock and bubble level
     }
   }
 

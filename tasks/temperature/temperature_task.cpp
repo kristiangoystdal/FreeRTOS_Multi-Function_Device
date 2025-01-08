@@ -12,7 +12,7 @@
 namespace temperature_task {
 
   static LM75B sensor(p28,p27);
-  
+
   void vTemperatureTask(void* pvParameters) {
     QueueHandle_t* pxQueueArray = (QueueHandle_t*)pvParameters;
     QueueHandle_t xQueueMaxMin = (QueueHandle_t)pxQueueArray[0];
@@ -20,6 +20,9 @@ namespace temperature_task {
     QueueHandle_t xQueueLCD = (QueueHandle_t)pxQueueArray[2];
     QueueHandle_t xQueueConsole = (QueueHandle_t)pxQueueArray[3];
     uint32_t ulNotificationValue = 0;
+    if(!sensor.open()) {
+      printf("Temperature sensor NOT OK");
+    }
     for(;;) {
       float xTemp = sensor.temp();
       time_t xMeasureTime = date_time::get_time();

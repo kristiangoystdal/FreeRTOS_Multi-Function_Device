@@ -3,6 +3,8 @@
 #include "configuration.hpp"
 #include "mbed.h"
 #include "FreeRTOS.h"
+#include "task.h"
+#include "atomic.hpp"
 
 namespace hit_bit_task {
 
@@ -13,6 +15,7 @@ namespace hit_bit_task {
   static InterruptIn pb(p14);
 
   static TaskHandle_t xHandle;
+  static atomic::Atomic<bool> xHitBitEnabled;
 
   void vButtonPressed() {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
@@ -56,16 +59,24 @@ namespace hit_bit_task {
     }
   }
 
+  bool xGetHitBitEnabled() {
+    return xHitBitEnabled.get();
+  }
+
+  void vSetHitBitEnabled(bool enabled) {
+    xHitBitEnabled.set(enabled);
+    if(enabled) {
+      vTaskResume(xHandle);
+    } else {
+      vTaskSuspend(xHandle);
+    }
+  }
+
   void vHitBitTask(void* pvParameters) {
     xHandle = xTaskGetCurrentTaskHandle();
+    xHitBitEnabled = new atomic::Atomic<bool>(false);
     pb.rise(&vButtonPressed);
-    TickType_t xUpdateTime = pdMS_TO_TICKS(DISABLED__UPDATE_TIME);
     for(;;) {
-      bool xEnabled = configuration::vConfigSetHitBitEnabled();
-      if(!xEnabled) {
-        vTaskDelay(pdMS_TO_TICKS(DISABLED__UPDATE_TIME));
-        continue;
-      }
       vPlayMode();
       vWinMode();
     }
