@@ -1,4 +1,3 @@
-// #ifdef notdef
 
 /***************************************************************************
 | File: comando.c  -  Concretizacao de comandos (exemplo)
@@ -6,12 +5,39 @@
 | Autor: Carlos Almeida (IST)
 | Data:  Nov 2002
 ***************************************************************************/
+#include "comando.hpp"
 #include "FreeRTOS.h"
+#include "LM75B.h"
+#include "alarm_task.hpp"
+#include "configuration.hpp"
+#include "lcd_task.hpp"
+#include "max_min_task.hpp"
 #include "queue.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+static QueueHandle_t *xQueueCommand = NULL;
+static QueueHandle_t *xQueueMaxMin = NULL;
+static QueueHandle_t *xQueueAlarm = NULL;
+static QueueHandle_t *xQueueLCD = NULL;
+
+namespace comando {
+void vCommandInitialize(QueueHandle_t (*pxQueueArray)[4]) {
+  // Assign the pointers to the queues
+  xQueueCommand = &(*pxQueueArray)[0];
+  xQueueMaxMin = &(*pxQueueArray)[1];
+  xQueueAlarm = &(*pxQueueArray)[2];
+  xQueueLCD = &(*pxQueueArray)[3];
+
+  if (*xQueueCommand == NULL || *xQueueMaxMin == NULL || *xQueueAlarm == NULL ||
+      *xQueueLCD == NULL) {
+    printf("Error: One or more queues are uninitialized!\n");
+  } else {
+    printf("Queues initialized successfully.\n");
+  }
+}
 
 /*-------------------------------------------------------------------------+
 | Function: cmd_sair - termina a aplicacao
@@ -128,6 +154,16 @@ void cmd_rt(int argc, char **argv) {
 void cmd_rmm(int argc, char **argv) {
   // Placeholder for command
   printf("cmd_rmm\n");
+  max_min_task::MaxMinMessage_t xMaxMinMessage;
+  xMaxMinMessage.xAction = max_min_task::Get;
+  xMaxMinMessage.xMeasure.xTemp = 0;
+  xMaxMinMessage.xMeasure.xTime = 0;
+  BaseType_t xStatus = xQueueSend(xQueueMaxMin, &xMaxMinMessage, 0);
+  if (xStatus == errQUEUE_FULL) {
+    printf("ERROR: Queue full: Temperature -> Max/Min");
+  } else {
+    printf("Pass\n");
+  }
 }
 
 void cmd_cmm(int argc, char **argv) {
@@ -230,9 +266,6 @@ void cmd_adcs(int argc, char **argv) {
   // Placeholder for command
   printf("cmd_adcs %d\n", atoi(argv[1]));
 }
-
-/*-------------------------------------------------------------------------+
-
-// #endif //notdef
+} // namespace comando
 
 */
