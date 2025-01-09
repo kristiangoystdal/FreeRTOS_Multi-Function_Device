@@ -139,11 +139,10 @@ void check_tasks() {
   printf("Init complete...");
 
   TaskHandle_t xReadTemperatureTaskHandler;
-  // init_TaskScheduler(&xQueue);
+  init_TaskScheduler(&xQueue);
 
-  // xTaskCreate(vTask1, "Task 1", 2 * configMINIMAL_STACK_SIZE, xQueue, 20,
-  // NULL); xTaskCreate(vTask2, "Task 2", 2 * configMINIMAL_STACK_SIZE, xQueue,
-  // 21, NULL);
+  xTaskCreate(vTask1, "Task 1", 2 * configMINIMAL_STACK_SIZE, xQueue, 20, NULL);
+  xTaskCreate(vTask2, "Task 2", 2 * configMINIMAL_STACK_SIZE, xQueue, 21, NULL);
 
   xTaskCreate(command_task::vCommandTask, "Task Command",
               4 * configMINIMAL_STACK_SIZE, &pxCmdParameters,
