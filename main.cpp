@@ -21,6 +21,7 @@ DigitalOut led2(LED2);
 Serial pc(USBTX, USBRX);
 
 // LM75B sensor(p28, p27);
+I2C i2c(p28, p27);
 
 DigitalOut led(LED1);
 
@@ -31,6 +32,7 @@ void check_rtc(void);
 void check_lcd(void);
 void check_cmd(void);
 void check_tasks(void);
+extern void monitor(void);
 QueueHandle_t createQueue(UBaseType_t uxSize, UBaseType_t uxType);
 
 int main() {
@@ -113,6 +115,15 @@ void check_cmd() {
   };
 }
 
+void scanI2CDevices() {
+  printf("Scanning I2C bus...\n");
+  for (int address = 0; address < 128; address++) {
+    if (i2c.write(address << 1, NULL, 0) == 0) {
+      printf("Device found at address 0x%X\n", address);
+    }
+  }
+}
+
 void check_tasks() {
 
   QueueHandle_t xQueueMaxMin = createQueue(
@@ -135,6 +146,8 @@ void check_tasks() {
   configuration::vConfigInitializer();
   max_min_task::vMaxMinInitialize();
   comando::vCommandInitialize(&pxCmdParameters);
+  scanI2CDevices();
+  setup_temp_sensor();
 
   printf("Init complete...");
 
@@ -142,7 +155,8 @@ void check_tasks() {
   init_TaskScheduler(&xQueue);
 
   xTaskCreate(vTask1, "Task 1", 2 * configMINIMAL_STACK_SIZE, xQueue, 20, NULL);
-  xTaskCreate(vTask2, "Task 2", 2 * configMINIMAL_STACK_SIZE, xQueue, 21, NULL);
+  // xTaskCreate(vTask2, "Task 2", 2 * configMINIMAL_STACK_SIZE,
+  //   xQueue, 21, NULL);
 
   xTaskCreate(command_task::vCommandTask, "Task Command",
               4 * configMINIMAL_STACK_SIZE, &pxCmdParameters,
