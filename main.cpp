@@ -129,6 +129,8 @@ void check_tasks() {
   QueueHandle_t pxMaxMinParameters[2] = {xQueueMaxMin, xQueueConsole};
   QueueHandle_t pxCmdParameters[4] = {xQueueConsole, xQueueMaxMin, xQueueAlarm,
                                       xQueueLCD};
+  QueueHandle_t pxLCDParameters[4] = {xQueueLCD, xQueueMaxMin, xQueueAlarm,
+                                      xQueueConsole};
 
   configuration::vConfigInitializer();
   max_min_task::vMaxMinInitialize();
@@ -151,6 +153,8 @@ void check_tasks() {
   xTaskCreate(max_min_task::vMaxMinTask, "Task Max Min",
               2 * configMINIMAL_STACK_SIZE, &pxMaxMinParameters,
               MAX_MIN_TASK_PRIORITY, NULL);
+  xTaskCreate(lcd_task::vLCDTask, "Task LCD", 2 * configMINIMAL_STACK_SIZE,
+              &pxLCDParameters, LCD_TASK_PRIORITY, NULL);
 
   vTaskStartScheduler();
   while (1)
