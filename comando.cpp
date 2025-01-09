@@ -135,7 +135,7 @@ void cmd_sd(int argc, char **argv) {
 
 void cmd_rc(int argc, char **argv) {
   // Placeholder for command
-  printf("cmd_rc\n");
+  printf("cmd_rc 2\n");
 }
 
 void cmd_sc(int argc, char **argv) {
@@ -267,4 +267,3 @@ void cmd_adcs(int argc, char **argv) {
   printf("cmd_adcs %d\n", atoi(argv[1]));
 }
 } // namespace comando
-

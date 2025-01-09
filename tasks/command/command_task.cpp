@@ -29,7 +29,7 @@ void vCommandTask(void *pvParameters) {
       break;
     case Clock:
       // Placeholder for command
-      printf("cmd_rc\n");
+      printf("cmd_rc 1\n");
       break;
     case Parameters:
       // Placeholder for command
