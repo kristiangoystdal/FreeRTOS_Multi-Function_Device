@@ -15,7 +15,6 @@ namespace lcd_task {
 
   void vLCDInitialize() {
     setup_lcd();
-    draw_bubble_level();
     write_clock_alarm(false);
     write_temp_alarm(false);
   }
@@ -24,10 +23,14 @@ namespace lcd_task {
     QueueHandle_t* pxQueueArray = (QueueHandle_t*)pvParameters;
     QueueHandle_t xQueueLCD = (QueueHandle_t)pxQueueArray[0];
     LCDMessage_t xMessage;
+    TickType_t xTicks = pdMS_TO_TICKS(LCD_CLOCK_UPDATE_TIME);
     vLCDInitialize();
     for(;;) {
-      TickType_t xTicks = pdMS_TO_TICKS(LCD_CLOCK_UPDATE_TIME);
-      xQueueReceive(xQueueLCD, &xMessage, xTicks);
+      vUpdateClock();
+      BaseType_t xStatus = xQueueReceive(xQueueLCD, &xMessage, xTicks);
+      if(xStatus != pdPASS) {
+        continue;
+      }
       switch(xMessage.xAction) {
         case Alarm:
           char cAlarmLetter = xMessage.xLCDData.cAlarmLetter;
@@ -52,12 +55,14 @@ namespace lcd_task {
           int xTemperature = xMessage.xLCDData.xTemperature;
           write_temperature(xTemperature);
           break;
+        case BubbleLevel:
+          int x = xMessage.xLCDData.xBubbleLevelPos.x;
+          int y = xMessage.xLCDData.xBubbleLevelPos.y;
+          draw_bubble_level(x, y);
+          break;
         default:
           break;
       }
-      // Always update clock and bubble level
-      vUpdateClock();
-      draw_bubble_level();
     }
   }
 }

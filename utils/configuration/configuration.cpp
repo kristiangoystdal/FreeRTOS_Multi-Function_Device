@@ -1,57 +1,32 @@
 
 #include "configuration.hpp"
-#include "semphr.h"
+#include "atomic.hpp"
 #include <stdio.h>
 
 namespace configuration {
 
-  static SemaphoreHandle_t xMutexPMON;
-  static SemaphoreHandle_t xMutexTALA;
-
-  static TickType_t xPMON;
-  static TickType_t xTALA;
+  static atomic::Atomic<TickType_t>* xPMON;
+  static atomic::Atomic<TickType_t>* xTALA;
   
   void vConfigInitializer() {
-    xMutexPMON = xSemaphoreCreateMutex();
-    if(xMutexPMON == NULL) {
-     printf("Critical error when creating PMON's Mutex!");
-    }
-
-    xMutexTALA = xSemaphoreCreateMutex();
-    if(xMutexTALA == NULL) {
-     printf("Critical error when creating TALA's Mutex!");
-    }
-
-    xPMON = pdMS_TO_TICKS(1000*PMON_DEFAULT_VALUE);
-    xTALA = pdMS_TO_TICKS(1000*TALA_DEFAULT_VALUE);
+    xPMON = new atomic::Atomic<TickType_t>(pdMS_TO_TICKS(1000*PMON_DEFAULT_VALUE));
+    xTALA = new atomic::Atomic<TickType_t>(pdMS_TO_TICKS(1000*TALA_DEFAULT_VALUE));
   }
 
   TickType_t xConfigGetPMON() {
-    xSemaphoreTake(xMutexPMON, portMAX_DELAY);
-    TickType_t xPMONValue = xPMON;
-    xSemaphoreGive(xMutexPMON);
-    return xPMONValue;
+    return xPMON->get();
   }
 
   TickType_t xConfigGetTALA() {
-    xSemaphoreTake(xMutexTALA, portMAX_DELAY);
-    TickType_t xTALAValue = xTALA;
-    xSemaphoreGive(xMutexTALA);
-    return xTALAValue;
+    return xTALA->get();
   }
   
   void vConfigSetPMON(int seconds) {
-    TickType_t ticks = pdMS_TO_TICKS(1000*seconds);
-    xSemaphoreTake(xMutexPMON, portMAX_DELAY);
-    xPMON = ticks;
-    xSemaphoreGive(xMutexPMON);
+    xPMON->set(pdMS_TO_TICKS(1000*seconds));
   }
 
   void vConfigSetTALA(int seconds) {
-    TickType_t ticks = pdMS_TO_TICKS(1000*seconds);
-    xSemaphoreTake(xMutexTALA, portMAX_DELAY);
-    xTALA = ticks;
-    xSemaphoreGive(xMutexTALA);
+    xTALA->set(pdMS_TO_TICKS(1000*seconds));
   }
 
 }
