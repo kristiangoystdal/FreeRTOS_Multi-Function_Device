@@ -57,8 +57,7 @@ namespace lcd_task {
       }
       // Always update clock and bubble level
       vUpdateClock();
-      draw_bubble_level()
+      draw_bubble_level();
     }
   }
-
 }

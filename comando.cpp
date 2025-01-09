@@ -268,4 +268,3 @@ void cmd_adcs(int argc, char **argv) {
 }
 } // namespace comando
 
-*/
