@@ -4,13 +4,13 @@
 #include "RTC.h"
 #include "configuration.hpp"
 #include "date_time.hpp"
+#include "global_queues.h"
 #include "lcd_task.hpp"
 #include "queue.h"
 #include "rgb.hpp"
 #include "semphr.h"
 #include "task.h"
 #include <stdio.h>
-
 
 namespace alarm_task {
 
@@ -69,11 +69,7 @@ void vClockAlarm() {
 
 void vAlarmTask(void *pvParameters) {
   printf("Alarm Task\n");
-  QueueHandle_t *pxQueueArray = (QueueHandle_t *)pvParameters;
-  QueueHandle_t xQueueAlarm = (QueueHandle_t)pxQueueArray[0];
-  QueueHandle_t xQueueConsole = (QueueHandle_t)pxQueueArray[1];
-  QueueHandle_t xQueueLCD = (QueueHandle_t)pxQueueArray[2];
-  xPWMTask = (TaskHandle_t)pxQueueArray[3];
+
   AlarmMessage_t xMessage;
   vAlarmInfoInitialize();
   vAlarmClockMutexInitialize();

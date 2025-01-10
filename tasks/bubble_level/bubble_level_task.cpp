@@ -6,6 +6,7 @@
 #include "lcd_task.hpp"
 #include "task.h"
 #include <stdio.h>
+#include "global_queues.h"
 
 namespace bubble_level_task {
 
@@ -29,8 +30,6 @@ namespace bubble_level_task {
 
   void vBubbleLevelTask(void* pvParameters) {
     printf("Bubble Level Task\n");
-    QueueHandle_t* pxQueueArray = (QueueHandle_t*)pvParameters;
-    QueueHandle_t xQueueLCD = (QueueHandle_t)pxQueueArray[0];
     lcd_task::LCDMessage_t xMessage;
     xHandle = xTaskGetCurrentTaskHandle();
     xBubbleLevelEnabled = new atomic::Atomic<bool>(true);

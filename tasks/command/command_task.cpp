@@ -4,13 +4,12 @@
 #include <cfloat>
 #include <cstdio>
 #include <stdio.h>
+#include "global_queues.h"
 
 namespace command_task {
 
 void vCommandTask(void *pvParameters) {
   printf("Command Task\n");
-  QueueHandle_t *pxQueueArray = (QueueHandle_t *)pvParameters;
-  QueueHandle_t xQueueCommand = (QueueHandle_t)pxQueueArray[0];
   CommandMessage_t xMessage;
   for (;;) {
     printf("CMD\n");

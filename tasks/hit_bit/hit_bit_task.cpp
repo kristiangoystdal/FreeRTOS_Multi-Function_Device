@@ -6,6 +6,7 @@
 #include "mbed.h"
 #include "task.h"
 #include <stdio.h>
+#include "global_queues.h"
 
 namespace hit_bit_task {
 
