@@ -12,6 +12,9 @@
 #include "configuration.hpp"
 #include "lcd_task.hpp"
 #include "max_min_task.hpp"
+#include "pwm_task.hpp"
+#include "hit_bit_task.hpp"
+#include "bubble_level_task.hpp"
 #include "queue.h"
 #include <ctype.h>
 #include <stdio.h>
@@ -87,7 +90,7 @@ bool check_args_digit(char **argv) {
 bool check_args_range(char **argv, int ranges[][2]) {
   for (int i = 1; i < 4; i++) {
     int value = atoi(argv[i]);
-    if (value < ranges[i - 1][0] || value > ranges[i - 1][1]) {
+    if (value <= ranges[i - 1][0] && value >= ranges[i - 1][1]) {
       return true;
     }
   }
@@ -236,7 +239,10 @@ void cmd_adat(int argc, char **argv) {
 }
 
 void cmd_rts(int argc, char **argv) {
-  // Placeholder for command
+  bool bubble_level_en = bubble_level_task::xGetBubbleLevelEnabled();
+  bool hit_bit_en = hit_bit_task::xGetHitBitEnabled();
+  bool config_sound_en = pwm_task::xGetConfigSoundEnabled();
+  printf("%d, %d, %d\n", bubble_level_en, hit_bit_en, config_sound_en);
   printf("cmd_rts\n");
 }
 
@@ -245,7 +251,7 @@ void cmd_adbl(int argc, char **argv) {
     return;
   }
 
-  // Placeholder for command
+  bubble_level_task::vSetBubbleLevelEnabled((bool) atoi(argv[1]));
   printf("cmd_adbl %d\n", atoi(argv[1]));
 }
 
@@ -254,7 +260,7 @@ void cmd_adhb(int argc, char **argv) {
     return;
   }
 
-  // Placeholder for command
+  hit_bit_task::vSetHitBitEnabled((bool) atoi(argv[1]));
   printf("cmd_adhb %d\n", atoi(argv[1]));
 }
 
@@ -263,7 +269,7 @@ void cmd_adcs(int argc, char **argv) {
     return;
   }
 
-  // Placeholder for command
+  pwm_task::vSetConfigSoundEnabled((bool) atoi(argv[1]));
   printf("cmd_adcs %d\n", atoi(argv[1]));
 }
 } // namespace comando
