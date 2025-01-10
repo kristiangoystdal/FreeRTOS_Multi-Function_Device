@@ -66,8 +66,6 @@ QueueHandle_t xCreateQueue(UBaseType_t uxSize, UBaseType_t uxType) {
 void check_tasks() {
 
   TaskHandle_t xPWMTaskHandler;
-  vCreateTask(pwm_task::vPWMTask, "Task PWM", 2 * configMINIMAL_STACK_SIZE,
-              NULL, MAX_MIN_TASK_PRIORITY, &xPWMTaskHandler);
 
   QueueHandle_t xQueueMaxMin = xCreateQueue(
       MAX_MIN_TASK_QUEUE_SIZE, sizeof(max_min_task::MaxMinMessage_t));
@@ -95,12 +93,15 @@ void check_tasks() {
 
   printf("Init complete...");
 
+  //   vCreateTask(pwm_task::vPWMTask, "Task PWM", 2 * configMINIMAL_STACK_SIZE,
+  //               NULL, MAX_MIN_TASK_PRIORITY, &xPWMTaskHandler);
+
   // xTaskCreate(vMonitorTask, "Monitor", 2 * configMINIMAL_STACK_SIZE, NULL, 1,
   //             NULL);
 
   TaskHandle_t xTemperatureTaskHandler;
   vCreateTask(temperature_task::vTemperatureTask, "Task Temperature",
-              2 * configMINIMAL_STACK_SIZE, &pxTemperatureParameters,
+              16 * configMINIMAL_STACK_SIZE, &pxTemperatureParameters,
               TEMPERATURE_TASK_PRIORITY, &xTemperatureTaskHandler);
   // vCreateTask(alarm_task::vAlarmTask, "Task Alarm",
   //             2 * configMINIMAL_STACK_SIZE, &pxAlarmParameters,
