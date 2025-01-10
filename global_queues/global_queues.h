@@ -4,9 +4,9 @@
 #include "FreeRTOS.h"
 #include "queue.h"
 
-QueueHandle_t xQueueMaxMin;
-QueueHandle_t xQueueAlarm;
-QueueHandle_t xQueueLCD;
-QueueHandle_t xQueueConsole;
+extern QueueHandle_t xQueueMaxMin;
+extern QueueHandle_t xQueueAlarm;
+extern QueueHandle_t xQueueLCD;
+extern QueueHandle_t xQueueConsole;
 
 #endif // __GLOBAL_QUEUES_H__
