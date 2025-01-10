@@ -95,26 +95,25 @@ void check_tasks() {
 
   printf("Init complete...");
 
-  TaskHandle_t xReadTemperatureTaskHandler;
-
-  xTaskCreate(vMonitorTask, "Monitor", 2 * configMINIMAL_STACK_SIZE, NULL, 1,
-              NULL);
+  // xTaskCreate(vMonitorTask, "Monitor", 2 * configMINIMAL_STACK_SIZE, NULL, 1,
+  //             NULL);
 
   TaskHandle_t xTemperatureTaskHandler;
   vCreateTask(temperature_task::vTemperatureTask, "Task Temperature",
               2 * configMINIMAL_STACK_SIZE, &pxTemperatureParameters,
               TEMPERATURE_TASK_PRIORITY, &xTemperatureTaskHandler);
-  vCreateTask(alarm_task::vAlarmTask, "Task Alarm",
-              2 * configMINIMAL_STACK_SIZE, &pxAlarmParameters,
-              ALARM_TASK_PRIORITY, NULL);
-  vCreateTask(max_min_task::vMaxMinTask, "Task Max Min",
-              2 * configMINIMAL_STACK_SIZE, &pxMaxMinParameters,
-              MAX_MIN_TASK_PRIORITY, NULL);
-  vCreateTask(lcd_task::vLCDTask, "Task Hit Bit", 2 * configMINIMAL_STACK_SIZE,
-              NULL, HIT_BIT_TASK_PRIORITY, NULL);
-  vCreateTask(hit_bit_task::vHitBitTask, "Task LCD",
-              2 * configMINIMAL_STACK_SIZE, &pxLCDParameters, LCD_TASK_PRIORITY,
-              NULL);
+  // vCreateTask(alarm_task::vAlarmTask, "Task Alarm",
+  //             2 * configMINIMAL_STACK_SIZE, &pxAlarmParameters,
+  //             ALARM_TASK_PRIORITY, NULL);
+  // vCreateTask(max_min_task::vMaxMinTask, "Task Max Min",
+  //             2 * configMINIMAL_STACK_SIZE, &pxMaxMinParameters,
+  //             MAX_MIN_TASK_PRIORITY, NULL);
+  // vCreateTask(lcd_task::vLCDTask, "Task Hit Bit", 2 *
+  // configMINIMAL_STACK_SIZE,
+  //             NULL, HIT_BIT_TASK_PRIORITY, NULL);
+  // vCreateTask(hit_bit_task::vHitBitTask, "Task LCD",
+  //             2 * configMINIMAL_STACK_SIZE, &pxLCDParameters,
+  //             LCD_TASK_PRIORITY, NULL);
 
   vTaskStartScheduler();
   while (1)
