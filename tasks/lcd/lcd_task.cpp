@@ -20,6 +20,7 @@ namespace lcd_task {
   }
 
   void vLCDTask(void* pvParameters) {
+    printf("LCD Task\n");
     QueueHandle_t* pxQueueArray = (QueueHandle_t*)pvParameters;
     QueueHandle_t xQueueLCD = (QueueHandle_t)pxQueueArray[0];
     LCDMessage_t xMessage;

@@ -33,6 +33,7 @@ namespace max_min_task {
   }
 
   void vMaxMinTask(void* pvParameters) {
+    printf("MaxMin Task\n");
     QueueHandle_t* pxQueueArray = (QueueHandle_t*)pvParameters;
     QueueHandle_t xQueueMaxMin = (QueueHandle_t)pxQueueArray[0];
     QueueHandle_t xQueueConsole = (QueueHandle_t)pxQueueArray[1];
