@@ -79,8 +79,6 @@ void check_tasks() {
   QueueHandle_t pxTemperatureParameters[4] = {xQueueMaxMin, xQueueAlarm,
                                               xQueueLCD, xQueueConsole};
 
-  printf("%p\n", pxTemperatureParameters);
-
   QueueHandle_t pxAlarmParameters[4] = {xQueueAlarm, xQueueConsole, xQueueLCD,
                                         xPWMTaskHandler};
   QueueHandle_t pxMaxMinParameters[3] = {xQueueMaxMin, xQueueConsole,
@@ -116,6 +114,9 @@ void check_tasks() {
               NULL, HIT_BIT_TASK_PRIORITY, NULL);
   vCreateTask(hit_bit_task::vHitBitTask, "Task LCD",
               2 * configMINIMAL_STACK_SIZE, &pxLCDParameters, LCD_TASK_PRIORITY,
+              NULL);
+  vCreateTask(bubble_level_task::vBubbleLevelTask, "Task Bubble Level",
+              2 * configMINIMAL_STACK_SIZE, NULL, BUBBLE_LEVEL_TASK_PRIORITY,
               NULL);
 
   vTaskStartScheduler();
