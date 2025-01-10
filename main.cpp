@@ -26,8 +26,6 @@ I2C i2c(p28, p27);
 
 DigitalOut led(LED1);
 
-QueueHandle_t xQueue;
-
 void check_temperature(void);
 void check_rtc(void);
 void check_lcd(void);
@@ -125,54 +123,67 @@ void scanI2CDevices() {
   }
 }
 
+void vCreateTask(TaskFunction_t pxTaskCode, const char *const pcName,
+                 const uint16_t usStackDepth, void *const pvParameters,
+                 UBaseType_t uxPriority, TaskHandle_t *const pxCreatedTask) {
+  BaseType_t xReturn = xTaskCreate(pxTaskCode, pcName, usStackDepth,
+                                   pvParameters, uxPriority, pxCreatedTask);
+  if (xReturn == errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY) {
+    printf("Failed to create the task %s\n", pcName);
+  }
+}
+
 void check_tasks() {
 
-  QueueHandle_t xQueueMaxMin = createQueue(
+  TaskHandle_t xPWMTaskHandler;
+  vCreateTask(pwm_task::vPWMTask, "Task PWM", 2 * configMINIMAL_STACK_SIZE,
+              NULL, MAX_MIN_TASK_PRIORITY, &xPWMTaskHandler);
+
+  QueueHandle_t xQueueMaxMin = xCreateQueue(
       MAX_MIN_TASK_QUEUE_SIZE, sizeof(max_min_task::MaxMinMessage_t));
   QueueHandle_t xQueueAlarm =
-      createQueue(ALARM_TASK_QUEUE_SIZE, sizeof(alarm_task::AlarmMessage_t));
+      xCreateQueue(ALARM_TASK_QUEUE_SIZE, sizeof(alarm_task::AlarmMessage_t));
   QueueHandle_t xQueueLCD =
-      createQueue(LCD_TASK_QUEUE_SIZE, sizeof(lcd_task::LCDMessage_t));
+      xCreateQueue(LCD_TASK_QUEUE_SIZE, sizeof(lcd_task::LCDMessage_t));
   QueueHandle_t xQueueConsole =
-      createQueue(CONSOLE_TASK_QUEUE_SIZE, 100); // TODO: Think about this
+      xCreateQueue(CONSOLE_TASK_QUEUE_SIZE, 100); // TODO: Think about this
 
-  QueueHandle_t pxReadTemperatureParameters[4] = {xQueueMaxMin, xQueueAlarm,
-                                                  xQueueLCD, xQueueConsole};
-  QueueHandle_t pxMaxMinParameters[2] = {xQueueMaxMin, xQueueConsole};
+  QueueHandle_t pxTemperatureParameters[4] = {xQueueMaxMin, xQueueAlarm,
+                                              xQueueLCD, xQueueConsole};
+  QueueHandle_t pxAlarmParameters[4] = {xQueueAlarm, xQueueConsole, xQueueLCD,
+                                        xPWMTaskHandler};
+  QueueHandle_t pxMaxMinParameters[3] = {xQueueMaxMin, xQueueConsole,
+                                         xQueueLCD};
+  QueueHandle_t pxLCDParameters[1] = {xQueueLCD};
+
   QueueHandle_t pxCmdParameters[4] = {xQueueConsole, xQueueMaxMin, xQueueAlarm,
                                       xQueueLCD};
-  QueueHandle_t pxLCDParameters[4] = {xQueueLCD, xQueueMaxMin, xQueueAlarm,
-                                      xQueueConsole};
 
   configuration::vConfigInitializer();
-  max_min_task::vMaxMinInitialize();
   comando::vCommandInitialize(&pxCmdParameters);
   scanI2CDevices();
-  //   setup_temp_sensor();
 
   printf("Init complete...");
 
   TaskHandle_t xReadTemperatureTaskHandler;
-  init_TaskScheduler(&xQueue);
 
-  xTaskCreate(vTask1, "Task 1", 2 * configMINIMAL_STACK_SIZE, xQueue, 20, NULL);
-  // xTaskCreate(vTask2, "Task 2", 2 * configMINIMAL_STACK_SIZE,
-  //   xQueue, 21, NULL);
+  xTaskCreate(vMonitorTask, "Monitor", 2 * configMINIMAL_STACK_SIZE, NULL, 1, NULL);
 
-  xTaskCreate(command_task::vCommandTask, "Task Command",
-              4 * configMINIMAL_STACK_SIZE, &pxCmdParameters,
-              CONSOLE_TASK_PRIORITY, NULL);
-  xTaskCreate(temperature_task::vTemperatureTask, "Task Read Temperature",
-              2 * configMINIMAL_STACK_SIZE, &pxReadTemperatureParameters,
-              TEMPERATURE_TASK_PRIORITY, &xReadTemperatureTaskHandler);
-  xTaskCreate(max_min_task::vMaxMinTask, "Task Max Min",
+  TaskHandle_t xTemperatureTaskHandler;
+  vCreateTask(temperature_task::vTemperatureTask, "Task Temperature",
+              2 * configMINIMAL_STACK_SIZE, &pxTemperatureParameters,
+              TEMPERATURE_TASK_PRIORITY, &xTemperatureTaskHandler);
+  vCreateTask(alarm_task::vAlarmTask, "Task Alarm",
+              2 * configMINIMAL_STACK_SIZE, &pxAlarmParameters,
+              ALARM_TASK_PRIORITY, NULL);
+  vCreateTask(max_min_task::vMaxMinTask, "Task Max Min",
               2 * configMINIMAL_STACK_SIZE, &pxMaxMinParameters,
               MAX_MIN_TASK_PRIORITY, NULL);
-  xTaskCreate(lcd_task::vLCDTask, "Task LCD", 2 * configMINIMAL_STACK_SIZE,
-              &pxLCDParameters, LCD_TASK_PRIORITY, NULL);
-  xTaskCreate(bubble_level_task::vBubbleLevelTask, "Task Bubble Level",
-              2 * configMINIMAL_STACK_SIZE, &pxLCDParameters,
-              BUBBLE_LEVEL_TASK_PRIORITY, NULL);
+  vCreateTask(lcd_task::vLCDTask, "Task Hit Bit", 2 * configMINIMAL_STACK_SIZE,
+              NULL, HIT_BIT_TASK_PRIORITY, NULL);
+  vCreateTask(hit_bit_task::vHitBitTask, "Task LCD",
+              2 * configMINIMAL_STACK_SIZE, &pxLCDParameters, LCD_TASK_PRIORITY,
+              NULL);
 
   vTaskStartScheduler();
   while (1)

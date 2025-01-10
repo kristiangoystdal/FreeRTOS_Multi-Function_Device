@@ -12,22 +12,7 @@
 extern void monitor(void);
 
 // Task 1 definition
-void vTask1(void *pvParameters) {
-  // Cast pvParameters to QueueHandle_t
-  QueueHandle_t xQueue = (QueueHandle_t)pvParameters;
-  int32_t lValueToSend;
-  BaseType_t xStatus;
-  // led1 = 1;
-  for (;;) {
-    lValueToSend = 201;
-    // Send to the queue
-    xStatus = xQueueSend(xQueue, &lValueToSend, 0);
-    if (xStatus == pdPASS) {
-      monitor(); // Assuming this does not return
-    }
-    // led1 = !led1; // Toggle led1
-  }
-}
+void vMonitorTask(void *pvParameters) { monitor(); }
 
 // Task 2 definition
 void vTask2(void *pvParameters) {
@@ -35,7 +20,7 @@ void vTask2(void *pvParameters) {
   QueueHandle_t xQueue = (QueueHandle_t)pvParameters;
   int32_t lReceivedValue;
   BaseType_t xStatus;
-  //led2 = 1;
+  // led2 = 1;
   printf("Hello from mbed -- FreeRTOS / cmd\n");
   for (;;) {
     // Receive from the queue
