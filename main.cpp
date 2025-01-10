@@ -9,9 +9,11 @@
 #include "comando.hpp"
 #include "command_task.hpp"
 #include "configuration.hpp"
+#include "hit_bit_task.hpp"
 #include "lcd_task.hpp"
 #include "max_min_task.hpp"
 #include "mbed.h"
+#include "pwm_task.hpp"
 #include "queue.h"
 #include "task.h"
 #include "tasks_macros.h"
@@ -51,6 +53,14 @@ void vCreateTask(TaskFunction_t pxTaskCode, const char *const pcName,
   if (xReturn == errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY) {
     printf("Failed to create the task %s\n", pcName);
   }
+}
+
+QueueHandle_t xCreateQueue(UBaseType_t uxSize, UBaseType_t uxType) {
+  QueueHandle_t xQueue = xQueueCreate(uxSize, uxType);
+  if (xQueue == NULL) {
+    printf("Failed to create the queue\n");
+  }
+  return xQueue;
 }
 
 void check_tasks() {
@@ -109,12 +119,4 @@ void check_tasks() {
   vTaskStartScheduler();
   while (1)
     ;
-}
-
-QueueHandle_t createQueue(UBaseType_t uxSize, UBaseType_t uxType) {
-  QueueHandle_t xQueue = xQueueCreate(uxSize, uxType);
-  if (xQueue == NULL) {
-    printf("Failed to create the queue\n");
-  }
-  return xQueue;
 }
