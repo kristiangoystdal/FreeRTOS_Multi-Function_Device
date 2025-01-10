@@ -9,7 +9,6 @@
 #include "queue.h"
 #include "task.h"
 
-
 namespace temperature_task {
 
 static LM75B sensor(p28, p27);
@@ -28,8 +27,9 @@ void vTemperatureTask(void *pvParameters) {
   }
   for (;;) {
     float xTemp = sensor.temp();
+    print("Temperature: %.2f\n", xTemp);
     time_t xMeasureTime = date_time::get_time();
-
+    printf("Time: %d\n", xMeasureTime);
     Measure_t xMeasure;
     xMeasure.xTime = xMeasureTime;
     xMeasure.xTemp = xTemp;
@@ -37,6 +37,7 @@ void vTemperatureTask(void *pvParameters) {
     xMaxMinMessage.xAction = max_min_task::Set;
     xMaxMinMessage.xMeasure = xMeasure;
     BaseType_t xStatus = xQueueSend(xQueueMaxMin, &xMaxMinMessage, 0);
+    printf("Temperature sent to MaxMin\n");
     if (xStatus == errQUEUE_FULL) {
       printf("ERROR: Queue full: Temperature -> Max/Min");
     }
