@@ -5,7 +5,7 @@
 #include "configuration.hpp"
 #include "mbed.h"
 #include "task.h"
-
+#include <stdio.h>
 
 namespace hit_bit_task {
 

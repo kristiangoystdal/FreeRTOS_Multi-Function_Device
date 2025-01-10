@@ -1,10 +1,11 @@
 
 #include "bubble_level_task.hpp"
 #include "FreeRTOS.h"
-#include "task.h"
 #include "MMA7660.h"
 #include "atomic.hpp"
 #include "lcd_task.hpp"
+#include "task.h"
+#include <stdio.h>
 
 namespace bubble_level_task {
 

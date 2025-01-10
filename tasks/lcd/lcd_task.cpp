@@ -1,10 +1,11 @@
 
 #include "lcd_task.hpp"
 #include "FreeRTOS.h"
-#include "queue.h"
 #include "LCD.h"
 #include "RTC.h"
 #include "date_time.hpp"
+#include "queue.h"
+#include <stdio.h>
 
 namespace lcd_task {
 

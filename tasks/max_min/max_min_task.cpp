@@ -4,6 +4,7 @@
 #include "FreeRTOS.h"
 #include "queue.h"
 #include "temperature_task.hpp"
+#include <stdio.h>
 
 namespace max_min_task {
 
