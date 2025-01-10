@@ -1,10 +1,10 @@
 #include "command_task.hpp"
 #include "FreeRTOS.h"
+#include "global_queues.h"
 #include "queue.h"
 #include <cfloat>
 #include <cstdio>
 #include <stdio.h>
-#include "global_queues.h"
 
 namespace command_task {
 
@@ -13,7 +13,7 @@ void vCommandTask(void *pvParameters) {
   CommandMessage_t xMessage;
   for (;;) {
     printf("CMD\n");
-    xQueueReceive(xQueueCommand, &xMessage, portMAX_DELAY);
+    xQueueReceive(xQueueConsole, &xMessage, portMAX_DELAY);
     switch (xMessage.action) {
     case DateTime:
       // Placeholder for command
