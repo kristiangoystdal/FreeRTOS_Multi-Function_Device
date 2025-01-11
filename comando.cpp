@@ -212,12 +212,7 @@ void cmd_sac(int argc, char **argv) {
   }
   alarm_task::AlarmMessage_t xAlarmMessage;
   xAlarmMessage.xAction = alarm_task::SetClock;
-  struct tm time_info = {0};
-  time_info.tm_hour = atoi(argv[1]);
-  time_info.tm_min = atoi(argv[2]);
-  time_info.tm_sec = atoi(argv[3]);
-  time_t t = mktime(&time_info);
-  xAlarmMessage.xAlarmData.tclock = t;
+  time_t t = get_time_t(atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
   printf("SENDING NEW ALARM TIME TO QUEUE: %s", ctime(&t));
   BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
   if (xStatus == errQUEUE_FULL) {

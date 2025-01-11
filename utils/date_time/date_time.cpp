@@ -69,4 +69,13 @@ void convertTimeToClockString(time_t xTime, char *timeString,
   strftime(timeString, bufferSize, "%H:%M:%S", timeInfo);
 }
 
+time_t get_time_t(int H, int M, int S) {
+    time_t now = time(NULL);
+    struct tm timeinfo = *localtime(&now);
+    timeinfo.tm_hour = H;
+    timeinfo.tm_min = M;
+    timeinfo.tm_sec = S;
+    return mktime(&timeinfo);
+}
+
 } // namespace date_time
