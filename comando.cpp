@@ -151,7 +151,7 @@ void cmd_rt(int argc, char **argv) {
   // Placeholder for command
   printf("cmd_rt\n");
   float temp;
-  temperature_task::get_temperature(temp);
+  temperature_task::get_temperature(&temp);
   printf("Temperature: %.1f\n", temp);
 }
 
