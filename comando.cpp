@@ -111,8 +111,6 @@ int ranges_bool[1][2] = {{0, 1}};
 +--------------------------------------------------------------------------*/
 
 void cmd_rdt(int argc, char **argv) {
-  // Placeholder for command
-  // printf("cmd_rdt\n");
   time_t xTime = date_time::get_time();
   char buffer[100];
   date_time::convertTimeToDateClockString(xTime, buffer, sizeof(buffer));
@@ -123,22 +121,20 @@ void cmd_sd(int argc, char **argv) {
   if (check_args(argc, argv, 4, ranges_dates)) {
     return;
   }
-  // Placeholder for command
-  printf("cmd_sd %s %s %s\n", argv[1], argv[2], argv[3]);
-
   char s[100];
   char buffer[10];
   date_time::get_clock(buffer);
-  printf("Clock buffer: '%s'\n", buffer);
   snprintf(s, sizeof(s), "%02d/%02d/%04d %s", atoi(argv[1]), atoi(argv[2]),
            atoi(argv[3]), buffer);
-  printf("Date time: %s\n", s);
   date_time::set_date(s);
 }
 
 void cmd_rc(int argc, char **argv) {
   // Placeholder for command
   printf("cmd_rc 2\n");
+  char s[100];
+  date_time::get_clock(s);
+  printf("%s\n", s);
 }
 
 void cmd_sc(int argc, char **argv) {
