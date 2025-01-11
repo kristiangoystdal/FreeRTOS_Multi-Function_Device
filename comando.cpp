@@ -167,10 +167,10 @@ void cmd_rmm(int argc, char **argv) {
 void cmd_cmm(int argc, char **argv) { max_min_task::vMaxMinInitialize(); }
 
 void cmd_rp(int argc, char **argv) {
-  int pmon = configuration::xConfigGetPMON();
-  int tala = configuration::xConfigGetTALA();
-  printf("PMON: %d\n", pmon);
-  printf("TALA: %d\n", tala);
+  int pmon = configuration::xConfigGetPMON() / 1000;
+  int tala = configuration::xConfigGetTALA() / 1000;
+  printf("PMON: %d seconds\n", pmon);
+  printf("TALA: %d seconds\n", tala);
 }
 
 void cmd_mmp(int argc, char **argv) {
@@ -186,7 +186,6 @@ void cmd_mta(int argc, char **argv) {
     return;
   }
 
-  printf("cmd_mta %d\n", atoi(argv[1]));
   configuration::vConfigSetTALA(atoi(argv[1]));
 }
 
@@ -266,7 +265,9 @@ void cmd_rts(int argc, char **argv) {
   bool bubble_level_en = bubble_level_task::xGetBubbleLevelEnabled();
   bool hit_bit_en = hit_bit_task::xGetHitBitEnabled();
   bool config_sound_en = pwm_task::xGetConfigSoundEnabled();
-  printf("%d, %d, %d\n", bubble_level_en, hit_bit_en, config_sound_en);
+  printf("Bubble Level: %d\n", bubble_level_en);
+  printf("Hit Bit: %d\n", hit_bit_en);
+  printf("Config Sound: %d\n", config_sound_en);
 }
 
 void cmd_adbl(int argc, char **argv) {
