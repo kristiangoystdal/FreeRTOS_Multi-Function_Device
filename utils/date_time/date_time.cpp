@@ -48,6 +48,12 @@ void set_clock(char *s) {
 
 time_t clock_to_time(tm *t) { return mktime(t); }
 
+time_t update_time() {
+  tm *tm_ = date_time::get_time_tm();
+  write_time(tm_->tm_hour, tm_->tm_min, tm_->tm_sec);
+  return clock_to_time(tm_);
+}
+
 tm *time_to_clock(time_t t) { return localtime(&t); }
 
 void convertTimeToString(time_t xTime, char *timeString, size_t bufferSize) {

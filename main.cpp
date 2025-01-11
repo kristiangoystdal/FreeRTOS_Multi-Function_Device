@@ -15,6 +15,7 @@
 #include "pwm_task.hpp"
 #include "tasks_macros.h"
 #include "temperature_task.hpp"
+#include "date_time.hpp"
 
 Serial pc(USBTX, USBRX);
 
@@ -37,24 +38,6 @@ void scanI2CDevices() {
   }
 }
 
-void vCreateTask(TaskFunction_t pxTaskCode, const char *const pcName,
-                 const uint16_t usStackDepth, void *const pvParameters,
-                 UBaseType_t uxPriority, TaskHandle_t *const pxCreatedTask) {
-  BaseType_t xReturn = xTaskCreate(pxTaskCode, pcName, usStackDepth,
-                                   pvParameters, uxPriority, pxCreatedTask);
-  if (xReturn == errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY) {
-    printf("Failed to create the task %s\n", pcName);
-  }
-}
-
-QueueHandle_t xCreateQueue(UBaseType_t uxSize, UBaseType_t uxType) {
-  QueueHandle_t xQueue = xQueueCreate(uxSize, uxType);
-  if (xQueue == NULL) {
-    printf("Failed to create the queue\n");
-  }
-  return xQueue;
-}
-
 void check_tasks() {
 
   xQueueMaxMin = xCreateQueue(MAX_MIN_TASK_QUEUE_SIZE,
@@ -64,6 +47,8 @@ void check_tasks() {
   xQueueLCD = xCreateQueue(LCD_TASK_QUEUE_SIZE, sizeof(lcd_task::LCDMessage_t));
 
   configuration::vConfigInitializer();
+  NVIC_SetPriority(RTC_IRQn, 254); //TODO: Maybe value is wrong
+  RTC::attach(&vUpdateClockISR, RTC::Second);
   scanI2CDevices();
 
   printf("Init complete..\n");

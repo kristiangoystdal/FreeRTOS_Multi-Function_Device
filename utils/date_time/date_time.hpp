@@ -14,6 +14,7 @@ void get_clock(char *s);
 void set_time_t(time_t t);
 void set_date(char *s);
 void set_clock(char *s);
+time_t update_time();
 
 time_t clock_to_time(tm *t);
 tm *time_to_clock(time_t t);

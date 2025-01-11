@@ -11,28 +11,26 @@
 
 namespace lcd_task {
 
-void vUpdateClock() {
-  tm *tm_ = date_time::get_time_tm();
-  write_time(tm_->tm_hour, tm_->tm_min, tm_->tm_sec);
-}
-
 void vLCDInitialize() {
   setup_lcd();
   write_clock_alarm(false);
   write_temp_alarm(false);
 }
 
+void vUpdateClockISR() {
+  BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+  LCDMessage_t xMessage;
+  xMessage.xAction = LCDAction::Clock;
+  xMessage.xLCDData = date_time::update_time()
+  xQueueSendFromISR(xQueueLCD, &xMessage, &xHigherPriorityTaskWoken);
+}
+
 void vLCDTask(void *pvParameters) {
   printf("LCD Task\n");
   LCDMessage_t xMessage;
-  TickType_t xTicks = pdMS_TO_TICKS(LCD_CLOCK_UPDATE_TIME);
   vLCDInitialize();
   for (;;) {
-    vUpdateClock();
-    BaseType_t xStatus = xQueueReceive(xQueueLCD, &xMessage, xTicks);
-    if (xStatus != pdPASS) {
-      continue;
-    }
+    BaseType_t xStatus = xQueueReceive(xQueueLCD, &xMessage, portMAX_DELAY);
     switch (xMessage.xAction) {
     case Alarm:
       char cAlarmLetter = xMessage.xLCDData.cAlarmLetter;
@@ -56,6 +54,11 @@ void vLCDTask(void *pvParameters) {
     case Temperature:
       float xTemperature = xMessage.xLCDData.xTemperature;
       write_temperature(xTemperature);
+      break;
+    case Clock:
+      time_t time = xMessage.xLCDData.time;
+      tm* t = date_time::time_to_clock(time);
+      write_time(t->tm_hour, t->tm_min, t->tm_sec);
       break;
     case BubbleLevel:
       int x = xMessage.xLCDData.xBubbleLevelPos.x;
