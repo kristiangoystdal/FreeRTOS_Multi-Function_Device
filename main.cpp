@@ -1,19 +1,20 @@
 #include "C12832.h"
-#include "CMD/cmd.h"
 #include "LCD/LCD.h"
 #include "RTC.h"
 #include "alarm_task.hpp"
 #include "bubble_level_task.hpp"
 #include "configuration.hpp"
+#include "date_time.hpp"
 #include "global.h"
 #include "hit_bit_task.hpp"
 #include "lcd_task.hpp"
 #include "max_min_task.hpp"
 #include "mbed.h"
+#include "monitor_task.hpp"
 #include "pwm_task.hpp"
 #include "tasks_macros.h"
 #include "temperature_task.hpp"
-#include "date_time.hpp"
+
 
 Serial pc(USBTX, USBRX);
 
@@ -54,22 +55,20 @@ void check_tasks() {
 
   vCreateTask(pwm_task::vPWMTask, "Task PWM", 2 * configMINIMAL_STACK_SIZE,
               NULL, MAX_MIN_TASK_PRIORITY, &xPWMHandler);
-  vCreateTask(vMonitorTask, "Monitor", 2 * configMINIMAL_STACK_SIZE, NULL, MONITOR_TASK_PRIORITY,
-              NULL);
+  vCreateTask(monitor_task::vMonitorTask, "Monitor",
+              2 * configMINIMAL_STACK_SIZE, NULL, MONITOR_TASK_PRIORITY, NULL);
   vCreateTask(temperature_task::vTemperatureTask, "Task Temperature",
               2 * configMINIMAL_STACK_SIZE, NULL, TEMPERATURE_TASK_PRIORITY,
               &xTemperatureHandler);
   vCreateTask(alarm_task::vAlarmTask, "Task Alarm",
-              2 * configMINIMAL_STACK_SIZE, NULL,
-              ALARM_TASK_PRIORITY, NULL);
+              2 * configMINIMAL_STACK_SIZE, NULL, ALARM_TASK_PRIORITY, NULL);
   vCreateTask(max_min_task::vMaxMinTask, "Task Max Min",
-              2 * configMINIMAL_STACK_SIZE, NULL,
-              MAX_MIN_TASK_PRIORITY, NULL);
-  vCreateTask(hit_bit_task::vHitBitTask, "Task Hit Bit", 2 * configMINIMAL_STACK_SIZE,
-              NULL, HIT_BIT_TASK_PRIORITY, &xHitBitHandler);
-  vCreateTask(lcd_task::vLCDTask, "Task LCD",
-              2 * configMINIMAL_STACK_SIZE, NULL, LCD_TASK_PRIORITY,
-              NULL);
+              2 * configMINIMAL_STACK_SIZE, NULL, MAX_MIN_TASK_PRIORITY, NULL);
+  vCreateTask(hit_bit_task::vHitBitTask, "Task Hit Bit",
+              2 * configMINIMAL_STACK_SIZE, NULL, HIT_BIT_TASK_PRIORITY,
+              &xHitBitHandler);
+  vCreateTask(lcd_task::vLCDTask, "Task LCD", 2 * configMINIMAL_STACK_SIZE,
+              NULL, LCD_TASK_PRIORITY, NULL);
   vCreateTask(bubble_level_task::vBubbleLevelTask, "Task Bubble Level",
               2 * configMINIMAL_STACK_SIZE, NULL, BUBBLE_LEVEL_TASK_PRIORITY,
               &xBubbleLevelHandler);
