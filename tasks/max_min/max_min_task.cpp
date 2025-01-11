@@ -18,7 +18,6 @@ void sendMaxMin() {
   printf("Max: %f at %s\n", xMaxMin.xMax.xTemp, buffer);
   date_time::convertTimeToString(xMaxMin.xMin.xTime, buffer, sizeof(buffer));
   printf("Min: %f at %s\n", xMaxMin.xMin.xTemp, buffer);
-  // TODO: Send to console
 }
 
 void updateMaxMin(temperature_task::Measure_t xMeasure) {
