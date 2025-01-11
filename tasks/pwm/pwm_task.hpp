@@ -3,7 +3,9 @@
 #define __PWM_TASK_H
 
 namespace pwm_task {
-  
+
+  #define CONFIG_SOUND_UPDATE_TIME 200
+
   bool xGetConfigSoundEnabled();
 
   void vSetConfigSoundEnabled(bool enabled);

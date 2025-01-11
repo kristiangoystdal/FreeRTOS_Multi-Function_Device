@@ -6,6 +6,7 @@
 #include "mbed.h"
 #include "portmacro.h"
 #include "task.h"
+#include "timers.h"
 
 namespace pwm_task {
 
@@ -19,25 +20,40 @@ static float fDutyCycle = 0.0;
 const float min_output = 0.001;
 const float max_output = 0.003;
 
+static TimerHandle_t xTimer;
+
 static atomic::Atomic<bool> *xConfigSoundEnabled;
+
+void vTimerCallback(TimerHandle_t xTimer) {
+  fPeriod = min_output + (max_output - min_output) * p1;
+  fDutyCycle = p2;
+}
 
 bool xGetConfigSoundEnabled() { return xConfigSoundEnabled->get(); }
 
-void vSetConfigSoundEnabled(bool enabled) { xConfigSoundEnabled->set(enabled); }
+void vSetConfigSoundEnabled(bool enabled) {
+  xConfigSoundEnabled->set(enabled);
+  if(enabled) {
+    if (xTimerStart(xTimer, 0) != pdPASS) {
+      printf("Failed to start timer!\n");
+    }
+  } else {
+    if (xTimerStop(xTimer, 0) != pdPASS) {
+      printf("Failed to stop timer!\n");
+    }
+  }
+}
 
 void vPWMTask(void *pvParameters) {
   printf("PWM Task\n");
   xConfigSoundEnabled = new atomic::Atomic<bool>(false);
   bool xEnabled = false;
+  TickType_t xPWMUpdate = pdMS_TO_TICKS(CONFIG_SOUND_UPDATE_TIME);
+  xTimer = xTimerCreate("Config Sound Timer", xPWMUpdate, pdTRUE, (void *)0, vTimerCallback);
   for (;;) {
     TickType_t xTALA =
         xEnabled ? configuration::xConfigGetTALA() : portMAX_DELAY;
     uint32_t ulNotificationValue = ulTaskNotifyTake(pdTRUE, xTALA);
-    if (xGetConfigSoundEnabled()) {
-      fPeriod = min_output + (max_output - min_output) * p1;
-      fDutyCycle = p2;
-    }
-
     if (ulNotificationValue > 0) {
       buzzer.period(fPeriod);
       buzzer = fDutyCycle;
