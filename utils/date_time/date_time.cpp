@@ -20,9 +20,11 @@ void get_date(char *s) {
 
 void get_clock(char *s) {
   time_t t = time(NULL);
-  tm tm_;
+  struct tm tm_;
   localtime_r(&t, &tm_);
-  strftime(&s[0], sizeof(s), "%H:%M:%S\n", &tm_);
+
+  // Ensure a safe, proper size is used for the buffer
+  strftime(s, 9, "%H:%M:%S", &tm_); // Format the time as "hh:mm:ss"
 }
 
 void set_time_t(time_t t) { set_time(t); }
