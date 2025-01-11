@@ -200,10 +200,7 @@ void cmd_rai(int argc, char **argv) {
   BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
   if (xStatus == errQUEUE_FULL) {
     printf("ERROR: Queue full: QueueAlarm");
-  } else {
-    printf("Pass\n");
-  }
-  printf("cmd_rai\n");
+  } 
 }
 
 void cmd_sac(int argc, char **argv) {
@@ -214,14 +211,10 @@ void cmd_sac(int argc, char **argv) {
   xAlarmMessage.xAction = alarm_task::SetClock;
   time_t t = date_time::integer_to_time_t(atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
   xAlarmMessage.xAlarmData.tclock = t;
-  printf("SENDING NEW ALARM TIME TO QUEUE: %s", ctime(&t));
   BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
   if (xStatus == errQUEUE_FULL) {
     printf("ERROR: Queue full: QueueAlarm");
-  } else {
-    printf("Pass\n");
-  }
-  printf("cmd_sac %d %d %d\n", atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
+  } 
 }
 
 void cmd_sat(int argc, char **argv) {
@@ -237,10 +230,7 @@ void cmd_sat(int argc, char **argv) {
   BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
   if (xStatus == errQUEUE_FULL) {
   printf("ERROR: Queue full: QueueAlarm");
-  } else {
-    printf("Pass\n");
-  }
-  printf("cmd_sat %d %d\n", atoi(argv[1]), atoi(argv[2]));
+  } 
 }
 
 void cmd_adac(int argc, char **argv) {
@@ -253,10 +243,7 @@ void cmd_adac(int argc, char **argv) {
   BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
   if (xStatus == errQUEUE_FULL) {
   printf("ERROR: Queue full: QueueAlarm");
-  } else {
-    printf("Pass\n");
-  }
-  printf("cmd_adac %d\n", atoi(argv[1]));
+  } 
 }
 
 void cmd_adat(int argc, char **argv) {
@@ -269,10 +256,7 @@ void cmd_adat(int argc, char **argv) {
   BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
   if (xStatus == errQUEUE_FULL) {
   printf("ERROR: Queue full: QueueAlarm");
-  } else {
-    printf("Pass\n");
-  }
-  printf("cmd_adat %d\n", atoi(argv[1]));
+  } 
 }
 
 void cmd_rts(int argc, char **argv) {
@@ -280,7 +264,6 @@ void cmd_rts(int argc, char **argv) {
   bool hit_bit_en = hit_bit_task::xGetHitBitEnabled();
   bool config_sound_en = pwm_task::xGetConfigSoundEnabled();
   printf("%d, %d, %d\n", bubble_level_en, hit_bit_en, config_sound_en);
-  printf("cmd_rts\n");
 }
 
 void cmd_adbl(int argc, char **argv) {
@@ -289,7 +272,6 @@ void cmd_adbl(int argc, char **argv) {
   }
 
   bubble_level_task::vSetBubbleLevelEnabled((bool)atoi(argv[1]));
-  printf("cmd_adbl %d\n", atoi(argv[1]));
 }
 
 void cmd_adhb(int argc, char **argv) {
@@ -298,7 +280,6 @@ void cmd_adhb(int argc, char **argv) {
   }
 
   hit_bit_task::vSetHitBitEnabled((bool)atoi(argv[1]));
-  printf("cmd_adhb %d\n", atoi(argv[1]));
 }
 
 void cmd_adcs(int argc, char **argv) {
@@ -307,6 +288,5 @@ void cmd_adcs(int argc, char **argv) {
   }
 
   pwm_task::vSetConfigSoundEnabled((bool)atoi(argv[1]));
-  printf("cmd_adcs %d\n", atoi(argv[1]));
 }
 } // namespace comando
