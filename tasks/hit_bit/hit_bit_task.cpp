@@ -6,7 +6,7 @@
 #include "mbed.h"
 #include "task.h"
 #include <stdio.h>
-#include "global_queues.h"
+#include "global.h"
 
 namespace hit_bit_task {
 
@@ -16,12 +16,11 @@ static DigitalOut led3(LED3);
 static DigitalOut led4(LED4);
 static InterruptIn pb(p14);
 
-static TaskHandle_t xHandle;
 static atomic::Atomic<bool> *xHitBitEnabled;
 
 void vButtonPressed() {
   BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-  vTaskNotifyGiveFromISR(xHandle, &xHigherPriorityTaskWoken);
+  vTaskNotifyGiveFromISR(xHitBitHandler, &xHigherPriorityTaskWoken);
 }
 
 void setLEDs(BaseType_t xLEDs) {
@@ -40,8 +39,11 @@ void vPlayMode() {
   while (xPlaying) {
     ulNotificationValue = ulTaskNotifyTake(pdTRUE, xUpdateTime);
     if (ulNotificationValue > 0) {
+      printf("Notifity!\n");
       vTaskDelay(xDelay100ms); // Debounce
-      xLEDs ^= pb.read();
+      int a = pb.read();
+      printf("New: %d\n", a);
+      xLEDs ^= a;
     }
     xLEDs = ((xLEDs & 0x01) << 3) | xLEDs >> 1;
     setLEDs(xLEDs);
@@ -66,15 +68,14 @@ bool xGetHitBitEnabled() { return xHitBitEnabled->get(); }
 void vSetHitBitEnabled(bool enabled) {
   xHitBitEnabled->set(enabled);
   if (enabled) {
-    vTaskResume(xHandle);
+    vTaskResume(xHitBitHandler);
   } else {
-    vTaskSuspend(xHandle);
+    vTaskSuspend(xHitBitHandler);
   }
 }
 
 void vHitBitTask(void *pvParameters) {
   printf("Hit Bit Task\n");
-  xHandle = xTaskGetCurrentTaskHandle();
   xHitBitEnabled = new atomic::Atomic<bool>(false);
   pb.rise(&vButtonPressed);
   for (;;) {

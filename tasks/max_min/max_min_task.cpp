@@ -2,7 +2,7 @@
 #include "max_min_task.hpp"
 #include "FreeRTOS.h"
 #include "date_time.hpp"
-#include "global_queues.h"
+#include "global.h"
 #include "queue.h"
 #include "temperature_task.hpp"
 #include <cfloat>

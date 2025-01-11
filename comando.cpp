@@ -11,8 +11,8 @@
 #include "alarm_task.hpp"
 #include "bubble_level_task.hpp"
 #include "configuration.hpp"
+#include "global.h"
 #include "date_time.hpp"
-#include "global_queues.h"
 #include "hit_bit_task.hpp"
 #include "lcd_task.hpp"
 #include "max_min_task.hpp"
@@ -47,12 +47,10 @@ void cmd_test(int argc, char **argv) {
 | Function: cmd_send - send message
 +--------------------------------------------------------------------------*/
 void cmd_send(int argc, char **argv) {
-  int32_t lValueToSend;
   //   BaseType_t xStatus;
 
   if (argc == 2) {
     printf("msg: %s\n", argv[1]);
-    lValueToSend = atoi(argv[1]);
     // xStatus = xQueueSend(xQueue, &lValueToSend, 0);
   } else {
     printf("wrong number of arguments!\n");
@@ -225,8 +223,15 @@ void cmd_adac(int argc, char **argv) {
   if (check_args(argc, argv, 2, ranges_bool)) {
     return;
   }
-
-  // Placeholder for command
+  alarm_task::AlarmMessage_t xAlarmMessage;
+  xAlarmMessage.xAction = alarm_task::SetClockEn;
+  xAlarmMessage.xAlarmData.clock_alarm_en = atoi(argv[1]);
+  BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
+  if (xStatus == errQUEUE_FULL) {
+  printf("ERROR: Queue full: QueueAlarm");
+  } else {
+    printf("Pass\n");
+  }
   printf("cmd_adac %d\n", atoi(argv[1]));
 }
 
@@ -234,8 +239,15 @@ void cmd_adat(int argc, char **argv) {
   if (check_args(argc, argv, 2, ranges_bool)) {
     return;
   }
-
-  // Placeholder for command
+  alarm_task::AlarmMessage_t xAlarmMessage;
+  xAlarmMessage.xAction = alarm_task::SetTempEn;
+  xAlarmMessage.xAlarmData.temp_alarm_en = atoi(argv[1]);
+  BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
+  if (xStatus == errQUEUE_FULL) {
+  printf("ERROR: Queue full: QueueAlarm");
+  } else {
+    printf("Pass\n");
+  }
   printf("cmd_adat %d\n", atoi(argv[1]));
 }
 
