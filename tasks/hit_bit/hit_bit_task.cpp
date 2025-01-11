@@ -40,8 +40,11 @@ void vPlayMode() {
   while (xPlaying) {
     ulNotificationValue = ulTaskNotifyTake(pdTRUE, xUpdateTime);
     if (ulNotificationValue > 0) {
+      printf("Notifity!\n");
       vTaskDelay(xDelay100ms); // Debounce
-      xLEDs ^= pb.read();
+      int a = pb.read();
+      printf("New: %d\n", &a);
+      xLEDs ^= a;
     }
     xLEDs = ((xLEDs & 0x01) << 3) | xLEDs >> 1;
     setLEDs(xLEDs);
