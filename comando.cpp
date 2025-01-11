@@ -167,8 +167,10 @@ void cmd_rmm(int argc, char **argv) {
 void cmd_cmm(int argc, char **argv) { max_min_task::vMaxMinInitialize(); }
 
 void cmd_rp(int argc, char **argv) {
-  // Placeholder for command
-  printf("cmd_rp\n");
+  int pmon = configuration::xConfigGetPMON() / 1000;
+  int tala = configuration::xConfigGetTALA() / 1000;
+  printf("PMON: %d seconds\n", pmon);
+  printf("TALA: %d seconds\n", tala);
 }
 
 void cmd_mmp(int argc, char **argv) {
@@ -176,7 +178,7 @@ void cmd_mmp(int argc, char **argv) {
     return;
   }
 
-  printf("cmd_mmp %d\n", atoi(argv[1]));
+  configuration::vConfigSetPMON(atoi(argv[1]));
 }
 
 void cmd_mta(int argc, char **argv) {
@@ -184,7 +186,7 @@ void cmd_mta(int argc, char **argv) {
     return;
   }
 
-  printf("cmd_mta %d\n", atoi(argv[1]));
+  configuration::vConfigSetTALA(atoi(argv[1]));
 }
 
 void cmd_rai(int argc, char **argv) {
@@ -193,7 +195,7 @@ void cmd_rai(int argc, char **argv) {
   BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
   if (xStatus == errQUEUE_FULL) {
     printf("ERROR: Queue full: QueueAlarm");
-  } 
+  }
 }
 
 void cmd_sac(int argc, char **argv) {
@@ -202,12 +204,13 @@ void cmd_sac(int argc, char **argv) {
   }
   alarm_task::AlarmMessage_t xAlarmMessage;
   xAlarmMessage.xAction = alarm_task::SetClock;
-  time_t t = date_time::integer_to_time_t(atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
+  time_t t =
+      date_time::integer_to_time_t(atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
   xAlarmMessage.xAlarmData.tclock = t;
   BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
   if (xStatus == errQUEUE_FULL) {
     printf("ERROR: Queue full: QueueAlarm");
-  } 
+  }
 }
 
 void cmd_sat(int argc, char **argv) {
@@ -216,14 +219,20 @@ void cmd_sat(int argc, char **argv) {
   if (check_args(argc, argv, 3, ranges_temp_double)) {
     return;
   }
+
+  if (argv[1] >= argv[2]) {
+    printf("ERROR: Low threshold cannot be higher than or equal to high "
+           "threshold!\n");
+    return;
+  }
   alarm_task::AlarmMessage_t xAlarmMessage;
   xAlarmMessage.xAction = alarm_task::SetTemp;
   xAlarmMessage.xAlarmData.threshold.tlow = atoi(argv[1]);
   xAlarmMessage.xAlarmData.threshold.thigh = atoi(argv[2]);
   BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
   if (xStatus == errQUEUE_FULL) {
-  printf("ERROR: Queue full: QueueAlarm");
-  } 
+    printf("ERROR: Queue full: QueueAlarm");
+  }
 }
 
 void cmd_adac(int argc, char **argv) {
@@ -235,8 +244,8 @@ void cmd_adac(int argc, char **argv) {
   xAlarmMessage.xAlarmData.clock_alarm_en = atoi(argv[1]);
   BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
   if (xStatus == errQUEUE_FULL) {
-  printf("ERROR: Queue full: QueueAlarm");
-  } 
+    printf("ERROR: Queue full: QueueAlarm");
+  }
 }
 
 void cmd_adat(int argc, char **argv) {
@@ -248,15 +257,17 @@ void cmd_adat(int argc, char **argv) {
   xAlarmMessage.xAlarmData.temp_alarm_en = atoi(argv[1]);
   BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
   if (xStatus == errQUEUE_FULL) {
-  printf("ERROR: Queue full: QueueAlarm");
-  } 
+    printf("ERROR: Queue full: QueueAlarm");
+  }
 }
 
 void cmd_rts(int argc, char **argv) {
   bool bubble_level_en = bubble_level_task::xGetBubbleLevelEnabled();
   bool hit_bit_en = hit_bit_task::xGetHitBitEnabled();
   bool config_sound_en = pwm_task::xGetConfigSoundEnabled();
-  printf("%d, %d, %d\n", bubble_level_en, hit_bit_en, config_sound_en);
+  printf("Bubble Level: %d\n", bubble_level_en);
+  printf("Hit Bit: %d\n", hit_bit_en);
+  printf("Config Sound: %d\n", config_sound_en);
 }
 
 void cmd_adbl(int argc, char **argv) {
