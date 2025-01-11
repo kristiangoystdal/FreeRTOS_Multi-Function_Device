@@ -112,7 +112,7 @@ int ranges_bool[1][2] = {{0, 1}};
 
 void cmd_rdt(int argc, char **argv) {
   // Placeholder for command
-  printf("cmd_rdt\n");
+  // printf("cmd_rdt\n");
   time_t xTime = date_time::get_time();
   char buffer[100];
   date_time::convertTimeToString(xTime, buffer, sizeof(buffer));
@@ -125,6 +125,10 @@ void cmd_sd(int argc, char **argv) {
   }
   // Placeholder for command
   printf("cmd_sd %d %d %d\n", atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
+
+  char buffer[100];
+  sprintf(buffer, "%s/%s/%s", argv[1], argv[2], argv[3]);
+  date_time::set_date(buffer);
 }
 
 void cmd_rc(int argc, char **argv) {
