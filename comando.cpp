@@ -11,8 +11,8 @@
 #include "alarm_task.hpp"
 #include "bubble_level_task.hpp"
 #include "configuration.hpp"
-#include "global.h"
 #include "date_time.hpp"
+#include "global.h"
 #include "hit_bit_task.hpp"
 #include "lcd_task.hpp"
 #include "max_min_task.hpp"
@@ -128,8 +128,6 @@ void cmd_sd(int argc, char **argv) {
 }
 
 void cmd_rc(int argc, char **argv) {
-  // Placeholder for command
-  printf("cmd_rc 2\n");
   char s[20];
   date_time::get_clock(s);
   printf("%s\n", s);
@@ -146,14 +144,15 @@ void cmd_sc(int argc, char **argv) {
   snprintf(s + 11, sizeof(s) - 11, "%02d:%02d:%02d", atoi(argv[1]),
            atoi(argv[2]), atoi(argv[3]));
 
-  printf("%s\n", s); // Print the updated string
-
   date_time::set_dateTime(s);
 }
 
 void cmd_rt(int argc, char **argv) {
   // Placeholder for command
   printf("cmd_rt\n");
+  float temp;
+  temperature_task::get_temperature(temp);
+  printf("Temperature: %.1f\n", temp);
 }
 
 void cmd_rmm(int argc, char **argv) {
@@ -228,7 +227,7 @@ void cmd_adac(int argc, char **argv) {
   xAlarmMessage.xAlarmData.clock_alarm_en = atoi(argv[1]);
   BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
   if (xStatus == errQUEUE_FULL) {
-  printf("ERROR: Queue full: QueueAlarm");
+    printf("ERROR: Queue full: QueueAlarm");
   } else {
     printf("Pass\n");
   }
@@ -244,7 +243,7 @@ void cmd_adat(int argc, char **argv) {
   xAlarmMessage.xAlarmData.temp_alarm_en = atoi(argv[1]);
   BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
   if (xStatus == errQUEUE_FULL) {
-  printf("ERROR: Queue full: QueueAlarm");
+    printf("ERROR: Queue full: QueueAlarm");
   } else {
     printf("Pass\n");
   }
