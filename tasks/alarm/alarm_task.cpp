@@ -77,7 +77,13 @@ void vAlarmTask(void *pvParameters) {
     xQueueReceive(xQueueAlarm, &xMessage, portMAX_DELAY);
     switch (xMessage.xAction) {
     case Get:
-      // TODO: Send to console
+      char time_string[9];
+      date_time::get_clock(&time_string);
+      printf("Alarm Clock: %s\n", time_string);
+      printf("Low temperature theshold: %.1f\n", xAlarmInfo.tlow);
+      printf("High temperature theshold: %.1f\n", xAlarmInfo.thigh);
+      printf("Clock Alarm enabled: %s\n", xAlarmInfo.clock_alarm_en ? "Yes" : "No");
+      printf("Temperature Alarm enabled: %s\n", xAlarmInfo.temp_alarm_en ? "Yes" : "No");
       break;
     case SetClock:
       xAlarmInfo.tclock = xMessage.xAlarmData.tclock;

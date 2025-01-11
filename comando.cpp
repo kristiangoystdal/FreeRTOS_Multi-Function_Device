@@ -179,7 +179,14 @@ void cmd_mta(int argc, char **argv) {
 }
 
 void cmd_rai(int argc, char **argv) {
-  // Placeholder for command
+  alarm_task::AlarmMessage_t xAlarmMessage;
+  xAlarmMessage.xAction = alarm_task::Get;
+  BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
+  if (xStatus == errQUEUE_FULL) {
+    printf("ERROR: Queue full: QueueAlarm");
+  } else {
+    printf("Pass\n");
+  }
   printf("cmd_rai\n");
 }
 
@@ -187,8 +194,19 @@ void cmd_sac(int argc, char **argv) {
   if (check_args(argc, argv, 4, ranges_temp)) {
     return;
   }
-
-  // Placeholder for command
+  alarm_task::AlarmMessage_t xAlarmMessage;
+  xAlarmMessage.xAction = alarm_task::SetClock;
+  struct tm time_info = {0};
+  time_info.tm_hour = atoi(argv[1]);
+  time_info.tm_min = atoi(argv[2]);
+  time_info.tm_sec = atoi(argv[3]);
+  xAlarmMessage.xAlarmData.tclock = mktime(&time_info);
+  BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
+  if (xStatus == errQUEUE_FULL) {
+    printf("ERROR: Queue full: QueueAlarm");
+  } else {
+    printf("Pass\n");
+  }
   printf("cmd_sac %d %d %d\n", atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
 }
 
@@ -198,8 +216,16 @@ void cmd_sat(int argc, char **argv) {
   if (check_args(argc, argv, 3, ranges_temp_double)) {
     return;
   }
-
-  // Placeholder for command
+  alarm_task::AlarmMessage_t xAlarmMessage;
+  xAlarmMessage.xAction = alarm_task::SetTemp;
+  xAlarmMessage.xAlarmData.threshold.tlow = atoi(argv[1]);
+  xAlarmMessage.xAlarmData.threshold.thigh = atoi(argv[2]);
+  BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
+  if (xStatus == errQUEUE_FULL) {
+  printf("ERROR: Queue full: QueueAlarm");
+  } else {
+    printf("Pass\n");
+  }
   printf("cmd_sat %d %d\n", atoi(argv[1]), atoi(argv[2]));
 }
 
