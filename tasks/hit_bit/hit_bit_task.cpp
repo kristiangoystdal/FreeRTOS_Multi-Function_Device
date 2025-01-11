@@ -47,9 +47,11 @@ void vPlayMode() {
     if (ulNotificationValue > 0) {
       vTaskDelay(xDelay); // Debounce
       xLEDs ^= pb.read();
-      xWakeUpTime -= (xCurrentTime - xPreviousTime);
-      if(xWakeUpTime < 0) {
+      xWakeUpTime = (xCurrentTime - xPreviousTime);
+      if(xWakeUpTime < (xCurrentTime - xPreviousTime)) {
         xWakeUpTime = 0;
+      } else {
+          xWakeUpTime -= (xCurrentTime - xPreviousTime);
       }
     } else {
       xLEDs = ((xLEDs & 0x01) << 3) | xLEDs >> 1;
