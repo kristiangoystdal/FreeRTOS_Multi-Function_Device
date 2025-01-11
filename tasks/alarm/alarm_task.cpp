@@ -78,7 +78,7 @@ void vAlarmTask(void *pvParameters) {
     switch (xMessage.xAction) {
     case Get:
       char time_string[9];
-      date_time::get_clock(&time_string);
+      date_time::get_clock(time_string);
       printf("Alarm Clock: %s\n", time_string);
       printf("Low temperature theshold: %.1f\n", xAlarmInfo.tlow);
       printf("High temperature theshold: %.1f\n", xAlarmInfo.thigh);
