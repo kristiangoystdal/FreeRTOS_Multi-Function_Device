@@ -128,7 +128,7 @@ void cmd_sd(int argc, char **argv) {
 
   char s[100];
   char buffer[10];
-  get_clock(buffer);
+  date_time::get_clock(buffer);
   sprintf(s, "%s/%s/%s %s", argv[1], argv[2], argv[3], buffer);
   date_time::set_date(s);
 }
