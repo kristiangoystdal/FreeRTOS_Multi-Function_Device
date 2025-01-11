@@ -45,6 +45,7 @@ void check_tasks() {
   xQueueAlarm =
       xCreateQueue(ALARM_TASK_QUEUE_SIZE, sizeof(alarm_task::AlarmMessage_t));
   xQueueLCD = xCreateQueue(LCD_TASK_QUEUE_SIZE, sizeof(lcd_task::LCDMessage_t));
+  xQueueConfigSound = xCreateQueue(CONFIG_SOUND_TASK_PRIORITY, sizeof(config_sound_task::ConfigSoundMessage_t));
 
   configuration::vConfigInitializer();
   NVIC_SetPriority(RTC_IRQn, 254);
@@ -55,7 +56,7 @@ void check_tasks() {
   printf("Init complete..\n");
 
   vCreateTask(config_sound_task::vConfigSoundTask, "Task Config Sound", 2 * configMINIMAL_STACK_SIZE,
-              NULL, MAX_MIN_TASK_PRIORITY, &xConfigSoundHandler);
+              NULL, MAX_MIN_TASK_PRIORITY, NULL);
   vCreateTask(vMonitorTask, "Monitor", 2 * configMINIMAL_STACK_SIZE, NULL,
               MONITOR_TASK_PRIORITY, NULL);
   vCreateTask(temperature_task::vTemperatureTask, "Task Temperature",

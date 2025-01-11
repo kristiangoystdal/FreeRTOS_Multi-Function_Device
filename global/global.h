@@ -8,7 +8,7 @@
 extern QueueHandle_t xQueueMaxMin;
 extern QueueHandle_t xQueueAlarm;
 extern QueueHandle_t xQueueLCD;
-extern TaskHandle_t xConfigSoundHandler;
+extern QueueHandle_t xQueueConfigSound;
 extern TaskHandle_t xBubbleLevelHandler;
 extern TaskHandle_t xHitBitHandler;
 extern TaskHandle_t xTemperatureHandler;
