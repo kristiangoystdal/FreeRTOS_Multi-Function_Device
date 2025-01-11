@@ -37,6 +37,7 @@ void set_date(char *s) {
     printf("Error while parsing date");
     return;
   }
+  printf("%d", clock_to_time(&tm_));
   set_time(clock_to_time(&tm_));
 }
 
