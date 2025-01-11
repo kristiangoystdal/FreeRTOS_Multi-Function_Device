@@ -15,7 +15,6 @@
 namespace alarm_task {
 
 static AlarmInfo_t xAlarmInfo;
-static SemaphoreHandle_t xMutexClock;
 
 void vAlarmInfoInitialize() {
   xAlarmInfo.tlow = 10.0;
@@ -27,13 +26,6 @@ void vAlarmInfoInitialize() {
   xAlarmInfo.tclock = date_time::clock_to_time(t);
   xAlarmInfo.clock_alarm_en = false;
   xAlarmInfo.temp_alarm_en = false;
-}
-
-void vAlarmClockMutexInitialize() {
-  xMutexClock = xSemaphoreCreateMutex();
-  if (xMutexClock == NULL) {
-    printf("Critical error when creating PMON's Mutex!");
-  }
 }
 
 void vSendToLCD(QueueHandle_t xQueueLCD, char letter) {
@@ -59,11 +51,8 @@ void vSetRGB(float temp) {
 }
 
 void vClockAlarm() {
-  xSemaphoreTake(xMutexClock, portMAX_DELAY);
-  if (xAlarmInfo.clock_alarm_en) {
-    xTaskNotifyGive(xPWMHandler);
-  }
-  xSemaphoreGive(xMutexClock);
+  BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+  vTaskNotifyGiveFromISR(xPWMHandler, &xHigherPriorityTaskWoken);
 }
 
 void vAlarmTask(void *pvParameters) {
@@ -71,7 +60,6 @@ void vAlarmTask(void *pvParameters) {
 
   AlarmMessage_t xMessage;
   vAlarmInfoInitialize();
-  vAlarmClockMutexInitialize();
   rgb::set_period();
   for (;;) {
     xQueueReceive(xQueueAlarm, &xMessage, portMAX_DELAY);
@@ -98,11 +86,11 @@ void vAlarmTask(void *pvParameters) {
       xAlarmInfo.thigh = xMessage.xAlarmData.threshold.thigh;
       break;
     case SetClockEn:
-      xSemaphoreTake(xMutexClock, portMAX_DELAY);
       xAlarmInfo.clock_alarm_en = xMessage.xAlarmData.clock_alarm_en;
-      xSemaphoreGive(xMutexClock);
       vSendToLCD(xQueueLCD, xAlarmInfo.clock_alarm_en ? 'C' : 'c');
       if (xAlarmInfo.clock_alarm_en) {
+        RTC::alarm(&vClockAlarm, *date_time::time_to_clock(xAlarmInfo.tclock));
+      } else {
         RTC::alarmOff();
       }
       break;
