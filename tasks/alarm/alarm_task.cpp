@@ -99,7 +99,7 @@ void vAlarmTask(void *pvParameters) {
       break;
     case SetTempEn:
       xAlarmInfo.temp_alarm_en = xMessage.xAlarmData.temp_alarm_en;
-      vSendToLCD(xQueueLCD, xAlarmInfo.clock_alarm_en ? 'T' : 't');
+      vSendToLCD(xQueueLCD, xAlarmInfo.temp_alarm_en ? 'T' : 't');
       break;
     case Temp:
       float temp = xMessage.xAlarmData.xMeasure.xTemp;
