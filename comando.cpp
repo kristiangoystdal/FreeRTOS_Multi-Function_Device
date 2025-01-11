@@ -46,12 +46,10 @@ void cmd_test(int argc, char **argv) {
 | Function: cmd_send - send message
 +--------------------------------------------------------------------------*/
 void cmd_send(int argc, char **argv) {
-  int32_t lValueToSend;
   //   BaseType_t xStatus;
 
   if (argc == 2) {
     printf("msg: %s\n", argv[1]);
-    lValueToSend = atoi(argv[1]);
     // xStatus = xQueueSend(xQueue, &lValueToSend, 0);
   } else {
     printf("wrong number of arguments!\n");
