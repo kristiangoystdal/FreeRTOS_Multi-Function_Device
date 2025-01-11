@@ -92,7 +92,7 @@ void check_tasks() {
   comando::vCommandInitialize(&pxCmdParameters);
   scanI2CDevices();
 
-  printf("Init complete...");
+  printf("Init complete..\n");
 
   vCreateTask(pwm_task::vPWMTask, "Task PWM", 2 * configMINIMAL_STACK_SIZE,
               NULL, MAX_MIN_TASK_PRIORITY, &xPWMTaskHandler);
