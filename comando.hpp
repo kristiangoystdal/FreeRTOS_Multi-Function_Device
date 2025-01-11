@@ -5,9 +5,6 @@
 #include "queue.h"
 
 namespace comando {
-// Initialization and task-related functions
-void vCommandInitialize(QueueHandle_t (*pxQueueArray)[4]);
-void vCommandTask(void *pvParameters);
 
 // Command functions
 void cmd_test(int argc, char **argv);

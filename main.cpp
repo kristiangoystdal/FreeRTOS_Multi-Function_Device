@@ -20,16 +20,11 @@
 #include "tasks_macros.h"
 #include "temperature_task.hpp"
 
-DigitalOut led1(LED1);
-DigitalOut led2(LED2);
 Serial pc(USBTX, USBRX);
 
-// LM75B sensor(p28, p27);
 I2C i2c(p28, p27);
 
 void check_tasks(void);
-
-QueueHandle_t createQueue(UBaseType_t uxSize, UBaseType_t uxType);
 
 int main() {
   pc.baud(115200);
@@ -73,20 +68,6 @@ void check_tasks() {
   xQueueAlarm =
       xCreateQueue(ALARM_TASK_QUEUE_SIZE, sizeof(alarm_task::AlarmMessage_t));
   xQueueLCD = xCreateQueue(LCD_TASK_QUEUE_SIZE, sizeof(lcd_task::LCDMessage_t));
-  xQueueConsole =
-      xCreateQueue(CONSOLE_TASK_QUEUE_SIZE, 10); // TODO: Think about this
-
-  QueueHandle_t pxTemperatureParameters[4] = {xQueueMaxMin, xQueueAlarm,
-                                              xQueueLCD, xQueueConsole};
-
-  QueueHandle_t pxAlarmParameters[4] = {xQueueAlarm, xQueueConsole, xQueueLCD,
-                                        xPWMTaskHandler};
-  QueueHandle_t pxMaxMinParameters[3] = {xQueueMaxMin, xQueueConsole,
-                                         xQueueLCD};
-  QueueHandle_t pxLCDParameters[1] = {xQueueLCD};
-
-  QueueHandle_t pxCmdParameters[4] = {xQueueConsole, xQueueMaxMin, xQueueAlarm,
-                                      xQueueLCD};
 
   configuration::vConfigInitializer();
   scanI2CDevices();
