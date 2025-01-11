@@ -123,6 +123,10 @@ int ranges_period[1][2] = {{0, 99}};
 int ranges_alarm[1][2] = {{0, 60}};
 int ranges_bool[1][2] = {{0, 1}};
 
+/*-------------------------------------------------------------------------+
+| Functions for the commands
++--------------------------------------------------------------------------*/
+
 void cmd_rdt(int argc, char **argv) {
   // Placeholder for command
   printf("cmd_rdt\n");
