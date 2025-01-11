@@ -124,15 +124,15 @@ void cmd_sd(int argc, char **argv) {
     return;
   }
   // Placeholder for command
-  printf("cmd_sd %d %d %d\n", atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
+  printf("cmd_sd %s %s %s\n", argv[1], argv[2], argv[3]);
 
   char s[100];
   char buffer[10];
   date_time::get_clock(buffer);
   printf("Clock buffer: '%s'\n", buffer);
-  snprintf(s, sizeof(s), "%d/%d/%d %s", atoi(argv[1]), atoi(argv[2]),
+  snprintf(s, sizeof(s), "%02d/%02d/%04d %s", atoi(argv[1]), atoi(argv[2]),
            atoi(argv[3]), buffer);
-  printf("%s\n", s);
+  printf("Date time: %s\n", s);
   date_time::set_date(s);
 }
 
