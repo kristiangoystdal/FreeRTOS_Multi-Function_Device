@@ -33,20 +33,27 @@ void setLEDs(BaseType_t xLEDs) {
 void vPlayMode() {
   uint32_t ulNotificationValue = 0;
   TickType_t xUpdateTime = pdMS_TO_TICKS(PLAY_MODE_UPDATE_TIME);
+  TickType_t xWakeUpTime = xUpdateTime;
+  TickType_t xDecrementTime = pdMS_TO_TICKS(PLAY_MODE_DECREMENT_TIME);
+  TickType_t xMinimumTime = pdMS_TO_TICKS(PLAY_MODE_MINIMUM_TIME);
+  TickType_t xCurrentTime, xPreviousTime;
   TickType_t xDelay = pdMS_TO_TICKS(JOYSTICK_DELAY_TIME);
   BaseType_t xLEDs = 0xC;
   bool xPlaying = true;
-  printf("Playing!");
   while (xPlaying) {
-    ulNotificationValue = ulTaskNotifyTake(pdTRUE, xUpdateTime);
+    xPreviousTime = xTaskGetTickCount();
+    ulNotificationValue = ulTaskNotifyTake(pdTRUE, xWakeUpTime);
+    xCurrentTime = xTaskGetTickCount();
     if (ulNotificationValue > 0) {
-      printf("Notifity!\n");
       vTaskDelay(xDelay); // Debounce
-      int a = pb.read();
-      printf("New: %d\n", a);
-      xLEDs ^= a;
+      xLEDs ^= pb.read();
+      xWakeUpTime -= (xCurrentTime - xPreviousTime);
     } else {
       xLEDs = ((xLEDs & 0x01) << 3) | xLEDs >> 1;
+      if(xUpdateTime > xMinimumTime) {
+        xUpdateTime -= xDecrementTime;
+      }
+      xWakeUpTime = xUpdateTime;
     }
     setLEDs(xLEDs);
     if (xLEDs == 0) {
@@ -58,7 +65,6 @@ void vPlayMode() {
 void vWinMode() {
   BaseType_t xCount = 0;
   TickType_t xUpdateTime = pdMS_TO_TICKS(WIN_MODE_UPDATE_TIME);
-  printf("Win!\n");
   while (xCount < 6) {
     setLEDs((xCount % 2 == 0) ? 0xF : 0x0);
     xCount++;

@@ -6,12 +6,14 @@
 
 namespace temperature_task {
 
-  typedef struct {
-    float xTemp;
-    time_t xTime;
-  } Measure_t;
+typedef struct {
+  float xTemp;
+  time_t xTime;
+} Measure_t;
 
-  void vTemperatureTask(void* pvParameters);
-}
+void vTemperatureTask(void *pvParameters);
+
+void get_temperature(float *temp);
+} // namespace temperature_task
 
 #endif

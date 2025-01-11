@@ -15,6 +15,8 @@ namespace temperature_task {
 
 static LM75B sensor(p28, p27);
 
+void get_temperature(float *temp) { *temp = sensor.temp(); }
+
 void vTemperatureTask(void *pvParameters) {
   uint32_t ulNotificationValue = 0;
   if (!sensor.open()) {

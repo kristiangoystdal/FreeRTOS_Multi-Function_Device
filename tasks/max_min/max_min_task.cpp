@@ -13,6 +13,10 @@ namespace max_min_task {
 static MaxMinMeasure_t xMaxMin;
 
 void sendMaxMin() {
+  if (xMaxMin.xMax.xTemp == -FLT_MAX || xMaxMin.xMin.xTemp == FLT_MAX) {
+    printf("No data\n");
+    return;
+  }
   char buffer[100];
   date_time::convertTimeToDateClockString(xMaxMin.xMax.xTime, buffer,
                                           sizeof(buffer));
