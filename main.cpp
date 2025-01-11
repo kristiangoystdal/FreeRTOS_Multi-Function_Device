@@ -15,10 +15,11 @@
 #include "tasks_macros.h"
 #include "temperature_task.hpp"
 
-
 Serial pc(USBTX, USBRX);
 
 I2C i2c(p28, p27);
+
+extern void vMonitorTask(void *pvParameters);
 
 void check_tasks(void);
 
@@ -55,8 +56,8 @@ void check_tasks() {
 
   vCreateTask(pwm_task::vPWMTask, "Task PWM", 2 * configMINIMAL_STACK_SIZE,
               NULL, MAX_MIN_TASK_PRIORITY, &xPWMHandler);
-  vCreateTask(monitor_task::vMonitorTask, "Monitor",
-              2 * configMINIMAL_STACK_SIZE, NULL, MONITOR_TASK_PRIORITY, NULL);
+  vCreateTask(vMonitorTask, "Monitor", 2 * configMINIMAL_STACK_SIZE, NULL,
+              MONITOR_TASK_PRIORITY, NULL);
   vCreateTask(temperature_task::vTemperatureTask, "Task Temperature",
               2 * configMINIMAL_STACK_SIZE, NULL, TEMPERATURE_TASK_PRIORITY,
               &xTemperatureHandler);
