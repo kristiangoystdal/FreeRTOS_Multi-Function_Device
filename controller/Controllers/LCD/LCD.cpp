@@ -1,5 +1,6 @@
 #include "LCD.h"
 #include "LM75B.h"
+#include <stdio.h>
 
 static C12832 lcd(p5, p7, p6, p8, p11);
 
@@ -32,6 +33,7 @@ void write_clock_alarm(bool clock_alarm_enabled) {
 }
 
 void write_temp_alarm(bool temp_alarm_enabled) {
+  printf("write_temp_alarm\n");
   lcd.locate(20, 12);
   lcd.printf(temp_alarm_enabled ? "T" : " ");
 }
