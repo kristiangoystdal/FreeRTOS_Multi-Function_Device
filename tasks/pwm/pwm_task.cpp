@@ -6,7 +6,6 @@
 #include "mbed.h"
 #include "task.h"
 
-
 namespace pwm_task {
 
 static AnalogIn p1(p19);
@@ -33,7 +32,9 @@ void vPWMTask(void *pvParameters) {
       fDutyCycle = p2;
     }
     if (ulNotificationValue > 0) {
-      buzzer.period(fPeriod);
+      if (fPeriod != 0) {
+        buzzer.period(fPeriod);
+      }
       buzzer = fDutyCycle;
     } else {
       buzzer = 0.0;

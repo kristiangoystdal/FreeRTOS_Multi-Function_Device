@@ -193,7 +193,7 @@ void cmd_rai(int argc, char **argv) {
   BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
   if (xStatus == errQUEUE_FULL) {
     printf("ERROR: Queue full: QueueAlarm");
-  } 
+  }
 }
 
 void cmd_sac(int argc, char **argv) {
@@ -202,12 +202,13 @@ void cmd_sac(int argc, char **argv) {
   }
   alarm_task::AlarmMessage_t xAlarmMessage;
   xAlarmMessage.xAction = alarm_task::SetClock;
-  time_t t = date_time::integer_to_time_t(atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
+  time_t t =
+      date_time::integer_to_time_t(atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
   xAlarmMessage.xAlarmData.tclock = t;
   BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
   if (xStatus == errQUEUE_FULL) {
     printf("ERROR: Queue full: QueueAlarm");
-  } 
+  }
 }
 
 void cmd_sat(int argc, char **argv) {
@@ -216,14 +217,20 @@ void cmd_sat(int argc, char **argv) {
   if (check_args(argc, argv, 3, ranges_temp_double)) {
     return;
   }
+
+  if (argv[1] >= argv[2]) {
+    printf("ERROR: Low threshold cannot be higher than or equal to high "
+           "threshold!\n");
+    return;
+  }
   alarm_task::AlarmMessage_t xAlarmMessage;
   xAlarmMessage.xAction = alarm_task::SetTemp;
   xAlarmMessage.xAlarmData.threshold.tlow = atoi(argv[1]);
   xAlarmMessage.xAlarmData.threshold.thigh = atoi(argv[2]);
   BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
   if (xStatus == errQUEUE_FULL) {
-  printf("ERROR: Queue full: QueueAlarm");
-  } 
+    printf("ERROR: Queue full: QueueAlarm");
+  }
 }
 
 void cmd_adac(int argc, char **argv) {
@@ -235,8 +242,8 @@ void cmd_adac(int argc, char **argv) {
   xAlarmMessage.xAlarmData.clock_alarm_en = atoi(argv[1]);
   BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
   if (xStatus == errQUEUE_FULL) {
-  printf("ERROR: Queue full: QueueAlarm");
-  } 
+    printf("ERROR: Queue full: QueueAlarm");
+  }
 }
 
 void cmd_adat(int argc, char **argv) {
@@ -248,8 +255,8 @@ void cmd_adat(int argc, char **argv) {
   xAlarmMessage.xAlarmData.temp_alarm_en = atoi(argv[1]);
   BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
   if (xStatus == errQUEUE_FULL) {
-  printf("ERROR: Queue full: QueueAlarm");
-  } 
+    printf("ERROR: Queue full: QueueAlarm");
+  }
 }
 
 void cmd_rts(int argc, char **argv) {
