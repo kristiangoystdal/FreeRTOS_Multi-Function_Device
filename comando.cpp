@@ -129,6 +129,7 @@ void cmd_sd(int argc, char **argv) {
   char s[100];
   char buffer[10];
   date_time::get_clock(buffer);
+  printf("Clock buffer: '%s'\n", buffer);
   snprintf(s, sizeof(s), "%d/%d/%d %s", atoi(argv[1]), atoi(argv[2]),
            atoi(argv[3]), buffer);
   printf("%s\n", s);
