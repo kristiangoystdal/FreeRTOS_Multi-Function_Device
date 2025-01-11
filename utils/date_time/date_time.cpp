@@ -16,8 +16,7 @@ void get_date(char *s) {
   struct tm tm_;
   localtime_r(&t, &tm_);
 
-  // Use the correct buffer size
-  strftime(s, 100, "%d/%m/%Y %H:%M:%S", &tm_);
+  strftime(s, 20, "%d/%m/%Y %H:%M:%S", &tm_);
 }
 
 void get_clock(char *s) {
