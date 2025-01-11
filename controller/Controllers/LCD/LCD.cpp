@@ -36,7 +36,7 @@ void write_temp_alarm(bool temp_alarm_enabled) {
   lcd.printf(temp_alarm_enabled ? "T" : " ");
 }
 
-void write_temperature(int temperature) {
+void write_temperature(float temperature) {
   lcd.locate(0, 22);
-  lcd.printf("Temp = %d", temperature);
+  lcd.printf("Temp = %.1f", temperature);
 }
