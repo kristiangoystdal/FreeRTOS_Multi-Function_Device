@@ -11,6 +11,7 @@
 #include "alarm_task.hpp"
 #include "bubble_level_task.hpp"
 #include "configuration.hpp"
+#include "date_time.hpp"
 #include "global_queues.h"
 #include "hit_bit_task.hpp"
 #include "lcd_task.hpp"
@@ -112,6 +113,8 @@ int ranges_bool[1][2] = {{0, 1}};
 void cmd_rdt(int argc, char **argv) {
   // Placeholder for command
   printf("cmd_rdt\n");
+  time_t xTime = date_time::get_time();
+  printf("%s\n", date_time::convertTimeToString(xTime));
 }
 
 void cmd_sd(int argc, char **argv) {
