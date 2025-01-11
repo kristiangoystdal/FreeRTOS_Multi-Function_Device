@@ -61,7 +61,7 @@ void vSetRGB(float temp) {
 void vClockAlarm() {
   xSemaphoreTake(xMutexClock, portMAX_DELAY);
   if (xAlarmInfo.clock_alarm_en) {
-    xTaskNotifyGive(xPWMTask);
+    xTaskNotifyGive(xPWMHandler);
   }
   xSemaphoreGive(xMutexClock);
 }
@@ -104,7 +104,7 @@ void vAlarmTask(void *pvParameters) {
       float temp = xMessage.xAlarmData.xMeasure.xTemp;
       if (xAlarmInfo.temp_alarm_en &&
           (xAlarmInfo.thigh < temp || xAlarmInfo.tlow > temp)) {
-        xTaskNotifyGive(xPWMTask);
+        xTaskNotifyGive(xPWMHandler);
       }
       vSetRGB(temp);
       break;
