@@ -48,6 +48,9 @@ void vPlayMode() {
       vTaskDelay(xDelay); // Debounce
       xLEDs ^= pb.read();
       xWakeUpTime -= (xCurrentTime - xPreviousTime);
+      if(xWakeUpTime < 0) {
+        xWakeUpTime = 0;
+      }
     } else {
       xLEDs = ((xLEDs & 0x01) << 3) | xLEDs >> 1;
       if(xUpdateTime > xMinimumTime) {
@@ -87,6 +90,7 @@ void vHitBitTask(void *pvParameters) {
   printf("Hit Bit Task\n");
   xHitBitEnabled = new atomic::Atomic<bool>(false);
   pb.rise(&vButtonPressed);
+  vTaskSuspend(xHitBitHandler);
   for (;;) {
     vPlayMode();
     vWinMode();
