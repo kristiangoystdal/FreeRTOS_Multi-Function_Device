@@ -156,8 +156,6 @@ void cmd_rt(int argc, char **argv) {
 void cmd_rmm(int argc, char **argv) {
   max_min_task::MaxMinMessage_t xMaxMinMessage;
   xMaxMinMessage.xAction = max_min_task::Get;
-  xMaxMinMessage.xMeasure.xTemp = 0;
-  xMaxMinMessage.xMeasure.xTime = 0;
   BaseType_t xStatus = xQueueSend(xQueueMaxMin, &xMaxMinMessage, 0);
   if (xStatus == errQUEUE_FULL) {
     printf("ERROR: Queue full: Temperature -> Max/Min");
