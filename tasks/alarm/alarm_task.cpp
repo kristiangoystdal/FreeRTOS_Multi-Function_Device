@@ -102,7 +102,7 @@ void vAlarmTask(void *pvParameters) {
       float temp = xMessage.xAlarmData.xMeasure.xTemp;
       if (xAlarmInfo.temp_alarm_en &&
           (xAlarmInfo.thigh < temp || xAlarmInfo.tlow > temp)) {
-        xTaskNotifyGive(xPWMHandler);
+        xTaskNotifyGive(xConfigSoundHandler);
       }
       vSetRGB(temp);
       break;

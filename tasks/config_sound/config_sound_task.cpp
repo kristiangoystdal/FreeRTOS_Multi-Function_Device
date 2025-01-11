@@ -1,5 +1,5 @@
 
-#include "pwm_task.hpp"
+#include "config_sound_task.hpp"
 #include "FreeRTOS.h"
 #include "atomic.hpp"
 #include "configuration.hpp"
@@ -8,7 +8,7 @@
 #include "task.h"
 #include "timers.h"
 
-namespace pwm_task {
+namespace config_sound_task {
 
 static AnalogIn p1(p19);
 static AnalogIn p2(p20);
@@ -44,12 +44,12 @@ void vSetConfigSoundEnabled(bool enabled) {
   }
 }
 
-void vPWMTask(void *pvParameters) {
-  printf("PWM Task\n");
+void vConfigSoundTask(void *pvParameters) {
+  printf("Config Sound Task\n");
   xConfigSoundEnabled = new atomic::Atomic<bool>(false);
   bool xEnabled = false;
-  TickType_t xPWMUpdate = pdMS_TO_TICKS(CONFIG_SOUND_UPDATE_TIME);
-  xTimer = xTimerCreate("Config Sound Timer", xPWMUpdate, pdTRUE, (void *)0, vTimerCallback);
+  TickType_t xUpdate = pdMS_TO_TICKS(CONFIG_SOUND_UPDATE_TIME);
+  xTimer = xTimerCreate("Config Sound Timer", xUpdate, pdTRUE, (void *)0, vTimerCallback);
   for (;;) {
     TickType_t xTALA =
         xEnabled ? configuration::xConfigGetTALA() : portMAX_DELAY;
@@ -65,4 +65,4 @@ void vPWMTask(void *pvParameters) {
   }
 }
 
-} // namespace pwm_task
+} // namespace config_sound_task

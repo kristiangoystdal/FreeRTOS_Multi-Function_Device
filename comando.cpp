@@ -16,7 +16,7 @@
 #include "hit_bit_task.hpp"
 #include "lcd_task.hpp"
 #include "max_min_task.hpp"
-#include "pwm_task.hpp"
+#include "config_sound_task.hpp"
 #include "queue.h"
 #include <ctype.h>
 #include <stdio.h>
@@ -262,7 +262,7 @@ void cmd_adat(int argc, char **argv) {
 void cmd_rts(int argc, char **argv) {
   bool bubble_level_en = bubble_level_task::xGetBubbleLevelEnabled();
   bool hit_bit_en = hit_bit_task::xGetHitBitEnabled();
-  bool config_sound_en = pwm_task::xGetConfigSoundEnabled();
+  bool config_sound_en = config_sound_task::xGetConfigSoundEnabled();
   printf("Bubble Level: %d\n", bubble_level_en);
   printf("Hit Bit: %d\n", hit_bit_en);
   printf("Config Sound: %d\n", config_sound_en);
@@ -289,6 +289,6 @@ void cmd_adcs(int argc, char **argv) {
     return;
   }
 
-  pwm_task::vSetConfigSoundEnabled((bool)atoi(argv[1]));
+  config_sound_task::vSetConfigSoundEnabled((bool)atoi(argv[1]));
 }
 } // namespace comando

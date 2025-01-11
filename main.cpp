@@ -11,7 +11,7 @@
 #include "max_min_task.hpp"
 #include "mbed.h"
 #include "monitor_task.hpp"
-#include "pwm_task.hpp"
+#include "config_sound_task.hpp"
 #include "tasks_macros.h"
 #include "temperature_task.hpp"
 
@@ -54,8 +54,8 @@ void check_tasks() {
 
   printf("Init complete..\n");
 
-  vCreateTask(pwm_task::vPWMTask, "Task PWM", 2 * configMINIMAL_STACK_SIZE,
-              NULL, MAX_MIN_TASK_PRIORITY, &xPWMHandler);
+  vCreateTask(config_sound_task::vConfigSoundTask, "Task Config Sound", 2 * configMINIMAL_STACK_SIZE,
+              NULL, MAX_MIN_TASK_PRIORITY, &xConfigSoundHandler);
   vCreateTask(vMonitorTask, "Monitor", 2 * configMINIMAL_STACK_SIZE, NULL,
               MONITOR_TASK_PRIORITY, NULL);
   vCreateTask(temperature_task::vTemperatureTask, "Task Temperature",
