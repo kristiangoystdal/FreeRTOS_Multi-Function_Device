@@ -115,7 +115,7 @@ void cmd_rdt(int argc, char **argv) {
   printf("cmd_rdt\n");
   time_t xTime = date_time::get_time();
   char buffer[100];
-  date_time::convertTimeToString(xMaxMin.xMax.xTime, buffer, sizeof(buffer));
+  date_time::convertTimeToString(xTime, buffer, sizeof(buffer));
   printf("%s\n", buffer);
 }
 
