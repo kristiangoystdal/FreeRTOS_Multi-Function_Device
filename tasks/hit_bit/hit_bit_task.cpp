@@ -92,7 +92,7 @@ void vHitBitTask(void *pvParameters) {
   printf("Hit Bit Task\n");
   xHitBitEnabled = new atomic::Atomic<bool>(false);
   pb.rise(&vButtonPressed);
-  vTaskSuspend(xHitBitHandler);
+  vSetHitBitEnabled(false);
   for (;;) {
     vPlayMode();
     vWinMode();
