@@ -169,6 +169,11 @@ void cmd_cmm(int argc, char **argv) { max_min_task::vMaxMinInitialize(); }
 void cmd_rp(int argc, char **argv) {
   // Placeholder for command
   printf("cmd_rp\n");
+
+  int pmon = configuration::xConfigGetPMON();
+  int tala = configuration::xConfigGetTALA();
+  printf("PMON: %d\n", pmon);
+  printf("TALA: %d\n", tala);
 }
 
 void cmd_mmp(int argc, char **argv) {
