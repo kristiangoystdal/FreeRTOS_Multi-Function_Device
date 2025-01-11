@@ -47,7 +47,12 @@ void vPlayMode() {
     if (ulNotificationValue > 0) {
       vTaskDelay(xDelay); // Debounce
       xLEDs ^= pb.read();
-      xWakeUpTime -= (xCurrentTime - xPreviousTime);
+      xWakeUpTime = (xCurrentTime - xPreviousTime);
+      if(xWakeUpTime < (xCurrentTime - xPreviousTime)) {
+        xWakeUpTime = 0;
+      } else {
+          xWakeUpTime -= (xCurrentTime - xPreviousTime);
+      }
     } else {
       xLEDs = ((xLEDs & 0x01) << 3) | xLEDs >> 1;
       if(xUpdateTime > xMinimumTime) {
@@ -75,18 +80,22 @@ void vWinMode() {
 bool xGetHitBitEnabled() { return xHitBitEnabled->get(); }
 
 void vSetHitBitEnabled(bool enabled) {
+  taskENTER_CRITICAL();
   xHitBitEnabled->set(enabled);
   if (enabled) {
+    pb.rise(&vButtonPressed);
     vTaskResume(xHitBitHandler);
   } else {
+    pb.rise(NULL);
     vTaskSuspend(xHitBitHandler);
   }
+  taskEXIT_CRITICAL();
 }
 
 void vHitBitTask(void *pvParameters) {
   printf("Hit Bit Task\n");
   xHitBitEnabled = new atomic::Atomic<bool>(false);
-  pb.rise(&vButtonPressed);
+  vSetHitBitEnabled(false);
   for (;;) {
     vPlayMode();
     vWinMode();

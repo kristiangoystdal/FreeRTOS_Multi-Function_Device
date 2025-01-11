@@ -24,8 +24,7 @@ void get_clock(char *s) {
   struct tm tm_;
   localtime_r(&t, &tm_);
 
-  // Ensure a safe, proper size is used for the buffer
-    // Format the time as "hh:mm:ss"
+  strftime(s, 9, "%H:%M:%S", &tm_); // Format the time as "hh:mm:ss"
 }
 
 void set_time_t(time_t t) { set_time(t); }
@@ -70,12 +69,12 @@ void convertTimeToClockString(time_t xTime, char *timeString,
 }
 
 time_t integer_to_time_t(int H, int M, int S) {
-    time_t now = time(NULL);
-    struct tm timeinfo = *localtime(&now);
-    timeinfo.tm_hour = H;
-    timeinfo.tm_min = M;
-    timeinfo.tm_sec = S;
-    return mktime(&timeinfo);
+  time_t now = time(NULL);
+  struct tm timeinfo = *localtime(&now);
+  timeinfo.tm_hour = H;
+  timeinfo.tm_min = M;
+  timeinfo.tm_sec = S;
+  return mktime(&timeinfo);
 }
 
 } // namespace date_time
