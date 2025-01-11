@@ -13,7 +13,7 @@ namespace max_min_task {
 static MaxMinMeasure_t xMaxMin;
 
 void sendMaxMin() {
-  if(xMaxMin.xMax.xTime == -FLT_MAX || xMaxMin.xMin.xTime == FLT_MAX) {
+  if (xMaxMin.xMax.xTemp == -FLT_MAX || xMaxMin.xMin.xTemp == FLT_MAX) {
     printf("No data\n");
     return;
   }
