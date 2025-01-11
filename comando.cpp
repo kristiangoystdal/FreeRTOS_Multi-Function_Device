@@ -143,10 +143,13 @@ void cmd_sc(int argc, char **argv) {
   }
 
   char s[100];
-  snprintf(s, sizeof(s), "%02d:%02d:%02d", atoi(argv[1]), atoi(argv[2]),
-           atoi(argv[3]));
+  date_time::get_date(s);
 
-  printf("%s\n", s);
+  snprintf(s + 11, sizeof(s) - 11, "%02d:%02d:%02d", atoi(argv[1]),
+           atoi(argv[2]), atoi(argv[3]));
+
+  printf("%s\n", s); // Print the updated string
+
   date_time::set_dateTime(s);
 }
 
