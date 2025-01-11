@@ -17,7 +17,10 @@ void set_clock(char *s);
 
 time_t clock_to_time(tm *t);
 tm *time_to_clock(time_t t);
-void convertTimeToString(time_t xTime, char *timeString, size_t bufferSize);
+void convertTimeToDateClockString(time_t xTime, char *timeString,
+                                  size_t bufferSize);
+void convertTimeToClockString(time_t xTime, char *timeString,
+                              size_t bufferSize);
 
 } // namespace date_time
 
