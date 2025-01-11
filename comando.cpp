@@ -210,8 +210,15 @@ void cmd_adac(int argc, char **argv) {
   if (check_args(argc, argv, 2, ranges_bool)) {
     return;
   }
-
-  // Placeholder for command
+  alarm_task::AlarmMessage_t xAlarmMessage;
+  xAlarmMessage.xAction = alarm_task::SetClockEn;
+  xAlarmMessage.xAlarmData.clock_alarm_en = atoi(argv[1]);
+  BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
+  if (xStatus == errQUEUE_FULL) {
+  printf("ERROR: Queue full: QueueAlarm");
+  } else {
+    printf("Pass\n");
+  }
   printf("cmd_adac %d\n", atoi(argv[1]));
 }
 
@@ -219,8 +226,15 @@ void cmd_adat(int argc, char **argv) {
   if (check_args(argc, argv, 2, ranges_bool)) {
     return;
   }
-
-  // Placeholder for command
+  alarm_task::AlarmMessage_t xAlarmMessage;
+  xAlarmMessage.xAction = alarm_task::SetTempEn;
+  xAlarmMessage.xAlarmData.temp_alarm_en = atoi(argv[1]);
+  BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
+  if (xStatus == errQUEUE_FULL) {
+  printf("ERROR: Queue full: QueueAlarm");
+  } else {
+    printf("Pass\n");
+  }
   printf("cmd_adat %d\n", atoi(argv[1]));
 }
 
