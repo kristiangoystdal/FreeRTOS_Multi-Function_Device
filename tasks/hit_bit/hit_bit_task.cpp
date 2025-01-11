@@ -42,7 +42,7 @@ void vPlayMode() {
       printf("Notifity!\n");
       vTaskDelay(xDelay100ms); // Debounce
       int a = pb.read();
-      printf("New: %d\n", &a);
+      printf("New: %d\n", a);
       xLEDs ^= a;
     }
     xLEDs = ((xLEDs & 0x01) << 3) | xLEDs >> 1;
