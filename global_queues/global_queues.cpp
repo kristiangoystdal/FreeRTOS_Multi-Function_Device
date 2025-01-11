@@ -4,4 +4,3 @@
 QueueHandle_t xQueueMaxMin;
 QueueHandle_t xQueueAlarm;
 QueueHandle_t xQueueLCD;
-QueueHandle_t xQueueConsole;

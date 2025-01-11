@@ -7,7 +7,6 @@
 #include "alarm_task.hpp"
 #include "bubble_level_task.hpp"
 #include "comando.hpp"
-#include "command_task.hpp"
 #include "configuration.hpp"
 #include "global_queues/global_queues.h"
 #include "hit_bit_task.hpp"
@@ -74,26 +73,26 @@ void check_tasks() {
 
   printf("Init complete..\n");
 
+  TaskHandle_t xTemperatureTaskHandler;
+
   vCreateTask(pwm_task::vPWMTask, "Task PWM", 2 * configMINIMAL_STACK_SIZE,
               NULL, MAX_MIN_TASK_PRIORITY, &xPWMTaskHandler);
 
   vCreateTask(vMonitorTask, "Monitor", 2 * configMINIMAL_STACK_SIZE, NULL, 1,
               NULL);
-
-  TaskHandle_t xTemperatureTaskHandler;
   vCreateTask(temperature_task::vTemperatureTask, "Task Temperature",
               2 * configMINIMAL_STACK_SIZE, NULL, TEMPERATURE_TASK_PRIORITY,
               &xTemperatureTaskHandler);
   vCreateTask(alarm_task::vAlarmTask, "Task Alarm",
-              2 * configMINIMAL_STACK_SIZE, &pxAlarmParameters,
+              2 * configMINIMAL_STACK_SIZE, NULL,
               ALARM_TASK_PRIORITY, NULL);
   vCreateTask(max_min_task::vMaxMinTask, "Task Max Min",
-              2 * configMINIMAL_STACK_SIZE, &pxMaxMinParameters,
+              2 * configMINIMAL_STACK_SIZE, NULL,
               MAX_MIN_TASK_PRIORITY, NULL);
   vCreateTask(lcd_task::vLCDTask, "Task Hit Bit", 2 * configMINIMAL_STACK_SIZE,
               NULL, HIT_BIT_TASK_PRIORITY, NULL);
   vCreateTask(hit_bit_task::vHitBitTask, "Task LCD",
-              2 * configMINIMAL_STACK_SIZE, &pxLCDParameters, LCD_TASK_PRIORITY,
+              2 * configMINIMAL_STACK_SIZE, NULL, LCD_TASK_PRIORITY,
               NULL);
   vCreateTask(bubble_level_task::vBubbleLevelTask, "Task Bubble Level",
               2 * configMINIMAL_STACK_SIZE, NULL, BUBBLE_LEVEL_TASK_PRIORITY,
