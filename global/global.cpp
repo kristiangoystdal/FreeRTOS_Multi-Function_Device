@@ -7,6 +7,8 @@ QueueHandle_t xQueueMaxMin;
 QueueHandle_t xQueueAlarm;
 QueueHandle_t xQueueLCD;
 TaskHandle_t xPWMHandler;
+TaskHandle_t xBubbleLevelHandler;
+TaskHandle_t xHitBitHandler;
 TaskHandle_t xTemperatureHandler;
 
 void vCreateTask(TaskFunction_t pxTaskCode, const char *const pcName,

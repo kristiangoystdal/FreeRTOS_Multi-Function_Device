@@ -66,13 +66,13 @@ void check_tasks() {
               2 * configMINIMAL_STACK_SIZE, NULL,
               MAX_MIN_TASK_PRIORITY, NULL);
   vCreateTask(hit_bit_task::vHitBitTask, "Task Hit Bit", 2 * configMINIMAL_STACK_SIZE,
-              NULL, HIT_BIT_TASK_PRIORITY, NULL);
+              NULL, HIT_BIT_TASK_PRIORITY, &xHitBitHandler);
   vCreateTask(lcd_task::vLCDTask, "Task LCD",
               2 * configMINIMAL_STACK_SIZE, NULL, LCD_TASK_PRIORITY,
               NULL);
   vCreateTask(bubble_level_task::vBubbleLevelTask, "Task Bubble Level",
               2 * configMINIMAL_STACK_SIZE, NULL, BUBBLE_LEVEL_TASK_PRIORITY,
-              NULL);
+              &xBubbleLevelHandler);
 
   vTaskStartScheduler();
   while (1)
