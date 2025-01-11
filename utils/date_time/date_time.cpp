@@ -29,7 +29,7 @@ void get_clock(char *s) {
 
 void set_time_t(time_t t) { set_time(t); }
 
-void set_date(char *s) {
+void set_dateTime(char *s) {
   struct tm tm_ = {0};
 
   if (sscanf(s, "%2d/%2d/%4d %2d:%2d:%2d", &tm_.tm_mday, &tm_.tm_mon,
@@ -48,15 +48,6 @@ void set_date(char *s) {
   }
 
   set_time(t);
-}
-
-void set_clock(char *s) {
-  tm tm_;
-  if (sscanf(s, "%2d:%2d:%2d", &tm_.tm_hour, &tm_.tm_min, &tm_.tm_sec) != 3) {
-    printf("Error while parsing clock");
-    return;
-  }
-  set_time(clock_to_time(&tm_));
 }
 
 time_t clock_to_time(tm *t) { return mktime(t); }

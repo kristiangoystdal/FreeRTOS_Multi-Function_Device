@@ -126,7 +126,7 @@ void cmd_sd(int argc, char **argv) {
   date_time::get_clock(buffer);
   snprintf(s, sizeof(s), "%02d/%02d/%04d %s", atoi(argv[1]), atoi(argv[2]),
            atoi(argv[3]), buffer);
-  date_time::set_date(s);
+  date_time::set_dateTime(s);
 }
 
 void cmd_rc(int argc, char **argv) {
@@ -142,7 +142,12 @@ void cmd_sc(int argc, char **argv) {
     return;
   }
 
-  printf("cmd_sc %d %d %d\n", atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
+  char s[100];
+  snprintf(s, sizeof(s), "%02d:%02d:%02d", atoi(argv[1]), atoi(argv[2]),
+           atoi(argv[3]));
+
+  printf("%s\n", s);
+  date_time::set_dateTime(s);
 }
 
 void cmd_rt(int argc, char **argv) {
