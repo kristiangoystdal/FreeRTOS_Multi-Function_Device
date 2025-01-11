@@ -53,7 +53,7 @@ tm *time_to_clock(time_t t) { return localtime(&t); }
 void convertTimeToString(time_t xTime, char *timeString, size_t bufferSize) {
   struct tm *timeInfo = localtime(&xTime);
 
-  strftime(timeString, bufferSize, "%d-%m-%Y %H:%M:%S", timeInfo);
+  strftime(timeString, bufferSize, "%d/%m/%Y %H:%M:%S", timeInfo);
 }
 
 } // namespace date_time
