@@ -3,6 +3,7 @@
 #include "FreeRTOS.h"
 #include "RTC.h"
 #include "configuration.hpp"
+#include "config_sound_task.hpp"
 #include "date_time.hpp"
 #include "global.h"
 #include "lcd_task.hpp"
@@ -51,14 +52,18 @@ void vSetRGB(float temp) {
 }
 
 void vClockAlarm() {
+  config_sound_task::ConfigSoundMessage_t xMessage;
+  xMessage.xAction = config_sound_task::Alarm;
   BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-  vTaskNotifyGiveFromISR(xPWMHandler, &xHigherPriorityTaskWoken);
+  xQueueSendFromISR(xQueueConfigSound, &xMessage, &xHigherPriorityTaskWoken);
 }
 
 void vAlarmTask(void *pvParameters) {
   printf("Alarm Task\n");
 
   AlarmMessage_t xMessage;
+  config_sound_task::ConfigSoundMessage_t xConfigSoundMessage;
+  xConfigSoundMessage.xAction = config_sound_task::Alarm;
   vAlarmInfoInitialize();
   rgb::set_period();
   for (;;) {
@@ -102,7 +107,9 @@ void vAlarmTask(void *pvParameters) {
       float temp = xMessage.xAlarmData.xMeasure.xTemp;
       if (xAlarmInfo.temp_alarm_en &&
           (xAlarmInfo.thigh < temp || xAlarmInfo.tlow > temp)) {
-        xTaskNotifyGive(xConfigSoundHandler);
+        if (xQueueSend(xQueueConfigSound, &xConfigSoundMessage, 0) == errQUEUE_FULL) {
+          printf("ERROR: Queue full: Alarm -> Config Sound");
+        }
       }
       vSetRGB(temp);
       break;

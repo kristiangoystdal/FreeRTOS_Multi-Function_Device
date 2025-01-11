@@ -15,16 +15,11 @@
 #include "tasks_macros.h"
 #include "temperature_task.hpp"
 
-Serial pc(USBTX, USBRX);
-
 I2C i2c(p28, p27);
-
-extern void vMonitorTask(void *pvParameters);
 
 void check_tasks(void);
 
 int main() {
-  pc.baud(115200);
   check_tasks();
   return 0;
 }
@@ -39,7 +34,7 @@ void scanI2CDevices() {
 }
 
 void check_tasks() {
-
+  monitor_task::vInitPC();
   xQueueMaxMin = xCreateQueue(MAX_MIN_TASK_QUEUE_SIZE,
                               sizeof(max_min_task::MaxMinMessage_t));
   xQueueAlarm =

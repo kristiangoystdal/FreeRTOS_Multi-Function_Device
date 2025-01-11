@@ -28,7 +28,7 @@ void vTimerCallback(TimerHandle_t xTimer) {
   xMessage.xData.xPeriod = min_output + (max_output - min_output) * p1;
   xMessage.xData.xDutyCycle = p2;
   BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-  xQueueSendFromISR(xQueueConfigSound, &xMessage, xHigherPriorityTaskWoken);
+  xQueueSendFromISR(xQueueConfigSound, &xMessage, &xHigherPriorityTaskWoken);
 }
 
 bool xGetConfigSoundEnabled() { return xConfigSoundEnabled->get(); }
