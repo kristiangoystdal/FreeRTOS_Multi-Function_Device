@@ -80,18 +80,21 @@ void vWinMode() {
 bool xGetHitBitEnabled() { return xHitBitEnabled->get(); }
 
 void vSetHitBitEnabled(bool enabled) {
+  taskENTER_CRITICAL();
   xHitBitEnabled->set(enabled);
   if (enabled) {
+    pb.rise(&vButtonPressed);
     vTaskResume(xHitBitHandler);
   } else {
+    pb.rise(NULL);
     vTaskSuspend(xHitBitHandler);
   }
+  taskEXIT_CRITICAL();
 }
 
 void vHitBitTask(void *pvParameters) {
   printf("Hit Bit Task\n");
   xHitBitEnabled = new atomic::Atomic<bool>(false);
-  pb.rise(&vButtonPressed);
   vSetHitBitEnabled(false);
   for (;;) {
     vPlayMode();
