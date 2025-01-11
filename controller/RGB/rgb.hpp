@@ -5,6 +5,8 @@
 namespace rgb {
 
   void set_rgb(float red, float green, float blue);
+
+  void set_period();
   
 } // namespace rgb
 

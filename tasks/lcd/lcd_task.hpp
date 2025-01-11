@@ -4,25 +4,40 @@
 
 #include <time.h>
 
-namespace lcd_task {
+namespace lcd_task
+{
 
-  typedef enum LCDDataType {
-    Timestamp,
+  typedef enum LCDAction
+  {
     Alarm,
-    Temperature
-  } LCDDataType;
+    Temperature,
+    Clock,
+    BubbleLevel
+  } LCDAction;
 
-  typedef union LCDData {
-    time_t xTime;
+  typedef struct
+  {
+    int x;
+    int y;
+  } Pos;
+
+  typedef union LCDData
+  {
     char cAlarmLetter;
     float xTemperature;
+    time_t time;
+    Pos xBubbleLevelPos;
   } LCDData;
 
-  typedef struct {
-    LCDDataType xDataType;
+  typedef struct
+  {
+    LCDAction xAction;
     LCDData xLCDData;
   } LCDMessage_t;
-  
+
+  void vLCDTask(void *pvParameters);
+  void vUpdateClockISR();
+
 }
 
 #endif
