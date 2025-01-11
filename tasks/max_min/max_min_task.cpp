@@ -1,6 +1,7 @@
 
 #include "max_min_task.hpp"
 #include "FreeRTOS.h"
+#include "date_time.hpp"
 #include "global_queues.h"
 #include "queue.h"
 #include "temperature_task.hpp"
@@ -12,7 +13,9 @@ namespace max_min_task {
 static MaxMinMeasure_t xMaxMin;
 
 void sendMaxMin() {
-  printf("Max: %f at %d\n", xMaxMin.xMax.xTemp, xMaxMin.xMax.xTime);
+  char buffer[100];
+  date_time::convertTimeToString(xMaxMin.xMax.xTime, buffer, sizeof(buffer));
+  printf("Max: %f at %s\n", xMaxMin.xMax.xTemp, buffer);
   // TODO: Send to console
 }
 
