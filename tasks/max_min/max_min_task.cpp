@@ -1,7 +1,8 @@
 
 #include "max_min_task.hpp"
 #include "FreeRTOS.h"
-#include "global_queues.h"
+#include "date_time.hpp"
+#include "global.h"
 #include "queue.h"
 #include "temperature_task.hpp"
 #include <cfloat>
@@ -11,8 +12,12 @@ namespace max_min_task {
 
 static MaxMinMeasure_t xMaxMin;
 
-void sendMaxMin(QueueHandle_t xQueueConsole) {
-  // TODO: Send to console
+void sendMaxMin() {
+  char buffer[100];
+  date_time::convertTimeToString(xMaxMin.xMax.xTime, buffer, sizeof(buffer));
+  printf("Max: %.1f at %s\n", xMaxMin.xMax.xTemp, buffer);
+  date_time::convertTimeToString(xMaxMin.xMin.xTime, buffer, sizeof(buffer));
+  printf("Min: %.1f at %s\n", xMaxMin.xMin.xTemp, buffer);
 }
 
 void updateMaxMin(temperature_task::Measure_t xMeasure) {
@@ -41,7 +46,7 @@ void vMaxMinTask(void *pvParameters) {
   for (;;) {
     xQueueReceive(xQueueMaxMin, &xMessage, portMAX_DELAY);
     if (xMessage.xAction == Get) {
-      sendMaxMin(xQueueConsole);
+      sendMaxMin();
     } else {
       updateMaxMin(xMessage.xMeasure);
     }

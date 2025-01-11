@@ -5,13 +5,11 @@
 #include <stdio.h>
 
 // Assuming led1 and led2 are defined elsewhere in your code
-// extern int led1;
-// extern int led2;
 
 // Function prototype for the monitor function
 extern void monitor(void);
 
-// Task 1 definition
+// Monitor definition
 void vMonitorTask(void *pvParameters) { monitor(); }
 
 

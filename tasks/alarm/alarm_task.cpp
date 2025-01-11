@@ -4,7 +4,7 @@
 #include "RTC.h"
 #include "configuration.hpp"
 #include "date_time.hpp"
-#include "global_queues.h"
+#include "global.h"
 #include "lcd_task.hpp"
 #include "queue.h"
 #include "rgb.hpp"
@@ -15,7 +15,6 @@
 namespace alarm_task {
 
 static AlarmInfo_t xAlarmInfo;
-static TaskHandle_t xPWMTask;
 static SemaphoreHandle_t xMutexClock;
 
 void vAlarmInfoInitialize() {
@@ -62,7 +61,7 @@ void vSetRGB(float temp) {
 void vClockAlarm() {
   xSemaphoreTake(xMutexClock, portMAX_DELAY);
   if (xAlarmInfo.clock_alarm_en) {
-    xTaskNotifyGive(xPWMTask);
+    xTaskNotifyGive(xPWMHandler);
   }
   xSemaphoreGive(xMutexClock);
 }
@@ -105,7 +104,7 @@ void vAlarmTask(void *pvParameters) {
       float temp = xMessage.xAlarmData.xMeasure.xTemp;
       if (xAlarmInfo.temp_alarm_en &&
           (xAlarmInfo.thigh < temp || xAlarmInfo.tlow > temp)) {
-        xTaskNotifyGive(xPWMTask);
+        xTaskNotifyGive(xPWMHandler);
       }
       vSetRGB(temp);
       break;

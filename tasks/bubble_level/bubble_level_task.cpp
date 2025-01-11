@@ -3,7 +3,7 @@
 #include "FreeRTOS.h"
 #include "MMA7660.h"
 #include "atomic.hpp"
-#include "global_queues.h"
+#include "global.h"
 #include "lcd_task.hpp"
 #include "task.h"
 #include <stdio.h>

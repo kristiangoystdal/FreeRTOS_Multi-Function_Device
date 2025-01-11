@@ -17,29 +17,7 @@
 /*-------------------------------------------------------------------------+
 | Headers of command functions
 +--------------------------------------------------------------------------*/
-// extern void comando::cmd_sair(int, char **);
-// extern void comando::cmd_test(int, char **);
 void cmd_sos(int, char **);
-// extern void comando::cmd_send(int, char **);
-// extern void comando::cmd_rdt(int, char **);
-// extern void comando::cmd_sd(int, char **);
-// extern void comando::cmd_rc(int, char **);
-// extern void cmd_sc(int, char **);
-// extern void cmd_rt(int, char **);
-// extern void cmd_rmm(int, char **);
-// extern void cmd_cmm(int, char **);
-// extern void cmd_rp(int, char **);
-// extern void cmd_mmp(int, char **);
-// extern void cmd_mta(int, char **);
-// extern void cmd_rai(int, char **);
-// extern void cmd_sac(int, char **);
-// extern void cmd_sat(int, char **);
-// extern void cmd_adac(int, char **);
-// extern void cmd_adat(int, char **);
-// extern void cmd_rts(int, char **);
-// extern void cmd_adbl(int, char **);
-// extern void cmd_adhb(int, char **);
-// extern void cmd_adcs(int, char **);
 
 /*-------------------------------------------------------------------------+
 | Variable and constants definition

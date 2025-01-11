@@ -13,6 +13,6 @@ void write_clock_alarm(bool clock_alarm_enabled);
 
 void write_temp_alarm(bool temp_alarm_enabled);
 
-void write_temperature(int temperature);
+void write_temperature(float temperature);
 
 #endif
