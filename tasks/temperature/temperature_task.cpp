@@ -4,7 +4,7 @@
 #include "alarm_task.hpp"
 #include "configuration.hpp"
 #include "date_time.hpp"
-#include "global_queues.h"
+#include "global.h"
 #include "lcd_task.hpp"
 #include "max_min_task.hpp"
 #include "queue.h"

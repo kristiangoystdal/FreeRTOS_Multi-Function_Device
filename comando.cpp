@@ -11,7 +11,7 @@
 #include "alarm_task.hpp"
 #include "bubble_level_task.hpp"
 #include "configuration.hpp"
-#include "global_queues.h"
+#include "global.h"
 #include "hit_bit_task.hpp"
 #include "lcd_task.hpp"
 #include "max_min_task.hpp"

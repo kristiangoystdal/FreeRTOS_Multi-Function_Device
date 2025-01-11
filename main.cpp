@@ -1,6 +1,5 @@
 #include "C12832.h"
 #include "CMD/cmd.h"
-#include "FreeRTOS.h"
 #include "LCD/LCD.h"
 #include "LM75B.h"
 #include "RTC.h"
@@ -8,14 +7,12 @@
 #include "bubble_level_task.hpp"
 #include "comando.hpp"
 #include "configuration.hpp"
-#include "global_queues/global_queues.h"
+#include "global.h"
 #include "hit_bit_task.hpp"
 #include "lcd_task.hpp"
 #include "max_min_task.hpp"
 #include "mbed.h"
 #include "pwm_task.hpp"
-#include "queue.h"
-#include "task.h"
 #include "tasks_macros.h"
 #include "temperature_task.hpp"
 
@@ -60,8 +57,6 @@ QueueHandle_t xCreateQueue(UBaseType_t uxSize, UBaseType_t uxType) {
 
 void check_tasks() {
 
-  TaskHandle_t xPWMTaskHandler;
-
   xQueueMaxMin = xCreateQueue(MAX_MIN_TASK_QUEUE_SIZE,
                               sizeof(max_min_task::MaxMinMessage_t));
   xQueueAlarm =
@@ -73,16 +68,14 @@ void check_tasks() {
 
   printf("Init complete..\n");
 
-  TaskHandle_t xTemperatureTaskHandler;
-
   vCreateTask(pwm_task::vPWMTask, "Task PWM", 2 * configMINIMAL_STACK_SIZE,
-              NULL, MAX_MIN_TASK_PRIORITY, &xPWMTaskHandler);
+              NULL, MAX_MIN_TASK_PRIORITY, &xPWMHandler);
 
   vCreateTask(vMonitorTask, "Monitor", 2 * configMINIMAL_STACK_SIZE, NULL, 1,
               NULL);
   vCreateTask(temperature_task::vTemperatureTask, "Task Temperature",
               2 * configMINIMAL_STACK_SIZE, NULL, TEMPERATURE_TASK_PRIORITY,
-              &xTemperatureTaskHandler);
+              &xTemperatureHandler);
   vCreateTask(alarm_task::vAlarmTask, "Task Alarm",
               2 * configMINIMAL_STACK_SIZE, NULL,
               ALARM_TASK_PRIORITY, NULL);
