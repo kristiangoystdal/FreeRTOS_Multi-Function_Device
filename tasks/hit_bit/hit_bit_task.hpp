@@ -6,7 +6,7 @@ namespace hit_bit_task {
 
   #define PLAY_MODE_UPDATE_TIME 1000
   #define WIN_MODE_UPDATE_TIME 1000
-  #define JOYSTICK_DELAY_TIME 100
+  #define JOYSTICK_DELAY_TIME 20
 
   bool xGetHitBitEnabled();
   void vSetHitBitEnabled(bool enabled);
