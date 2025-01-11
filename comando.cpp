@@ -167,9 +167,6 @@ void cmd_rmm(int argc, char **argv) {
 void cmd_cmm(int argc, char **argv) { max_min_task::vMaxMinInitialize(); }
 
 void cmd_rp(int argc, char **argv) {
-  // Placeholder for command
-  printf("cmd_rp\n");
-
   int pmon = configuration::xConfigGetPMON();
   int tala = configuration::xConfigGetTALA();
   printf("PMON: %d\n", pmon);
@@ -181,7 +178,7 @@ void cmd_mmp(int argc, char **argv) {
     return;
   }
 
-  printf("cmd_mmp %d\n", atoi(argv[1]));
+  configuration::vConfigSetPMON(atoi(argv[1]));
 }
 
 void cmd_mta(int argc, char **argv) {
@@ -190,6 +187,7 @@ void cmd_mta(int argc, char **argv) {
   }
 
   printf("cmd_mta %d\n", atoi(argv[1]));
+  configuration::vConfigSetTALA(atoi(argv[1]));
 }
 
 void cmd_rai(int argc, char **argv) {
