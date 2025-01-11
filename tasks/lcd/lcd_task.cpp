@@ -20,8 +20,8 @@ void vLCDInitialize() {
 void vUpdateClockISR() {
   BaseType_t xHigherPriorityTaskWoken = pdFALSE;
   LCDMessage_t xMessage;
-  xMessage.xAction = LCDAction::Clock;
-  xMessage.xLCDData = date_time::update_time()
+  xMessage.xAction = Clock;
+  xMessage.xLCDData.time = date_time::get_time();
   xQueueSendFromISR(xQueueLCD, &xMessage, &xHigherPriorityTaskWoken);
 }
 

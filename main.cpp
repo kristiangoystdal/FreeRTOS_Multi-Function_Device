@@ -1,11 +1,9 @@
 #include "C12832.h"
 #include "CMD/cmd.h"
 #include "LCD/LCD.h"
-#include "LM75B.h"
 #include "RTC.h"
 #include "alarm_task.hpp"
 #include "bubble_level_task.hpp"
-#include "comando.hpp"
 #include "configuration.hpp"
 #include "global.h"
 #include "hit_bit_task.hpp"
@@ -48,7 +46,7 @@ void check_tasks() {
 
   configuration::vConfigInitializer();
   NVIC_SetPriority(RTC_IRQn, 254); //TODO: Maybe value is wrong
-  RTC::attach(&vUpdateClockISR, RTC::Second);
+  RTC::attach(&lcd_task::vUpdateClockISR, RTC::Second);
   scanI2CDevices();
 
   printf("Init complete..\n");

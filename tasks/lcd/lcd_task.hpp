@@ -36,6 +36,7 @@ namespace lcd_task
   } LCDMessage_t;
 
   void vLCDTask(void *pvParameters);
+  void vUpdateClockISR();
 
 }
 
