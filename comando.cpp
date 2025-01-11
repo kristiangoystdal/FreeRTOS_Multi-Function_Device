@@ -216,7 +216,9 @@ void cmd_sac(int argc, char **argv) {
   time_info.tm_hour = atoi(argv[1]);
   time_info.tm_min = atoi(argv[2]);
   time_info.tm_sec = atoi(argv[3]);
-  xAlarmMessage.xAlarmData.tclock = mktime(&time_info);
+  time_t t = mktime(&time_info);
+  xAlarmMessage.xAlarmData.tclock = t;
+  printf("SENDING NEW ALARM TIME TO QUEUE: %s", ctime(&t));
   BaseType_t xStatus = xQueueSend(xQueueAlarm, &xAlarmMessage, 0);
   if (xStatus == errQUEUE_FULL) {
     printf("ERROR: Queue full: QueueAlarm");
