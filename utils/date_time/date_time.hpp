@@ -20,6 +20,7 @@ void convertTimeToDateClockString(time_t xTime, char *timeString,
                                   size_t bufferSize);
 void convertTimeToClockString(time_t xTime, char *timeString,
                               size_t bufferSize);
+time_t integer_to_time_t(int H, int M, int S);
 
 } // namespace date_time
 

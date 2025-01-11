@@ -69,7 +69,7 @@ void convertTimeToClockString(time_t xTime, char *timeString,
   strftime(timeString, bufferSize, "%H:%M:%S", timeInfo);
 }
 
-time_t get_time_t(int H, int M, int S) {
+time_t integer_to_time_t(int H, int M, int S) {
     time_t now = time(NULL);
     struct tm timeinfo = *localtime(&now);
     timeinfo.tm_hour = H;
