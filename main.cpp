@@ -45,7 +45,8 @@ void check_tasks() {
   xQueueLCD = xCreateQueue(LCD_TASK_QUEUE_SIZE, sizeof(lcd_task::LCDMessage_t));
 
   configuration::vConfigInitializer();
-  NVIC_SetPriority(RTC_IRQn, 254); //TODO: Maybe value is wrong
+  NVIC_SetPriority(RTC_IRQn, 254);
+  NVIC_SetPriority(EINT3_IRQn, 253);
   RTC::attach(&lcd_task::vUpdateClockISR, RTC::Second);
   scanI2CDevices();
 
@@ -53,8 +54,7 @@ void check_tasks() {
 
   vCreateTask(pwm_task::vPWMTask, "Task PWM", 2 * configMINIMAL_STACK_SIZE,
               NULL, MAX_MIN_TASK_PRIORITY, &xPWMHandler);
-
-  vCreateTask(vMonitorTask, "Monitor", 2 * configMINIMAL_STACK_SIZE, NULL, 1,
+  vCreateTask(vMonitorTask, "Monitor", 2 * configMINIMAL_STACK_SIZE, NULL, MONITOR_TASK_PRIORITY,
               NULL);
   vCreateTask(temperature_task::vTemperatureTask, "Task Temperature",
               2 * configMINIMAL_STACK_SIZE, NULL, TEMPERATURE_TASK_PRIORITY,
@@ -65,14 +65,14 @@ void check_tasks() {
   vCreateTask(max_min_task::vMaxMinTask, "Task Max Min",
               2 * configMINIMAL_STACK_SIZE, NULL,
               MAX_MIN_TASK_PRIORITY, NULL);
-  vCreateTask(lcd_task::vLCDTask, "Task Hit Bit", 2 * configMINIMAL_STACK_SIZE,
-              NULL, HIT_BIT_TASK_PRIORITY, NULL);
-  vCreateTask(hit_bit_task::vHitBitTask, "Task LCD",
+  vCreateTask(hit_bit_task::vHitBitTask, "Task Hit Bit", 2 * configMINIMAL_STACK_SIZE,
+              NULL, HIT_BIT_TASK_PRIORITY, &xHitBitHandler);
+  vCreateTask(lcd_task::vLCDTask, "Task LCD",
               2 * configMINIMAL_STACK_SIZE, NULL, LCD_TASK_PRIORITY,
               NULL);
   vCreateTask(bubble_level_task::vBubbleLevelTask, "Task Bubble Level",
               2 * configMINIMAL_STACK_SIZE, NULL, BUBBLE_LEVEL_TASK_PRIORITY,
-              NULL);
+              &xBubbleLevelHandler);
 
   vTaskStartScheduler();
   while (1)

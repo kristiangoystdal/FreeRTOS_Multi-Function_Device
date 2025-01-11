@@ -12,7 +12,6 @@ namespace bubble_level_task {
 
 static MMA7660 MMA(p28, p27); // I2C Accelerometer
 
-static TaskHandle_t xHandle;
 static atomic::Atomic<bool> *xBubbleLevelEnabled;
 
 bool xGetBubbleLevelEnabled() { return xBubbleLevelEnabled->get(); }
@@ -20,16 +19,15 @@ bool xGetBubbleLevelEnabled() { return xBubbleLevelEnabled->get(); }
 void vSetBubbleLevelEnabled(bool enabled) {
   xBubbleLevelEnabled->set(enabled);
   if (enabled) {
-    vTaskResume(xHandle);
+    vTaskResume(xBubbleLevelHandler);
   } else {
-    vTaskSuspend(xHandle);
+    vTaskSuspend(xBubbleLevelHandler);
   }
 }
 
 void vBubbleLevelTask(void *pvParameters) {
   printf("Bubble Level Task\n");
   lcd_task::LCDMessage_t xMessage;
-  xHandle = xTaskGetCurrentTaskHandle();
   xBubbleLevelEnabled = new atomic::Atomic<bool>(true);
   TickType_t xTicks = pdMS_TO_TICKS(BUBBLE_LEVEL_UPDATE_TIME);
   if (!MMA.testConnection()) {

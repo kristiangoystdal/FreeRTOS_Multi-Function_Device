@@ -12,6 +12,7 @@
 #include "bubble_level_task.hpp"
 #include "configuration.hpp"
 #include "global.h"
+#include "date_time.hpp"
 #include "hit_bit_task.hpp"
 #include "lcd_task.hpp"
 #include "max_min_task.hpp"
@@ -46,12 +47,10 @@ void cmd_test(int argc, char **argv) {
 | Function: cmd_send - send message
 +--------------------------------------------------------------------------*/
 void cmd_send(int argc, char **argv) {
-  int32_t lValueToSend;
   //   BaseType_t xStatus;
 
   if (argc == 2) {
     printf("msg: %s\n", argv[1]);
-    lValueToSend = atoi(argv[1]);
     // xStatus = xQueueSend(xQueue, &lValueToSend, 0);
   } else {
     printf("wrong number of arguments!\n");
@@ -110,21 +109,30 @@ int ranges_bool[1][2] = {{0, 1}};
 +--------------------------------------------------------------------------*/
 
 void cmd_rdt(int argc, char **argv) {
-  // Placeholder for command
-  printf("cmd_rdt\n");
+  time_t xTime = date_time::get_time();
+  char buffer[20];
+  date_time::convertTimeToDateClockString(xTime, buffer, sizeof(buffer));
+  printf("%s\n", buffer);
 }
 
 void cmd_sd(int argc, char **argv) {
   if (check_args(argc, argv, 4, ranges_dates)) {
     return;
   }
-  // Placeholder for command
-  printf("cmd_sd %d %d %d\n", atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
+  char s[20];
+  char buffer[10];
+  date_time::get_clock(buffer);
+  snprintf(s, sizeof(s), "%02d/%02d/%04d %s", atoi(argv[1]), atoi(argv[2]),
+           atoi(argv[3]), buffer);
+  date_time::set_dateTime(s);
 }
 
 void cmd_rc(int argc, char **argv) {
   // Placeholder for command
   printf("cmd_rc 2\n");
+  char s[20];
+  date_time::get_clock(s);
+  printf("%s\n", s);
 }
 
 void cmd_sc(int argc, char **argv) {
@@ -132,7 +140,15 @@ void cmd_sc(int argc, char **argv) {
     return;
   }
 
-  printf("cmd_sc %d %d %d\n", atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
+  char s[20];
+  date_time::get_date(s);
+
+  snprintf(s + 11, sizeof(s) - 11, "%02d:%02d:%02d", atoi(argv[1]),
+           atoi(argv[2]), atoi(argv[3]));
+
+  printf("%s\n", s); // Print the updated string
+
+  date_time::set_dateTime(s);
 }
 
 void cmd_rt(int argc, char **argv) {
