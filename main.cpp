@@ -89,7 +89,6 @@ void check_tasks() {
                                       xQueueLCD};
 
   configuration::vConfigInitializer();
-  comando::vCommandInitialize(&pxCmdParameters);
   scanI2CDevices();
 
   printf("Init complete..\n");

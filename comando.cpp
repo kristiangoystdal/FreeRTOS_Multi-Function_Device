@@ -9,38 +9,20 @@
 #include "FreeRTOS.h"
 #include "LM75B.h"
 #include "alarm_task.hpp"
+#include "bubble_level_task.hpp"
 #include "configuration.hpp"
+#include "hit_bit_task.hpp"
 #include "lcd_task.hpp"
 #include "max_min_task.hpp"
 #include "pwm_task.hpp"
-#include "hit_bit_task.hpp"
-#include "bubble_level_task.hpp"
 #include "queue.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-static QueueHandle_t *xQueueCommand = NULL;
-static QueueHandle_t *xQueueMaxMin = NULL;
-static QueueHandle_t *xQueueAlarm = NULL;
-static QueueHandle_t *xQueueLCD = NULL;
 
 namespace comando {
-void vCommandInitialize(QueueHandle_t (*pxQueueArray)[4]) {
-  // Assign the pointers to the queues
-  xQueueCommand = &(*pxQueueArray)[0];
-  xQueueMaxMin = &(*pxQueueArray)[1];
-  xQueueAlarm = &(*pxQueueArray)[2];
-  xQueueLCD = &(*pxQueueArray)[3];
-
-  if (*xQueueCommand == NULL || *xQueueMaxMin == NULL || *xQueueAlarm == NULL ||
-      *xQueueLCD == NULL) {
-    printf("Error: One or more queues are uninitialized!\n");
-  } else {
-    printf("Queues initialized successfully.\n");
-  }
-}
 
 /*-------------------------------------------------------------------------+
 | Function: cmd_sair - termina a aplicacao
@@ -255,7 +237,7 @@ void cmd_adbl(int argc, char **argv) {
     return;
   }
 
-  bubble_level_task::vSetBubbleLevelEnabled((bool) atoi(argv[1]));
+  bubble_level_task::vSetBubbleLevelEnabled((bool)atoi(argv[1]));
   printf("cmd_adbl %d\n", atoi(argv[1]));
 }
 
@@ -264,7 +246,7 @@ void cmd_adhb(int argc, char **argv) {
     return;
   }
 
-  hit_bit_task::vSetHitBitEnabled((bool) atoi(argv[1]));
+  hit_bit_task::vSetHitBitEnabled((bool)atoi(argv[1]));
   printf("cmd_adhb %d\n", atoi(argv[1]));
 }
 
@@ -273,7 +255,7 @@ void cmd_adcs(int argc, char **argv) {
     return;
   }
 
-  pwm_task::vSetConfigSoundEnabled((bool) atoi(argv[1]));
+  pwm_task::vSetConfigSoundEnabled((bool)atoi(argv[1]));
   printf("cmd_adcs %d\n", atoi(argv[1]));
 }
 } // namespace comando
