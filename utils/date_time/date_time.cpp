@@ -30,7 +30,8 @@ void get_clock(char *s) {
 void set_time_t(time_t t) { set_time(t); }
 
 void set_date(char *s) {
-  struct tm tm_ = {0}; // Initialize tm structure to zero
+  struct tm tm_ = {0};
+
   if (sscanf(s, "%2d/%2d/%4d %2d:%2d:%2d", &tm_.tm_mday, &tm_.tm_mon,
              &tm_.tm_year, &tm_.tm_hour, &tm_.tm_min, &tm_.tm_sec) != 6) {
     printf("Error while parsing date\n");
