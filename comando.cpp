@@ -165,7 +165,7 @@ void cmd_rmm(int argc, char **argv) {
   }
 }
 
-void cmd_cmm(int argc, char **argv) { temperature_task::vMaxMinInitialize(); }
+void cmd_cmm(int argc, char **argv) { max_min_task::vMaxMinInitialize(); }
 
 void cmd_rp(int argc, char **argv) {
   // Placeholder for command
