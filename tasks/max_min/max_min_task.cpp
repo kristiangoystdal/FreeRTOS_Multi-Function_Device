@@ -11,7 +11,8 @@ namespace max_min_task {
 
 static MaxMinMeasure_t xMaxMin;
 
-void sendMaxMin(QueueHandle_t xQueueConsole) {
+void sendMaxMin() {
+  printf("Max: %f at %d\n", xMaxMin.xMax.xTemp, xMaxMin.xMax.xTime);
   // TODO: Send to console
 }
 
@@ -41,7 +42,7 @@ void vMaxMinTask(void *pvParameters) {
   for (;;) {
     xQueueReceive(xQueueMaxMin, &xMessage, portMAX_DELAY);
     if (xMessage.xAction == Get) {
-      sendMaxMin(xQueueConsole);
+      sendMaxMin();
     } else {
       updateMaxMin(xMessage.xMeasure);
     }
