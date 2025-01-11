@@ -54,7 +54,7 @@ void vLCDTask(void *pvParameters) {
       }
       break;
     case Temperature:
-      int xTemperature = xMessage.xLCDData.xTemperature;
+      float xTemperature = xMessage.xLCDData.xTemperature;
       write_temperature(xTemperature);
       break;
     case BubbleLevel:

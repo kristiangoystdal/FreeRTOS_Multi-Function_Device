@@ -15,7 +15,7 @@ static MaxMinMeasure_t xMaxMin;
 void sendMaxMin() {
   char buffer[100];
   date_time::convertTimeToString(xMaxMin.xMax.xTime, buffer, sizeof(buffer));
-  printf("Max: %f at %s\n", xMaxMin.xMax.xTemp, buffer);
+  printf("Max: %.1f at %s\n", xMaxMin.xMax.xTemp, buffer);
   date_time::convertTimeToString(xMaxMin.xMin.xTime, buffer, sizeof(buffer));
   printf("Min: %.1f at %s\n", xMaxMin.xMin.xTemp, buffer);
 }
