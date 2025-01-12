@@ -148,7 +148,7 @@ void cmd_sc(int argc, char **argv) {
 }
 
 void cmd_rt(int argc, char **argv) {
-  temperature_task::TemperatureData_t xMessage = true;
+  temperature_task::TemperatureMessage_t xMessage = true;
   BaseType_t xStatus = xQueueSend(xQueueTemperature, &xMessage, 0);
   if (xStatus == errQUEUE_FULL) {
     printf("ERROR: Queue full: cmd rt");
