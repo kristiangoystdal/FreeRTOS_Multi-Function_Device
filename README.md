@@ -1,4 +1,3 @@
-
 # FreeRTOS Multi-Function Device
 
 This repository contains the implementation of a multi-function device using **FreeRTOS** on the **mbed LPC1768** platform. The project showcases real-time multitasking with a focus on managing concurrent tasks for embedded systems. Developed as part of the Real-Time Systems course at IST (2024/2025), this project demonstrates expertise in FreeRTOS-based applications.
@@ -80,9 +79,20 @@ The LCD provides:
 1. Clone the repository:
    ```bash
    git clone https://github.com/kristiangoystdal/FreeRTOS_Multi-Function_Device.git
-   ```
+  
 2. Open the project in your development environment.
 3. Compile and flash the program onto the mbed LPC1768.
+4. **Connect to the Serial Port**:
+   - Use a terminal application like **PuTTY** or **Tera Term**.
+   - Set the following parameters:
+     - **Baud Rate**: 115200 (or the configured baud rate for the project)
+     - **Data Bits**: 8
+     - **Parity**: None
+     - **Stop Bits**: 1
+     - **Flow Control**: None
+     - **Echo**: Local
+   - Select the correct COM port assigned by your system to the mbed LPC1768.
+   - Start the terminal and use the console commands to interact with the device.
 
 ---
 
@@ -95,4 +105,4 @@ Contributions are welcome! Fork this repository and submit a pull request with y
 ## References
 - [FreeRTOS Official Documentation](http://www.freertos.org)
 - [Mbed LPC1768 Platform](https://os.mbed.com/platforms/mbed-LPC1768)
-- [Mbed Application Board](https://os.mbed.com/components/mbed-Application-Board)
+- [Mbed Application Board](http
