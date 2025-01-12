@@ -2,6 +2,7 @@
 #include "FreeRTOS.h"
 #include "LM75B.h"
 #include "alarm_task.hpp"
+#include "atomic.hpp"
 #include "date_time.hpp"
 #include "global.h"
 #include "lcd_task.hpp"
@@ -10,7 +11,6 @@
 #include "task.h"
 #include "timers.h"
 #include <cstdio>
-#include "atomic.hpp"
 
 namespace temperature_task {
 
@@ -18,16 +18,14 @@ static LM75B sensor(p28, p27);
 
 static TimerHandle_t xTimer;
 
-static atomic::Atomic<TickType_t>* xPMON;
+static atomic::Atomic<TickType_t> *xPMON;
 
-TickType_t xConfigGetPMON() {
-  return xPMON->get();
-}
+TickType_t xConfigGetPMON() { return xPMON->get(); }
 
 void vConfigSetPMON(int seconds) {
-  TickType_t xTicks = pdMS_TO_TICKS(1000*seconds);
+  TickType_t xTicks = pdMS_TO_TICKS(1000 * seconds);
   xPMON->set(xTicks);
-  if(seconds == 0) {
+  if (seconds == 0) {
     if (xTimerStop(xTimer, 0) != pdPASS) {
       printf("Failed to stop timer!\n");
     }
@@ -42,7 +40,7 @@ void vConfigSetPMON(int seconds) {
 }
 
 void vTimerCallback(TimerHandle_t xTimer) {
-  TemperatureData_t xMessage = false; 
+  TemperatureData_t xMessage = false;
   if (xQueueSend(xQueueTemperature, &xMessage, 0) == errQUEUE_FULL) {
     printf("ERROR: Queue full: Timer -> Temperature");
   }
@@ -58,11 +56,17 @@ void vTemperatureInitializer() {
 
 void vTemperatureTask(void *pvParameters) {
   vTemperatureInitializer();
-  TemperatureData_t xToConsole = false; 
+  TemperatureData_t xToConsole = false;
   Measure_t xMeasure;
   max_min_task::MaxMinMessage_t xMaxMinMessage;
-  xPMON = new atomic::Atomic<TickType_t>(pdMS_TO_TICKS(1000*PMON_DEFAULT_VALUE));
-  xTimer = xTimerCreate("Temperature Timer", pdMS_TO_TICKS(1000*PMON_DEFAULT_VALUE), pdTRUE, (void *)1, vTimerCallback);
+  xPMON =
+      new atomic::Atomic<TickType_t>(pdMS_TO_TICKS(1000 * PMON_DEFAULT_VALUE));
+  xTimer = xTimerCreate("Temperature Timer",
+                        pdMS_TO_TICKS(1000 * PMON_DEFAULT_VALUE), pdTRUE,
+                        (void *)1, vTimerCallback);
+  if (xTimerStart(xTimer, 0) != pdPASS) {
+    printf("Failed to start timer!\n");
+  }
   for (;;) {
     float xTemp = sensor.temp();
     time_t xMeasureTime = date_time::get_time();

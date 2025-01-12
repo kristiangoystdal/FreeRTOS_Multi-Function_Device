@@ -10,14 +10,14 @@
 #include "LM75B.h"
 #include "alarm_task.hpp"
 #include "bubble_level_task.hpp"
+#include "config_sound_task.hpp"
 #include "date_time.hpp"
 #include "global.h"
 #include "hit_bit_task.hpp"
 #include "lcd_task.hpp"
 #include "max_min_task.hpp"
-#include "config_sound_task.hpp"
-#include "temperature_task.hpp"
 #include "queue.h"
+#include "temperature_task.hpp"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -148,7 +148,7 @@ void cmd_sc(int argc, char **argv) {
 }
 
 void cmd_rt(int argc, char **argv) {
-  temperature_task::TemperatureData_t xMessage = false; 
+  temperature_task::TemperatureData_t xMessage = true;
   BaseType_t xStatus = xQueueSend(xQueueTemperature, &xMessage, 0);
   if (xStatus == errQUEUE_FULL) {
     printf("ERROR: Queue full: cmd rt");
