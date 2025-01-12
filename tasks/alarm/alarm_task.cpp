@@ -90,7 +90,7 @@ void vAlarmTask(void *pvParameters) {
       break;
     case SetClock:
       xAlarmInfo.tclock = xMessage.xAlarmData.tclock;
-      if (!xAlarmInfo.clock_alarm_en) {
+      if (xAlarmInfo.clock_alarm_en) {
         RTC::alarm(&vClockAlarm, *date_time::time_to_clock(xAlarmInfo.tclock));
       }
       break;
