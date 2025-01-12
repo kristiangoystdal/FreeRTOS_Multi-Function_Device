@@ -9,16 +9,10 @@ namespace config_sound_task {
 #define CONFIG_SOUND_UPDATE_TIME 200
 #define TALA_DEFAULT_VALUE 5
 
-typedef enum ConfigSoundAction { Alarm, Update } ConfigSoundAction;
-
-typedef struct ConfigSoundData {
-  float xPeriod;
-  float xDutyCycle;
-} ConfigSoundData;
+typedef enum ConfigSoundAction { Alarm, Stop } ConfigSoundAction;
 
 typedef struct {
   ConfigSoundAction xAction;
-  ConfigSoundData xData;
 } ConfigSoundMessage_t;
 
 bool xGetConfigSoundEnabled();
