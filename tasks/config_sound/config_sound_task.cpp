@@ -27,8 +27,9 @@ void vTimerCallback(TimerHandle_t xTimer) {
   xMessage.xAction = Update;
   xMessage.xData.xPeriod = min_output + (max_output - min_output) * p1;
   xMessage.xData.xDutyCycle = p2;
-  BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-  xQueueSendFromISR(xQueueConfigSound, &xMessage, &xHigherPriorityTaskWoken);
+  if (xQueueSend(xQueueConfigSound, &xMessage, 0) == errQUEUE_FULL) {
+    printf("ERROR: Queue full: Timer -> Config Sound");
+  }
 }
 
 bool xGetConfigSoundEnabled() { return xConfigSoundEnabled->get(); }

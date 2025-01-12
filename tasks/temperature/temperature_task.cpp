@@ -43,8 +43,9 @@ void vConfigSetPMON(int seconds) {
 
 void vTimerCallback(TimerHandle_t xTimer) {
   TemperatureData_t xMessage = false; 
-  BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-  xQueueSendFromISR(xQueueTemperature, &xMessage, &xHigherPriorityTaskWoken);
+  if (xQueueSend(xQueueTemperature, &xMessage, 0) == errQUEUE_FULL) {
+    printf("ERROR: Queue full: Timer -> Temperature");
+  }
 }
 
 void vTemperatureInitializer() {
