@@ -8,11 +8,14 @@
 | Data:  Nov 2002
 ***************************************************************************/
 #include "comando.hpp"
+#include "monitor_task.hpp"
 #include "mbed.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+namespace monitor_task {
 
 /*-------------------------------------------------------------------------+
 | Headers of command functions
@@ -159,4 +162,8 @@ void vMonitorTask(void *pvParameters) {
   } /* forever */
 }
 
-// #endif //notdef
+void vInitPC() {
+  pc.baud(115200);
+}
+
+} // monitor_task

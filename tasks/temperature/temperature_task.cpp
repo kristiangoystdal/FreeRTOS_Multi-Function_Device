@@ -2,30 +2,71 @@
 #include "FreeRTOS.h"
 #include "LM75B.h"
 #include "alarm_task.hpp"
-#include "configuration.hpp"
+#include "atomic.hpp"
 #include "date_time.hpp"
 #include "global.h"
 #include "lcd_task.hpp"
 #include "max_min_task.hpp"
 #include "queue.h"
 #include "task.h"
+#include "timers.h"
 #include <cstdio>
 
 namespace temperature_task {
 
 static LM75B sensor(p28, p27);
 
-void get_temperature(float *temp) { *temp = sensor.temp(); }
+static TimerHandle_t xTimer;
 
-void vTemperatureTask(void *pvParameters) {
-  uint32_t ulNotificationValue = 0;
+static atomic::Atomic<TickType_t> *xPMON;
+
+TickType_t xConfigGetPMON() { return xPMON->get(); }
+
+void vConfigSetPMON(int seconds) {
+  TickType_t xTicks = pdMS_TO_TICKS(1000 * seconds);
+  xPMON->set(xTicks);
+  if (seconds == 0) {
+    if (xTimerStop(xTimer, 0) != pdPASS) {
+      printf("Failed to stop timer!\n");
+    }
+  } else {
+    if (xTimerChangePeriod(xTimer, xTicks, 0) != pdPASS) {
+      printf("Failed to change timer period!\n");
+    }
+    if (xTimerStart(xTimer, 0) != pdPASS) {
+      printf("Failed to start timer!\n");
+    }
+  }
+}
+
+void vTimerCallback(TimerHandle_t xTimer) {
+  TemperatureData_t xMessage = false;
+  if (xQueueSend(xQueueTemperature, &xMessage, 0) == errQUEUE_FULL) {
+    printf("ERROR: Queue full: Timer -> Temperature");
+  }
+}
+
+void vTemperatureInitializer() {
   if (!sensor.open()) {
     printf("Temperature sensor NOT OK\n");
   } else {
     printf("Temperature sensor OK\n");
   }
+}
+
+void vTemperatureTask(void *pvParameters) {
+  vTemperatureInitializer();
+  TemperatureData_t xToConsole = false;
   Measure_t xMeasure;
   max_min_task::MaxMinMessage_t xMaxMinMessage;
+  xPMON =
+      new atomic::Atomic<TickType_t>(pdMS_TO_TICKS(1000 * PMON_DEFAULT_VALUE));
+  xTimer = xTimerCreate("Temperature Timer",
+                        pdMS_TO_TICKS(1000 * PMON_DEFAULT_VALUE), pdTRUE,
+                        (void *)1, vTimerCallback);
+  if (xTimerStart(xTimer, 0) != pdPASS) {
+    printf("Failed to start timer!\n");
+  }
   for (;;) {
     float xTemp = sensor.temp();
     time_t xMeasureTime = date_time::get_time();
@@ -54,13 +95,10 @@ void vTemperatureTask(void *pvParameters) {
       printf("ERROR: Queue full: Temperature -> Alarm");
     }
 
-    if (ulNotificationValue > 0) {
-      // TODO: Send to console
+    if (xToConsole == true) {
+      printf("Temperature: %.1f\n", xTemp);
     }
-
-    TickType_t xPMON = configuration::xConfigGetPMON();
-    xPMON = xPMON > 0 ? xPMON : portMAX_DELAY;
-    ulNotificationValue = ulTaskNotifyTake(pdTRUE, xPMON);
+    xQueueReceive(xQueueTemperature, &xToConsole, portMAX_DELAY);
   }
 }
 } // namespace temperature_task

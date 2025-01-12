@@ -10,14 +10,14 @@
 #include "LM75B.h"
 #include "alarm_task.hpp"
 #include "bubble_level_task.hpp"
-#include "configuration.hpp"
+#include "config_sound_task.hpp"
 #include "date_time.hpp"
 #include "global.h"
 #include "hit_bit_task.hpp"
 #include "lcd_task.hpp"
 #include "max_min_task.hpp"
-#include "pwm_task.hpp"
 #include "queue.h"
+#include "temperature_task.hpp"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -148,9 +148,11 @@ void cmd_sc(int argc, char **argv) {
 }
 
 void cmd_rt(int argc, char **argv) {
-  float temp;
-  temperature_task::get_temperature(&temp);
-  printf("Temperature: %.1f\n", temp);
+  temperature_task::TemperatureData_t xMessage = true;
+  BaseType_t xStatus = xQueueSend(xQueueTemperature, &xMessage, 0);
+  if (xStatus == errQUEUE_FULL) {
+    printf("ERROR: Queue full: cmd rt");
+  }
 }
 
 void cmd_rmm(int argc, char **argv) {
@@ -165,8 +167,8 @@ void cmd_rmm(int argc, char **argv) {
 void cmd_cmm(int argc, char **argv) { max_min_task::vMaxMinInitialize(); }
 
 void cmd_rp(int argc, char **argv) {
-  int pmon = configuration::xConfigGetPMON() / 1000;
-  int tala = configuration::xConfigGetTALA() / 1000;
+  int pmon = temperature_task::xConfigGetPMON() / 1000;
+  int tala = config_sound_task::xConfigGetTALA() / 1000;
   printf("PMON: %d seconds\n", pmon);
   printf("TALA: %d seconds\n", tala);
 }
@@ -176,7 +178,7 @@ void cmd_mmp(int argc, char **argv) {
     return;
   }
 
-  configuration::vConfigSetPMON(atoi(argv[1]));
+  temperature_task::vConfigSetPMON(atoi(argv[1]));
 }
 
 void cmd_mta(int argc, char **argv) {
@@ -184,7 +186,7 @@ void cmd_mta(int argc, char **argv) {
     return;
   }
 
-  configuration::vConfigSetTALA(atoi(argv[1]));
+  config_sound_task::vConfigSetTALA(atoi(argv[1]));
 }
 
 void cmd_rai(int argc, char **argv) {
@@ -262,7 +264,7 @@ void cmd_adat(int argc, char **argv) {
 void cmd_rts(int argc, char **argv) {
   bool bubble_level_en = bubble_level_task::xGetBubbleLevelEnabled();
   bool hit_bit_en = hit_bit_task::xGetHitBitEnabled();
-  bool config_sound_en = pwm_task::xGetConfigSoundEnabled();
+  bool config_sound_en = config_sound_task::xGetConfigSoundEnabled();
   printf("Bubble Level: %d\n", bubble_level_en);
   printf("Hit Bit: %d\n", hit_bit_en);
   printf("Config Sound: %d\n", config_sound_en);
@@ -289,6 +291,6 @@ void cmd_adcs(int argc, char **argv) {
     return;
   }
 
-  pwm_task::vSetConfigSoundEnabled((bool)atoi(argv[1]));
+  config_sound_task::vSetConfigSoundEnabled((bool)atoi(argv[1]));
 }
 } // namespace comando
