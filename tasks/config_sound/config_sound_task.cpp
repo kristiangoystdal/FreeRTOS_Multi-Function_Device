@@ -7,6 +7,7 @@
 #include "portmacro.h"
 #include "task.h"
 #include "timers.h"
+#include "rgb.hpp"
 
 namespace config_sound_task {
 
@@ -80,6 +81,7 @@ void vConfigSoundTask(void *pvParameters) {
     case Stop:
       buzzer = 0.0;
       xEnabled = false;
+      rgb::refresh_rgb();
       break;
     default:
       break;

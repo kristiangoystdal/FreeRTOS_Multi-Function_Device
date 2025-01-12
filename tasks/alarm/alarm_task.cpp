@@ -64,7 +64,7 @@ void vAlarmTask(void *pvParameters) {
   config_sound_task::ConfigSoundMessage_t xConfigSoundMessage;
   xConfigSoundMessage.xAction = config_sound_task::Alarm;
   vAlarmInfoInitialize();
-  rgb::set_period();
+  rgb::rgb_init();
   for (;;) {
     xQueueReceive(xQueueAlarm, &xMessage, portMAX_DELAY);
     switch (xMessage.xAction) {
