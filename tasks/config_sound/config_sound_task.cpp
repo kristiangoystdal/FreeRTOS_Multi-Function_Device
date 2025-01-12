@@ -18,7 +18,7 @@ static PwmOut buzzer(p26);
 const float min_output = 0.001;
 const float max_output = 0.003;
 
-static float fPeriod = 0.02;
+static float fPeriod = 0.002;
 static float fDutyCycle = 0.5;
 
 static TimerHandle_t xTimer;
