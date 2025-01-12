@@ -7,8 +7,8 @@
 |        from an original by Leendert Van Doorn
 | Data:  Nov 2002
 ***************************************************************************/
-#include "comando.hpp"
 #include "monitor_task.hpp"
+#include "comando.hpp"
 #include "mbed.h"
 #include <ctype.h>
 #include <stdio.h>
@@ -34,9 +34,6 @@ struct command_d {
   char *cmd_help;
 } const commands[] = {
     {cmd_sos, "sos", "                             help"},
-    {comando::cmd_send, "send", "<msg>                       send message"},
-    {comando::cmd_sair, "sair", "                            sair"},
-    {comando::cmd_test, "test", "<arg1> <arg2>               test command"},
     {comando::cmd_rdt, "rdt",
      "                             read date/time (dd/MM/YYYY hh:mm:ss)"},
     {comando::cmd_sd, "sd",
@@ -159,11 +156,9 @@ void vMonitorTask(void *pvParameters) {
       else
         printf("%s", InvalMsg);
     } /* if my_getline */
-  } /* forever */
+  }   /* forever */
 }
 
-void vInitPC() {
-  pc.baud(115200);
-}
+void vInitPC() { pc.baud(115200); }
 
-} // monitor_task
+} // namespace monitor_task
