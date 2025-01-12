@@ -9,9 +9,9 @@ extern QueueHandle_t xQueueMaxMin;
 extern QueueHandle_t xQueueAlarm;
 extern QueueHandle_t xQueueLCD;
 extern QueueHandle_t xQueueConfigSound;
+extern QueueHandle_t xQueueTemperature;
 extern TaskHandle_t xBubbleLevelHandler;
 extern TaskHandle_t xHitBitHandler;
-extern TaskHandle_t xTemperatureHandler;
 void vCreateTask(TaskFunction_t pxTaskCode, const char *const pcName,
                  const uint16_t usStackDepth, void *const pvParameters,
                  UBaseType_t uxPriority, TaskHandle_t *const pxCreatedTask);

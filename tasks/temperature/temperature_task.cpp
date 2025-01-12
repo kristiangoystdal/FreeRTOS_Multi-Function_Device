@@ -20,8 +20,6 @@ static TimerHandle_t xTimer;
 
 static atomic::Atomic<TickType_t>* xPMON;
 
-void get_temperature(float *temp) { *temp = sensor.temp(); }
-
 TickType_t xConfigGetPMON() {
   return xPMON->get();
 }
@@ -44,15 +42,22 @@ void vConfigSetPMON(int seconds) {
 }
 
 void vTimerCallback(TimerHandle_t xTimer) {
+  TemperatureData_t xMessage = false; 
+  BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+  xQueueSendFromISR(xQueueTemperature, &xMessage, &xHigherPriorityTaskWoken);
 }
 
-void vTemperatureTask(void *pvParameters) {
-  uint32_t ulNotificationValue = 0;
+void vTemperatureInitializer() {
   if (!sensor.open()) {
     printf("Temperature sensor NOT OK\n");
   } else {
     printf("Temperature sensor OK\n");
   }
+}
+
+void vTemperatureTask(void *pvParameters) {
+  vTemperatureInitializer();
+  TemperatureData_t xToConsole = false; 
   Measure_t xMeasure;
   max_min_task::MaxMinMessage_t xMaxMinMessage;
   xPMON = new atomic::Atomic<TickType_t>(pdMS_TO_TICKS(1000*PMON_DEFAULT_VALUE));
@@ -85,10 +90,10 @@ void vTemperatureTask(void *pvParameters) {
       printf("ERROR: Queue full: Temperature -> Alarm");
     }
 
-    if (ulNotificationValue > 0) {
-      // TODO: Send to console
+    if (xToConsole == true) {
+      printf("Temperature: %.1f\n", xTemp);
     }
-    ulNotificationValue = ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+    xQueueReceive(xQueueTemperature, &xToConsole, portMAX_DELAY);
   }
 }
 } // namespace temperature_task

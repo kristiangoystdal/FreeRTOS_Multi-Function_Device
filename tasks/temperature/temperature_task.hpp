@@ -14,12 +14,13 @@ typedef struct {
   time_t xTime;
 } Measure_t;
 
+typedef bool TemperatureData_t;
+
 void vTemperatureTask(void *pvParameters);
 
 TickType_t xConfigGetPMON();
 void vConfigSetPMON(int seconds);
 
-void get_temperature(float *temp);
 } // namespace temperature_task
 
 #endif

@@ -16,6 +16,7 @@
 #include "lcd_task.hpp"
 #include "max_min_task.hpp"
 #include "config_sound_task.hpp"
+#include "temperature_task.hpp"
 #include "queue.h"
 #include <ctype.h>
 #include <stdio.h>
@@ -147,9 +148,11 @@ void cmd_sc(int argc, char **argv) {
 }
 
 void cmd_rt(int argc, char **argv) {
-  float temp;
-  temperature_task::get_temperature(&temp);
-  printf("Temperature: %.1f\n", temp);
+  TemperatureData_t xMessage = false; 
+  BaseType_t xStatus = xQueueSend(xQueueTemperature, &xMessage, 0);
+  if (xStatus == errQUEUE_FULL) {
+    printf("ERROR: Queue full: cmd rt");
+  }
 }
 
 void cmd_rmm(int argc, char **argv) {

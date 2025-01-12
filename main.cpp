@@ -39,7 +39,8 @@ void check_tasks() {
   xQueueAlarm =
       xCreateQueue(ALARM_TASK_QUEUE_SIZE, sizeof(alarm_task::AlarmMessage_t));
   xQueueLCD = xCreateQueue(LCD_TASK_QUEUE_SIZE, sizeof(lcd_task::LCDMessage_t));
-  xQueueConfigSound = xCreateQueue(CONFIG_SOUND_TASK_PRIORITY, sizeof(config_sound_task::ConfigSoundMessage_t));
+  xQueueConfigSound = xCreateQueue(CONFIG_SOUND_TASK_QUEUE_SIZE, sizeof(config_sound_task::ConfigSoundMessage_t));
+  xQueueTemperature = xCreateQueue(TEMPERATURE_QUEUE_SIZE, sizeof(temperature_task::TemperatureData_t));
 
   NVIC_SetPriority(RTC_IRQn, 254);
   NVIC_SetPriority(EINT3_IRQn, 253);
@@ -54,7 +55,7 @@ void check_tasks() {
               MONITOR_TASK_PRIORITY, NULL);
   vCreateTask(temperature_task::vTemperatureTask, "Task Temperature",
               2 * configMINIMAL_STACK_SIZE, NULL, TEMPERATURE_TASK_PRIORITY,
-              &xTemperatureHandler);
+              NULL);
   vCreateTask(alarm_task::vAlarmTask, "Task Alarm",
               2 * configMINIMAL_STACK_SIZE, NULL, ALARM_TASK_PRIORITY, NULL);
   vCreateTask(max_min_task::vMaxMinTask, "Task Max Min",
