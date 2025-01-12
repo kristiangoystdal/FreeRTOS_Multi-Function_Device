@@ -40,7 +40,7 @@ void vConfigSetPMON(int seconds) {
 }
 
 void vTimerCallback(TimerHandle_t xTimer) {
-  TemperatureMessage_t xMessage = false;
+  TemperatureData_t xMessage = false;
   if (xQueueSend(xQueueTemperature, &xMessage, 0) == errQUEUE_FULL) {
     printf("ERROR: Queue full: Timer -> Temperature");
   }
@@ -56,7 +56,7 @@ void vTemperatureInitializer() {
 
 void vTemperatureTask(void *pvParameters) {
   vTemperatureInitializer();
-  TemperatureMessage_t xToConsole = false;
+  TemperatureData_t xToConsole = false;
   Measure_t xMeasure;
   max_min_task::MaxMinMessage_t xMaxMinMessage;
   xPMON =

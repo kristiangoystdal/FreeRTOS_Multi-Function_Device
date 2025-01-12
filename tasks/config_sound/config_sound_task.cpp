@@ -7,7 +7,7 @@
 #include "portmacro.h"
 #include "task.h"
 #include "timers.h"
-#include "rgb_task.hpp"
+#include "rgb.hpp"
 
 namespace config_sound_task {
 
@@ -18,8 +18,8 @@ static PwmOut buzzer(p26);
 const float min_output = 0.001;
 const float max_output = 0.003;
 
-static float fPeriod = 0.0;
-static float fDutyCycle = 0.0;
+static float fPeriod = 0.02;
+static float fDutyCycle = 0.5;
 
 static TimerHandle_t xTimer;
 
@@ -81,11 +81,7 @@ void vConfigSoundTask(void *pvParameters) {
     case Stop:
       buzzer = 0.0;
       xEnabled = false;
-      rgb_task::RGBMessage_t xRGBMessage;
-      xRGBMessage.xAction = rgb_task::Update;
-      if (xQueueSend(xQueueRGB, &xRGBMessage, 0) == errQUEUE_FULL) {
-        printf("ERROR: Queue full: Config Sound -> RGB");
-      }
+      rgb::refresh_rgb();
       break;
     default:
       break;

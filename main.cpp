@@ -13,7 +13,6 @@
 #include "config_sound_task.hpp"
 #include "tasks_macros.h"
 #include "temperature_task.hpp"
-#include "rgb_task.hpp"
 
 I2C i2c(p28, p27);
 
@@ -41,8 +40,7 @@ void check_tasks() {
       xCreateQueue(ALARM_TASK_QUEUE_SIZE, sizeof(alarm_task::AlarmMessage_t));
   xQueueLCD = xCreateQueue(LCD_TASK_QUEUE_SIZE, sizeof(lcd_task::LCDMessage_t));
   xQueueConfigSound = xCreateQueue(CONFIG_SOUND_TASK_QUEUE_SIZE, sizeof(config_sound_task::ConfigSoundMessage_t));
-  xQueueTemperature = xCreateQueue(TEMPERATURE_TASK_QUEUE_SIZE, sizeof(temperature_task::TemperatureMessage_t));
-  xQueueRGB = xCreateQueue(RGB_TASK_QUEUE_SIZE, sizeof(rgb_task::RGBMessage_t));
+  xQueueTemperature = xCreateQueue(TEMPERATURE_QUEUE_SIZE, sizeof(temperature_task::TemperatureData_t));
 
   NVIC_SetPriority(RTC_IRQn, 254);
   NVIC_SetPriority(EINT3_IRQn, 253);
@@ -70,8 +68,6 @@ void check_tasks() {
   vCreateTask(bubble_level_task::vBubbleLevelTask, "Task Bubble Level",
               2 * configMINIMAL_STACK_SIZE, NULL, BUBBLE_LEVEL_TASK_PRIORITY,
               &xBubbleLevelHandler);
-  vCreateTask(rgb_task::vRGBTask, "Task RGB",
-              2 * configMINIMAL_STACK_SIZE, NULL, RGB_TASK_PRIORITY, NULL);
 
   vTaskStartScheduler();
   while (1)
