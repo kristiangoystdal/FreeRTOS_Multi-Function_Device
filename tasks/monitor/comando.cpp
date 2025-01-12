@@ -68,10 +68,10 @@ bool check_args_digit(char **argv) {
   return false;
 }
 
-bool check_args_range(char **argv, int ranges[][2]) {
-  for (int i = 1; i < 4; i++) {
+bool check_args_range(int argc, char **argv, int ranges[][2]) {
+  for (int i = 1; i < argc; i++) {
     int value = atoi(argv[i]);
-    if (value <= ranges[i - 1][0] && value >= ranges[i - 1][1]) {
+    if (value < ranges[i - 1][0] || value > ranges[i - 1][1]) {
       return true;
     }
   }
@@ -87,7 +87,7 @@ bool check_args(int argc, char **argv, int num_args, int ranges[][2]) {
     printf("wrong type of arguments!\n");
     return true;
   }
-  if (check_args_range(argv, ranges)) {
+  if (check_args_range(argc, argv, ranges)) {
     printf("wrong range of arguments!\n");
     return true;
   }
@@ -97,7 +97,7 @@ bool check_args(int argc, char **argv, int num_args, int ranges[][2]) {
 /*-------------------------------------------------------------------------+
 | Ranges for the arguments
 +--------------------------------------------------------------------------*/
-int ranges_dates[3][2] = {{0, 31}, {0, 12}, {0, 9999}};
+int ranges_dates[3][2] = {{1, 31}, {1, 12}, {0, 9999}};
 int ranges_time[3][2] = {{0, 23}, {0, 59}, {0, 59}};
 int ranges_temp[1][2] = {{0, 50}};
 int ranges_period[1][2] = {{0, 99}};

@@ -47,9 +47,6 @@ void vConfigSoundTask(void *pvParameters) {
   TickType_t xUpdate = pdMS_TO_TICKS(CONFIG_SOUND_UPDATE_TIME);
   xTimer = xTimerCreate("Config Sound Timer", xUpdate, pdTRUE, (void *)0,
                         vTimerCallback);
-  if (xTimerStart(xTimer, 0) != pdPASS) {
-    printf("Failed to start timer!\n");
-  }
   ConfigSoundMessage_t xMessage;
   xTALA =
       new atomic::Atomic<TickType_t>(pdMS_TO_TICKS(1000 * TALA_DEFAULT_VALUE));
