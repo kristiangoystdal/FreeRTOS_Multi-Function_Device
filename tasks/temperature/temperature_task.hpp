@@ -14,7 +14,7 @@ typedef struct {
   time_t xTime;
 } Measure_t;
 
-typedef bool TemperatureData_t;
+typedef bool TemperatureMessage_t;
 
 void vTemperatureTask(void *pvParameters);
 

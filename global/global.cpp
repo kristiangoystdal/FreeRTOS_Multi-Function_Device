@@ -8,6 +8,7 @@ QueueHandle_t xQueueAlarm;
 QueueHandle_t xQueueLCD;
 QueueHandle_t xQueueConfigSound;
 QueueHandle_t xQueueTemperature;
+QueueHandle_t xQueueRGB;
 TaskHandle_t xBubbleLevelHandler;
 TaskHandle_t xHitBitHandler;
 

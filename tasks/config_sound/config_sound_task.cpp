@@ -7,7 +7,7 @@
 #include "portmacro.h"
 #include "task.h"
 #include "timers.h"
-#include "rgb.hpp"
+#include "rgb_task.hpp"
 
 namespace config_sound_task {
 
@@ -81,7 +81,11 @@ void vConfigSoundTask(void *pvParameters) {
     case Stop:
       buzzer = 0.0;
       xEnabled = false;
-      rgb::refresh_rgb();
+      rgb_task::RGBMessage_t xRGBMessage;
+      xRGBMessage.xAction = rgb_task::Update;
+      if (xQueueSend(xQueueRGB, &xRGBMessage, 0) == errQUEUE_FULL) {
+        printf("ERROR: Queue full: Config Sound -> RGB");
+      }
       break;
     default:
       break;
