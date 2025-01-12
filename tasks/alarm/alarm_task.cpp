@@ -7,7 +7,7 @@
 #include "global.h"
 #include "lcd_task.hpp"
 #include "queue.h"
-#include "rgb.hpp"
+#include "rgb_task.hpp"
 #include "semphr.h"
 #include "task.h"
 #include <stdio.h>
@@ -39,14 +39,23 @@ void vSendToLCD(QueueHandle_t xQueueLCD, char letter) {
 }
 
 void vSetRGB(float temp) {
+  rgb_task::RGBMessage_t xRGBMessage;
+  xRGBMessage.xAction = rgb_task::Set;
+  xRGBMessage.xData.g = 0.0;
   if (temp <= xAlarmInfo.tlow) {
-    rgb::set_rgb(0, 0, 1.0);
+    xRGBMessage.xData.r = 0.0;
+    xRGBMessage.xData.b = 1.0;
   } else if (temp >= xAlarmInfo.thigh) {
-    rgb::set_rgb(1.0, 0, 0);
+    xRGBMessage.xData.r = 1.0;
+    xRGBMessage.xData.b = 0.0;
   } else {
     float delta =
         (temp - xAlarmInfo.tlow) / (xAlarmInfo.thigh - xAlarmInfo.tlow);
-    rgb::set_rgb(delta, 0, 1.0 - delta);
+    xRGBMessage.xData.r = delta;
+    xRGBMessage.xData.b = 1.0 - delta;
+  }
+  if (xQueueSend(xQueueRGB, &xRGBMessage, 0) == errQUEUE_FULL) {
+    printf("ERROR: Queue full: Alarm -> RGB");
   }
 }
 
@@ -59,12 +68,10 @@ void vClockAlarm() {
 
 void vAlarmTask(void *pvParameters) {
   printf("Alarm Task\n");
-
   AlarmMessage_t xMessage;
   config_sound_task::ConfigSoundMessage_t xConfigSoundMessage;
   xConfigSoundMessage.xAction = config_sound_task::Alarm;
   vAlarmInfoInitialize();
-  rgb::rgb_init();
   for (;;) {
     xQueueReceive(xQueueAlarm, &xMessage, portMAX_DELAY);
     switch (xMessage.xAction) {
