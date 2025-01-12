@@ -164,7 +164,7 @@ void cmd_rmm(int argc, char **argv) {
 void cmd_cmm(int argc, char **argv) { max_min_task::vMaxMinInitialize(); }
 
 void cmd_rp(int argc, char **argv) {
-  int pmon = configuration::xConfigGetPMON() / 1000;
+  int pmon = temperature_task::xConfigGetPMON() / 1000;
   int tala = config_sound_task::xConfigGetTALA() / 1000;
   printf("PMON: %d seconds\n", pmon);
   printf("TALA: %d seconds\n", tala);
@@ -175,7 +175,7 @@ void cmd_mmp(int argc, char **argv) {
     return;
   }
 
-  configuration::vConfigSetPMON(atoi(argv[1]));
+  temperature_task::vConfigSetPMON(atoi(argv[1]));
 }
 
 void cmd_mta(int argc, char **argv) {

@@ -2,6 +2,8 @@
 #ifndef __CONFIG_SOUND_TASK_H
 #define __CONFIG_SOUND_TASK_H
 
+#include "FreeRTOS.h"
+
 namespace config_sound_task {
 
   #define CONFIG_SOUND_UPDATE_TIME 200

@@ -3,6 +3,7 @@
 #define __TEMPERATURE_TASK_H
 
 #include <time.h>
+#include "FreeRTOS.h"
 
 namespace temperature_task {
 

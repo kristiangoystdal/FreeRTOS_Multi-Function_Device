@@ -41,7 +41,6 @@ void check_tasks() {
   xQueueLCD = xCreateQueue(LCD_TASK_QUEUE_SIZE, sizeof(lcd_task::LCDMessage_t));
   xQueueConfigSound = xCreateQueue(CONFIG_SOUND_TASK_PRIORITY, sizeof(config_sound_task::ConfigSoundMessage_t));
 
-  configuration::vConfigInitializer();
   NVIC_SetPriority(RTC_IRQn, 254);
   NVIC_SetPriority(EINT3_IRQn, 253);
   RTC::attach(&lcd_task::vUpdateClockISR, RTC::Second);
