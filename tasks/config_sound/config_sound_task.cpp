@@ -2,7 +2,6 @@
 #include "config_sound_task.hpp"
 #include "FreeRTOS.h"
 #include "atomic.hpp"
-#include "configuration.hpp"
 #include "mbed.h"
 #include "portmacro.h"
 #include "task.h"
@@ -21,6 +20,7 @@ const float max_output = 0.003;
 static TimerHandle_t xTimer;
 
 static atomic::Atomic<bool> *xConfigSoundEnabled;
+static atomic::Atomic<TickType_t>* xTALA;
 
 void vTimerCallback(TimerHandle_t xTimer) {
   ConfigSoundMessage_t xMessage;
@@ -35,6 +35,10 @@ bool xGetConfigSoundEnabled() { return xConfigSoundEnabled->get(); }
 
 void vSetConfigSoundEnabled(bool enabled) { xConfigSoundEnabled->set(enabled); }
 
+TickType_t xConfigGetTALA() { return xTALA->get(); }
+
+void vConfigSetTALA(int seconds) { xTALA->set(pdMS_TO_TICKS(1000*seconds)); }
+
 void vConfigSoundTask(void *pvParameters) {
   printf("Config Sound Task\n");
   xConfigSoundEnabled = new atomic::Atomic<bool>(false);
@@ -42,12 +46,10 @@ void vConfigSoundTask(void *pvParameters) {
   TickType_t xUpdate = pdMS_TO_TICKS(CONFIG_SOUND_UPDATE_TIME);
   xTimer = xTimerCreate("Config Sound Timer", xUpdate, pdTRUE, (void *)0, vTimerCallback);
   ConfigSoundMessage_t xMessage;
-  BaseType_t xStatus;
+  xTALA = new atomic::Atomic<TickType_t>(pdMS_TO_TICKS(1000*TALA_DEFAULT_VALUE));
   for (;;) {
-    TickType_t xTALA =
-        xEnabled ? configuration::xConfigGetTALA() : portMAX_DELAY;
-    xStatus = xQueueReceive(xQueueConfigSound, &xMessage, xTALA);
-    if(xStatus == pdFALSE) {
+    TickType_t xTicks = xEnabled ? xConfigGetTALA() : portMAX_DELAY;
+    if(xQueueReceive(xQueueConfigSound, &xMessage, xTicks) == pdFALSE) {
       if (xTimerStop(xTimer, 0) != pdPASS) {
         printf("Failed to stop timer!\n");
       }

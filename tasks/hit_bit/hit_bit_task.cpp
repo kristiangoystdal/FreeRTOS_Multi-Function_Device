@@ -2,7 +2,6 @@
 #include "hit_bit_task.hpp"
 #include "FreeRTOS.h"
 #include "atomic.hpp"
-#include "configuration.hpp"
 #include "mbed.h"
 #include "task.h"
 #include <stdio.h>

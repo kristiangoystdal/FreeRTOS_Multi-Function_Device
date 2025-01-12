@@ -5,6 +5,7 @@
 namespace config_sound_task {
 
   #define CONFIG_SOUND_UPDATE_TIME 200
+  #define TALA_DEFAULT_VALUE 5
 
   typedef enum ConfigSoundAction {
     Alarm,
@@ -22,8 +23,10 @@ namespace config_sound_task {
   } ConfigSoundMessage_t;
 
   bool xGetConfigSoundEnabled();
-
   void vSetConfigSoundEnabled(bool enabled);
+
+  TickType_t xConfigGetTALA();
+  void vConfigSetTALA(int seconds);
 
   void vConfigSoundTask(void* pvParameters);
 

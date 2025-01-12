@@ -2,20 +2,49 @@
 #include "FreeRTOS.h"
 #include "LM75B.h"
 #include "alarm_task.hpp"
-#include "configuration.hpp"
 #include "date_time.hpp"
 #include "global.h"
 #include "lcd_task.hpp"
 #include "max_min_task.hpp"
 #include "queue.h"
 #include "task.h"
+#include "timers.h"
 #include <cstdio>
+#include "atomic.hpp"
 
 namespace temperature_task {
 
 static LM75B sensor(p28, p27);
 
+static TimerHandle_t xTimer;
+
+static atomic::Atomic<TickType_t>* xPMON;
+
 void get_temperature(float *temp) { *temp = sensor.temp(); }
+
+TickType_t xConfigGetPMON() {
+  return xPMON->get();
+}
+
+void vConfigSetPMON(int seconds) {
+  TickType_t xTicks = pdMS_TO_TICKS(1000*seconds);
+  xPMON->set(xTicks);
+  if(seconds == 0) {
+    if (xTimerStop(xTimer, 0) != pdPASS) {
+      printf("Failed to stop timer!\n");
+    }
+  } else {
+    if (xTimerChangePeriod(xTimer, xTicks, 0) != pdPASS) {
+      printf("Failed to change timer period!\n");
+    }
+    if (xTimerStart(xTimer, 0) != pdPASS) {
+      printf("Failed to start timer!\n");
+    }
+  }
+}
+
+void vTimerCallback(TimerHandle_t xTimer) {
+}
 
 void vTemperatureTask(void *pvParameters) {
   uint32_t ulNotificationValue = 0;
@@ -26,6 +55,8 @@ void vTemperatureTask(void *pvParameters) {
   }
   Measure_t xMeasure;
   max_min_task::MaxMinMessage_t xMaxMinMessage;
+  xPMON = new atomic::Atomic<TickType_t>(pdMS_TO_TICKS(1000*PMON_DEFAULT_VALUE));
+  xTimer = xTimerCreate("Temperature Timer", pdMS_TO_TICKS(1000*PMON_DEFAULT_VALUE), pdTRUE, (void *)1, vTimerCallback);
   for (;;) {
     float xTemp = sensor.temp();
     time_t xMeasureTime = date_time::get_time();
@@ -57,10 +88,7 @@ void vTemperatureTask(void *pvParameters) {
     if (ulNotificationValue > 0) {
       // TODO: Send to console
     }
-
-    TickType_t xPMON = configuration::xConfigGetPMON();
-    xPMON = xPMON > 0 ? xPMON : portMAX_DELAY;
-    ulNotificationValue = ulTaskNotifyTake(pdTRUE, xPMON);
+    ulNotificationValue = ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
   }
 }
 } // namespace temperature_task

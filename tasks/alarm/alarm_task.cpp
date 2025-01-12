@@ -2,7 +2,6 @@
 #include "alarm_task.hpp"
 #include "FreeRTOS.h"
 #include "RTC.h"
-#include "configuration.hpp"
 #include "config_sound_task.hpp"
 #include "date_time.hpp"
 #include "global.h"

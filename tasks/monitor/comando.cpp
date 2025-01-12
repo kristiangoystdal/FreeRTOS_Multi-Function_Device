@@ -10,7 +10,6 @@
 #include "LM75B.h"
 #include "alarm_task.hpp"
 #include "bubble_level_task.hpp"
-#include "configuration.hpp"
 #include "date_time.hpp"
 #include "global.h"
 #include "hit_bit_task.hpp"
@@ -166,7 +165,7 @@ void cmd_cmm(int argc, char **argv) { max_min_task::vMaxMinInitialize(); }
 
 void cmd_rp(int argc, char **argv) {
   int pmon = configuration::xConfigGetPMON() / 1000;
-  int tala = configuration::xConfigGetTALA() / 1000;
+  int tala = config_sound_task::xConfigGetTALA() / 1000;
   printf("PMON: %d seconds\n", pmon);
   printf("TALA: %d seconds\n", tala);
 }
@@ -184,7 +183,7 @@ void cmd_mta(int argc, char **argv) {
     return;
   }
 
-  configuration::vConfigSetTALA(atoi(argv[1]));
+  config_sound_task::vConfigSetTALA(atoi(argv[1]));
 }
 
 void cmd_rai(int argc, char **argv) {
